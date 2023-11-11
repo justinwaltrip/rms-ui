@@ -1,4 +1,4 @@
-import '@mdxeditor/editor/style.css';
+import "@mdxeditor/editor/style.css";
 
 import InfoBar from "../info-bar/InfoBar";
 import "./SourceEditor.css";
@@ -11,7 +11,7 @@ import {
   listsPlugin,
   frontmatterPlugin,
   diffSourcePlugin,
-} from '@mdxeditor/editor';
+} from "@mdxeditor/editor";
 
 const Source: FC = () => {
   const [value, setValue] = useState(`
@@ -58,7 +58,7 @@ description paragraph
               imagePlugin(),
               listsPlugin(),
               frontmatterPlugin(),
-              diffSourcePlugin({ viewMode: 'source' }),
+              diffSourcePlugin({ viewMode: "source" }),
             ]}
             onChange={setValue}
             contentEditableClassName="prose"

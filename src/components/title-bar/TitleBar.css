@@ -1,24 +1,24 @@
 .title-bar {
-    background-color: #1E1E1E;
-    user-select: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 40px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  background-color: #1e1e1e;
+  user-select: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .create-icon {
-    position: relative;
-    left: 75px;
-    width: 25px;
-    height: 25px;
-    opacity: 0.6;
+  position: relative;
+  left: 75px;
+  width: 25px;
+  height: 25px;
+  opacity: 0.6;
 }
 
 .create-icon:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
