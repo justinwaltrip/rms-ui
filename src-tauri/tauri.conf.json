@@ -51,10 +51,9 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "rms",
-        "width": 800,
-        "height": 600,
-        "titleBarStyle": "Overlay"
+        "titleBarStyle": "Overlay",
+        "maximized": true,
+        "hiddenTitle": true
       }
     ]
   }

@@ -1,6 +1,6 @@
 import '@mdxeditor/editor/style.css';
 
-import InfoBar from "../../components/infobar/InfoBar";
+import InfoBar from "../../components/info-bar/InfoBar";
 import "./Source.css";
 import { FC, useState } from "react";
 import view from "../../assets/view.png";
@@ -49,8 +49,8 @@ description paragraph
   return (
     <div className="source-page">
       <img className="view-icon" src={view} alt="View icon" />
-      <InfoBar />
       <div className="content">
+        <InfoBar />
         <div className="md-editor">
           <MDXEditor
             markdown={value}
