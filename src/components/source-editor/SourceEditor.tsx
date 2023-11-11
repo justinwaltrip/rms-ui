@@ -1,13 +1,12 @@
 import '@mdxeditor/editor/style.css';
 
 import InfoBar from "../info-bar/InfoBar";
-import "./Source.css";
+import "./SourceEditor.css";
 import { FC, useState } from "react";
 import view from "../../assets/view.png";
 import {
   MDXEditor,
   headingsPlugin,
-  thematicBreakPlugin,
   imagePlugin,
   listsPlugin,
   frontmatterPlugin,
