@@ -4,7 +4,7 @@ import create from "../../assets/create.png";
 
 const TitleBar: FC = () => (
     <div data-tauri-drag-region className="title-bar">
-        <img className="create-icon" src={create} alt="Create new recipe" />
+        <img className="create-icon" src={create} alt="Create icon" />
     </div>
 );
 

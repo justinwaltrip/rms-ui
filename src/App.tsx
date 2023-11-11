@@ -1,9 +1,13 @@
 import "./App.css";
-import TitleBar from "./components/title-bar/TitleBar";
+import SideBar from "./components/sidebar/SideBar";
+import TitleBar from "./components/titlebar/TitleBar";
 
 function App() {
   return (
-    <TitleBar />
+    <div>
+      <TitleBar />
+      <SideBar />
+    </div>
   );
 }
 
