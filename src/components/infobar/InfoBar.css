@@ -1,0 +1,12 @@
+.info-bar {
+    position: relative;
+    left: 0;
+    top: 0;
+    margin: 5px;
+}
+
+.title {
+    text-align: center;
+    color: #EBEBF5;
+    opacity: 0.6;
+}

@@ -1,0 +1,57 @@
+
+.source-page {
+    position: fixed;
+    top: 30px;
+    left: 50px;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    width: 100%;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.md-editor {
+    width: 700px;
+}
+
+.view-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    height: 25px;
+    width: 25px;
+    opacity: 0.6;
+}
+
+.view-icon:hover {
+    cursor: pointer;
+}
+
+/* remove source editor background and set font color to white */
+.ͼo {
+    color: #fff;
+    background-color: transparent;
+}
+
+/* hide line numbers */
+.cm-gutters {
+    width: 0;
+    visibility: hidden;
+}
+
+/* prevent active line highlighting */
+.ͼo .cm-activeLine {
+    background-color: transparent;
+}
+
+/* change caret color to white */
+.ͼ4 .cm-line {
+    caret-color: #fff !important;
+}
