@@ -92,12 +92,3 @@ button {
     background-color: #0f0f0f69;
   }
 }
-
-.titlebar {
-  height: 30px;
-  user-select: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-}
