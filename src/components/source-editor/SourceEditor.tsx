@@ -1,6 +1,6 @@
 import '@mdxeditor/editor/style.css';
 
-import InfoBar from "../../components/info-bar/InfoBar";
+import InfoBar from "../info-bar/InfoBar";
 import "./Source.css";
 import { FC, useState } from "react";
 import view from "../../assets/view.png";
