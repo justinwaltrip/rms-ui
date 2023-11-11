@@ -1,10 +1,10 @@
 [package]
 name = "rms"
 version = "0.0.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "Local-first recipe management system inspired by Obsidian"
+authors = ["Justin Waltrip"]
 license = ""
-repository = ""
+repository = "https://github.com/justinwaltrip/rms"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
