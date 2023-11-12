@@ -1,5 +1,6 @@
 import "./SideBar.css";
 import { FC } from "react";
+
 import search from "../../assets/search.png";
 
 const SideBar: FC = () => (

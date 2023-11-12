@@ -1,7 +1,7 @@
 import "./App.css";
 import SideBar from "./components/sidebar/SideBar";
-import TitleBar from "./components/title-bar/TitleBar";
 import Source from "./components/source-editor/SourceEditor";
+import TitleBar from "./components/title-bar/TitleBar";
 
 function App() {
   return (

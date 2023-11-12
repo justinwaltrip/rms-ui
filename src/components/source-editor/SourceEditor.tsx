@@ -1,17 +1,18 @@
 import "@mdxeditor/editor/style.css";
 
-import InfoBar from "../info-bar/InfoBar";
 import "./SourceEditor.css";
-import { FC, useState } from "react";
-import view from "../../assets/view.png";
 import {
   MDXEditor,
+  diffSourcePlugin,
+  frontmatterPlugin,
   headingsPlugin,
   imagePlugin,
   listsPlugin,
-  frontmatterPlugin,
-  diffSourcePlugin,
 } from "@mdxeditor/editor";
+import { FC, useState } from "react";
+
+import view from "../../assets/view.png";
+import InfoBar from "../info-bar/InfoBar";
 
 const Source: FC = () => {
   const [value, setValue] = useState(`
