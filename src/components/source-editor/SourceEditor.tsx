@@ -8,11 +8,14 @@ import {
   headingsPlugin,
   imagePlugin,
   listsPlugin,
+  MDXEditorMethods,
 } from "@mdxeditor/editor";
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 
 import view from "../../assets/view.png";
 import InfoBar from "../info-bar/InfoBar";
+
+import { writeTextFile, BaseDirectory } from "@tauri-apps/api/fs";
 
 
 interface SourceEditorProps {
@@ -22,38 +25,40 @@ interface SourceEditorProps {
 
 
 const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle }) => {
-//   const [markdown, setMarkdown] = useState(`
-// ---
-// tags: 
-// - tag 1
-// - tag 2
-// date: year-month-day
-// source: url
-// rating: integer
-// prep: minutes
-// cook: minutes
-// servings: serving size
-// ---
+  const [markdown, setMarkdown] = useState(`
+---
+tags: 
+- tag 1
+- tag 2
+date: year-month-day
+source: url
+rating: integer
+prep: minutes
+cook: minutes
+servings: serving size
+---
 
-// # title
+# title
 
-// ![image](/source/path)
+![image](/source/path)
 
-// description paragraph
+description paragraph
 
-// ## ingredients
-// - [ ] first ingredient 
-// - [ ] second ingredient
+## ingredients
+- [ ] first ingredient 
+- [ ] second ingredient
 
-// ## directions
-// 1. step one
-// 2. step two
+## directions
+1. step one
+2. step two
 
-// ## notes
-// - first note
-// - second note
-//   `);
-  const [markdown, setMarkdown] = useState("");
+## notes
+- first note
+- second note
+    `);
+  // const [markdown, setMarkdown] = useState("");
+
+  const ref = useRef<MDXEditorMethods>(null)
 
   /**
    * If title is empty, set focus to title input
@@ -64,14 +69,32 @@ const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle }) => {
     }
   }, []);
 
+  async function write() {
+    // write markdown to file
+    await writeTextFile(`${title}.md`, markdown, { dir: BaseDirectory.Home });
+  }
+
   /**
    * If title is non-empty, write markdown to file
    */
   useEffect(() => {
     if (title) {
-      // write markdown to file
+      write();
     }
-  }, [title]);
+  }, [title, markdown]);
+
+  /**
+   * Check if markdown has changed every 5 seconds
+   */
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newMarkdown = ref.current?.getMarkdown();
+      if (markdown !== newMarkdown) {
+        setMarkdown(newMarkdown || "");
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="source-page">
@@ -80,6 +103,7 @@ const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle }) => {
         <InfoBar title={title} setTitle={setTitle} />
         <div className="md-editor">
           <MDXEditor
+            ref={ref}
             markdown={markdown}
             plugins={[
               headingsPlugin(),
@@ -88,8 +112,6 @@ const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle }) => {
               frontmatterPlugin(),
               diffSourcePlugin({ viewMode: "source" }),
             ]}
-            onChange={setMarkdown}
-            contentEditableClassName="prose"
           />
         </div>
       </div>
