@@ -1,5 +1,5 @@
 import "./InfoBar.css";
-import { FC } from "react";
+import { FC, useState } from "react";
 
 interface InfoBarProps {
   title: string;
@@ -7,13 +7,21 @@ interface InfoBarProps {
 }
 
 const InfoBar: FC<InfoBarProps> = ({ title, setTitle }) => {
+  const [titleInput, setTitleInput] = useState<string>(title);
+
   return (
     <div className="info-bar">
       <input
-        className="title"
+        id="title-input"
         type="text"
-        defaultValue={title}
-        onChange={(e) => setTitle(e.target.value)}
+        defaultValue={titleInput}
+        onChange={(e) => setTitleInput(e.target.value)}
+        // on tab, set title
+        onKeyDown={(e) => {
+          if (e.key === "Tab") {
+            setTitle(titleInput);
+          }
+        }}
       />
     </div>
   );

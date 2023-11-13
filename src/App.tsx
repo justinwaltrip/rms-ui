@@ -18,7 +18,13 @@ const App: FC = () => {
         setActiveFileIndex={setActiveFileIndex}
       />
       <SideBar />
-      {activeFileIndex === -1 ? <NoFile /> : <SourceEditor />}
+      {activeFileIndex === -1 ? <NoFile /> : <SourceEditor title={openFiles[activeFileIndex]} setTitle={
+        (title: string) => {
+          const newOpenFiles = [...openFiles];
+          newOpenFiles[activeFileIndex] = title;
+          setOpenFiles(newOpenFiles);
+        }
+      } />}
     </div>
   );
 };
