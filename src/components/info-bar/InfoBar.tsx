@@ -1,10 +1,20 @@
 import "./InfoBar.css";
 import { FC } from "react";
 
-const InfoBar: FC = () => {
+interface InfoBarProps {
+  title: string;
+  setTitle: (title: string) => void;
+}
+
+const InfoBar: FC<InfoBarProps> = ({ title, setTitle }) => {
   return (
     <div className="info-bar">
-      <div className="title">title</div>
+      <input
+        className="title"
+        type="text"
+        defaultValue={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
     </div>
   );
 };

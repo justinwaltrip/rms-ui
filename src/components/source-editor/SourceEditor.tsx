@@ -14,8 +14,9 @@ import { FC, useState } from "react";
 import view from "../../assets/view.png";
 import InfoBar from "../info-bar/InfoBar";
 
-const Source: FC = () => {
-  const [value, setValue] = useState(`
+const SourceEditor: FC = () => {
+  const [title, setTitle] = useState("title");
+  const [markdown, setMarkdown] = useState(`
 ---
 tags: 
 - tag 1
@@ -46,14 +47,15 @@ description paragraph
 - first note
 - second note
   `);
+
   return (
     <div className="source-page">
       <img className="view-icon" src={view} alt="View icon" />
       <div className="content">
-        <InfoBar />
+        <InfoBar title={title} setTitle={setTitle} />
         <div className="md-editor">
           <MDXEditor
-            markdown={value}
+            markdown={markdown}
             plugins={[
               headingsPlugin(),
               imagePlugin(),
@@ -61,7 +63,7 @@ description paragraph
               frontmatterPlugin(),
               diffSourcePlugin({ viewMode: "source" }),
             ]}
-            onChange={setValue}
+            onChange={setMarkdown}
             contentEditableClassName="prose"
           />
         </div>
@@ -70,4 +72,4 @@ description paragraph
   );
 };
 
-export default Source;
+export default SourceEditor;

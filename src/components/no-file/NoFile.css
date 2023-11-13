@@ -1,0 +1,16 @@
+.no-file {
+  position: fixed;
+  top: 40px;
+  left: 50px;
+  right: 0;
+  bottom: 0;
+}
+
+.no-file-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 400px;
+  text-align: center;
+}
