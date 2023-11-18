@@ -10,7 +10,7 @@ import {
   imagePlugin,
   listsPlugin,
 } from "@mdxeditor/editor";
-import { BaseDirectory, writeTextFile } from "@tauri-apps/api/fs";
+import { BaseDirectory, readTextFile, writeTextFile } from "@tauri-apps/api/fs";
 import { FC, useEffect, useRef, useState } from "react";
 
 import view from "../../assets/view.png";
@@ -21,58 +21,90 @@ interface SourceEditorProps {
   setTitle: (title: string) => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const defaultMarkdown = `
+  ---
+  tags:
+  - tag 1
+  - tag 2
+  date: year-month-day
+  source: url
+  rating: integer
+  prep: minutes
+  cook: minutes
+  servings: serving size
+  ---
+
+  # title
+
+  ![image](/source/path)
+
+  description paragraph
+
+  ## ingredients
+  - [ ] first ingredient
+  - [ ] second ingredient
+
+  ## directions
+  1. step one
+  2. step two
+
+  ## notes
+  - first note
+  - second note
+`;
+
 const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle }) => {
-  //   const [markdown, setMarkdown] = useState(`
-  // ---
-  // tags:
-  // - tag 1
-  // - tag 2
-  // date: year-month-day
-  // source: url
-  // rating: integer
-  // prep: minutes
-  // cook: minutes
-  // servings: serving size
-  // ---
-
-  // # title
-
-  // ![image](/source/path)
-
-  // description paragraph
-
-  // ## ingredients
-  // - [ ] first ingredient
-  // - [ ] second ingredient
-
-  // ## directions
-  // 1. step one
-  // 2. step two
-
-  // ## notes
-  // - first note
-  // - second note
-  //     `);
   const [markdown, setMarkdown] = useState("");
 
   const ref = useRef<MDXEditorMethods>(null);
 
   /**
-   * If title is empty, set focus to title input
+   * Write markdown to file
    */
-  useEffect(() => {
-    if (!title) {
-      document.getElementById("title-input")?.focus();
-    }
-  }, []);
-
   async function write() {
-    // write markdown to file
-    await writeTextFile(`${title}.md`, markdown, { dir: BaseDirectory.Home });
+    try {
+      // write markdown to file
+      await writeTextFile(`${title}.md`, markdown, { dir: BaseDirectory.Home });
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   }
 
   /**
-   * If title is non-empty, write markdown to file
+   * Read markdown from file
+   */
+  async function read() {
+    try {
+      // read markdown from file
+      const contents = await readTextFile(`${title}.md`, {
+        dir: BaseDirectory.Home,
+      });
+      ref.current?.setMarkdown(contents);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  /**
+   * On tab load
+   */
+  useEffect(() => {
+    if (title) {
+      // load markdown from file
+      read()
+        .then(() => {})
+        .catch((err) => console.error(err));
+    } else {
+      // prompt user to enter title
+      document.getElementById("title-input")?.focus();
+    }
+  }, [title]);
+
+  /**
+   * On markdown change
    */
   useEffect(() => {
     if (title) {
@@ -80,10 +112,10 @@ const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle }) => {
         .then(() => {})
         .catch((err) => console.error(err));
     }
-  }, [title, markdown]);
+  }, [markdown]);
 
   /**
-   * Check if markdown has changed every 5 seconds
+   * Every 5 seconds, get markdown from editor and update state
    */
   useEffect(() => {
     const interval = setInterval(() => {
@@ -101,17 +133,19 @@ const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle }) => {
       <div className="content">
         <InfoBar title={title} setTitle={setTitle} />
         <div className="md-editor">
-          <MDXEditor
-            ref={ref}
-            markdown={markdown}
-            plugins={[
-              headingsPlugin(),
-              imagePlugin(),
-              listsPlugin(),
-              frontmatterPlugin(),
-              diffSourcePlugin({ viewMode: "source" }),
-            ]}
-          />
+          {title && (
+            <MDXEditor
+              ref={ref}
+              markdown={markdown}
+              plugins={[
+                headingsPlugin(),
+                imagePlugin(),
+                listsPlugin(),
+                frontmatterPlugin(),
+                diffSourcePlugin({ viewMode: "source" }),
+              ]}
+            />
+          )}
         </div>
       </div>
     </div>
