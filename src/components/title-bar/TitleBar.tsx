@@ -7,6 +7,7 @@ import create from "../../assets/create.png";
 interface TitleBarProps {
   openFiles: Array<string>;
   setOpenFiles: (openFiles: Array<string>) => void;
+  activeFileIndex: number;
   setActiveFileIndex: (activeFileIndex: number) => void;
 }
 
@@ -22,6 +23,7 @@ function createFile(
 const TitleBar: FC<TitleBarProps> = ({
   openFiles,
   setOpenFiles,
+  activeFileIndex,
   setActiveFileIndex,
 }) => (
   <div data-tauri-drag-region className="title-bar">
@@ -32,7 +34,13 @@ const TitleBar: FC<TitleBarProps> = ({
       onClick={() => createFile(openFiles, setOpenFiles, setActiveFileIndex)}
     />
     {openFiles.map((file, index) => (
-      <div key={index} className="tab">
+      <div
+        key={index}
+        className={`tab ${
+          index === activeFileIndex ? "active-tab" : "inactive-tab"
+        }`}
+        onClick={() => setActiveFileIndex(index)}
+      >
         <p className="tab-label">{file ? file : "New tab"}</p>
         <img
           className="close-icon"
@@ -41,12 +49,8 @@ const TitleBar: FC<TitleBarProps> = ({
           onClick={() => {
             if (openFiles.length === 1) {
               setOpenFiles([]);
-              setActiveFileIndex(-1);
             } else {
               setOpenFiles(openFiles.filter((_, i) => i !== index));
-              setActiveFileIndex(
-                index === openFiles.length - 1 ? index - 1 : index,
-              );
             }
           }}
         />
