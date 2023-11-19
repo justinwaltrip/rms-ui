@@ -40,14 +40,12 @@ const TitleBar: FC<TitleBarProps> = ({
   setActiveFileIndex,
 }) => {
   document.addEventListener("keydown", (e) => {
-    console.log(e);
     // on command + w, close the active tab
     if (e.metaKey && e.key === "w") {
-      closeTab(
-        activeFileIndex,
-        openFiles,
-        setOpenFiles,
-      );
+      closeTab(activeFileIndex, openFiles, setOpenFiles);
+      // on command + n, create a new tab
+    } else if (e.metaKey && e.key === "n") {
+      createFile(openFiles, setOpenFiles, setActiveFileIndex);
     }
   });
   return (
