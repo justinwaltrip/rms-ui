@@ -34,3 +34,30 @@
   display: flex;
   flex-direction: column;
 }
+
+.image {
+  height: 250px;
+  width: 250px;
+}
+
+.ingredient {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 30px;
+}
+
+.ingredient-label {
+  position: relative;
+  left: 10px;
+}
+
+.direction {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.note {
+  margin-top: 0;
+  margin-bottom: 5px;
+}

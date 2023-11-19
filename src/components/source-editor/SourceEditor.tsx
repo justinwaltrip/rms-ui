@@ -13,6 +13,8 @@ import {
 import { FC, useEffect, useRef, useState } from "react";
 
 import view from "../../assets/view.png";
+// TODO remove
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { read, write } from "../../services/fs";
 import InfoBar from "../info-bar/InfoBar";
 
@@ -80,9 +82,10 @@ const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle, setMode }) => {
    */
   useEffect(() => {
     if (title) {
-      write(`${title}.md`, markdown)
-        .then(() => {})
-        .catch((err) => console.error(err));
+      // TODO prevent data loss
+      // write(`${title}.md`, markdown)
+      //   .then(() => {})
+      //   .catch((err) => console.error(err));
     }
   }, [markdown]);
 

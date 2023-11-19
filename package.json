@@ -13,7 +13,8 @@
     "@mdxeditor/editor": "^1.8.1",
     "@tauri-apps/api": "^1.2.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "yaml": "^2.3.4"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.2.2",
