@@ -2,7 +2,7 @@ dev:
 	pnpm tauri dev
 
 lint:
-	pnpm exec eslint . --fix
+	pnpm exec eslint src --fix
 
 pretty:
 	pnpm exec prettier . --write

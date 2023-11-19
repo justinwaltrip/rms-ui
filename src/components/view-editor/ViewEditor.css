@@ -28,3 +28,9 @@
 .source-icon:hover {
   cursor: pointer;
 }
+
+.view-editor {
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+}

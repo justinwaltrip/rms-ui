@@ -2,8 +2,8 @@ import "./ViewEditor.css";
 import { FC, useEffect, useState } from "react";
 
 import source from "../../assets/source.png";
-import { read } from "../../services/fs";
-import { getTitle } from "../../services/md";
+import { read, readImage } from "../../services/fs";
+import { getImage, getTitle } from "../../services/md";
 import InfoBar from "../info-bar/InfoBar";
 
 interface ViewEditorProps {
@@ -14,6 +14,8 @@ interface ViewEditorProps {
 
 const ViewEditor: FC<ViewEditorProps> = ({ title, setTitle, setMode }) => {
   const [markdown, setMarkdown] = useState("");
+  const [alt, setAlt] = useState<string>("");
+  const [image, setImage] = useState<string | ArrayBuffer | null>("");
 
   /**
    * On tab load
@@ -30,9 +32,19 @@ const ViewEditor: FC<ViewEditorProps> = ({ title, setTitle, setMode }) => {
     }
   }, [title]);
 
-  // TODO delete
+  /**
+   * On markdown change
+   */
   useEffect(() => {
-    console.log(markdown);
+    const { src, alt } = getImage(markdown);
+    if (src) {
+      readImage(src)
+        .then((image) => setImage(image))
+        .catch((err) => console.error(err));
+    }
+    if (alt) {
+      setAlt(alt);
+    }
   }, [markdown]);
 
   return (
@@ -47,6 +59,7 @@ const ViewEditor: FC<ViewEditorProps> = ({ title, setTitle, setMode }) => {
         <InfoBar title={title} setTitle={setTitle} />
         <div className="view-editor">
           <h1>{getTitle(markdown)}</h1>
+          <img src={image} alt={alt} />
         </div>
       </div>
     </div>
