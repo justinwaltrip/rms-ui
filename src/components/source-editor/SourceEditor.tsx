@@ -10,15 +10,16 @@ import {
   imagePlugin,
   listsPlugin,
 } from "@mdxeditor/editor";
-import { BaseDirectory, readTextFile, writeTextFile } from "@tauri-apps/api/fs";
 import { FC, useEffect, useRef, useState } from "react";
 
 import view from "../../assets/view.png";
+import { read, write } from "../../services/fs";
 import InfoBar from "../info-bar/InfoBar";
 
 interface SourceEditorProps {
   title: string;
   setTitle: (title: string) => void;
+  setMode: (mode: "source" | "view") => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -54,39 +55,10 @@ const defaultMarkdown = `
   - second note
 `;
 
-const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle }) => {
+const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle, setMode }) => {
   const [markdown, setMarkdown] = useState("");
 
   const ref = useRef<MDXEditorMethods>(null);
-
-  /**
-   * Write markdown to file
-   */
-  async function write() {
-    try {
-      // write markdown to file
-      await writeTextFile(`${title}.md`, markdown, { dir: BaseDirectory.Home });
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  }
-
-  /**
-   * Read markdown from file
-   */
-  async function read() {
-    try {
-      // read markdown from file
-      const contents = await readTextFile(`${title}.md`, {
-        dir: BaseDirectory.Home,
-      });
-      ref.current?.setMarkdown(contents);
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  }
 
   /**
    * On tab load
@@ -94,8 +66,8 @@ const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle }) => {
   useEffect(() => {
     if (title) {
       // load markdown from file
-      read()
-        .then(() => {})
+      read(`${title}.md`)
+        .then((contents) => ref.current?.setMarkdown(contents))
         .catch((err) => console.error(err));
     } else {
       // prompt user to enter title
@@ -108,7 +80,7 @@ const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle }) => {
    */
   useEffect(() => {
     if (title) {
-      write()
+      write(`${title}.md`, markdown)
         .then(() => {})
         .catch((err) => console.error(err));
     }
@@ -129,7 +101,12 @@ const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle }) => {
 
   return (
     <div className="source-page">
-      <img className="view-icon" src={view} alt="View icon" />
+      <img
+        className="view-icon"
+        src={view}
+        alt="View icon"
+        onClick={() => setMode("view")}
+      />
       <div className="content">
         <InfoBar title={title} setTitle={setTitle} />
         <div className="md-editor">

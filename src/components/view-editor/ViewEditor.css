@@ -1,0 +1,30 @@
+.view-page {
+  position: fixed;
+  top: 40px;
+  left: 50px;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  width: 100%;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.source-icon {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  height: 25px;
+  width: 25px;
+  opacity: 0.6;
+}
+
+.source-icon:hover {
+  cursor: pointer;
+}
