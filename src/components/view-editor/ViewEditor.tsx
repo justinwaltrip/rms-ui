@@ -3,7 +3,7 @@ import "./ViewEditor.css";
 import { FC, useEffect, useState } from "react";
 
 import source from "../../assets/source.png";
-import { read, readImage } from "../../services/fs";
+import { read, readImage, write } from "../../services/fs";
 import {
   getDirections,
   getImage,
@@ -11,6 +11,8 @@ import {
   getNotes,
   getTitle,
   parseFrontmatter,
+  setFrontmatter as setFrontmatterMarkdown,
+  setTitle as setTitleMarkdown,
 } from "../../services/md";
 import InfoBar from "../info-bar/InfoBar";
 import Properties from "../properties/Properties";
@@ -22,6 +24,7 @@ interface ViewEditorProps {
 }
 
 const ViewEditor: FC<ViewEditorProps> = ({ filename, setFilename, setMode }) => {
+  const [fileLoaded, setFileLoaded] = useState<boolean>(false);
   const [markdown, setMarkdown] = useState("");
 
   const [title, setTitle] = useState<string>("");
@@ -41,7 +44,10 @@ const ViewEditor: FC<ViewEditorProps> = ({ filename, setFilename, setMode }) => 
     if (filename) {
       // load markdown from file
       read(`${filename}.md`)
-        .then((contents) => setMarkdown(contents))
+        .then((contents) => {
+          setMarkdown(contents);
+          setFileLoaded(true);
+        })
         .catch((err) => console.error(err));
     } else {
       // prompt user to enter title
@@ -53,21 +59,35 @@ const ViewEditor: FC<ViewEditorProps> = ({ filename, setFilename, setMode }) => 
    * On markdown change
    */
   useEffect(() => {
-    setTitle(getTitle(markdown));
-    const { src, alt } = getImage(markdown);
-    if (src) {
-      readImage(src)
-        .then((image) => setImage(image))
+    if (filename && fileLoaded) {
+      write(`${filename}.md`, markdown)
+        .then(() => {})
         .catch((err) => console.error(err));
+
+      setTitle(getTitle(markdown));
+      const { src, alt } = getImage(markdown);
+      if (src) {
+        readImage(src)
+          .then((image) => setImage(image))
+          .catch((err) => console.error(err));
+      }
+      if (alt) {
+        setAlt(alt);
+      }
+      setFrontmatter(parseFrontmatter(markdown));
+      setIngredients(getIngredients(markdown));
+      setDirections(getDirections(markdown));
+      setNotes(getNotes(markdown));
     }
-    if (alt) {
-      setAlt(alt);
-    }
-    setFrontmatter(parseFrontmatter(markdown));
-    setIngredients(getIngredients(markdown));
-    setDirections(getDirections(markdown));
-    setNotes(getNotes(markdown));
   }, [markdown]);
+
+  useEffect(() => {
+    setMarkdown(setTitleMarkdown(markdown, title));
+  }, [title]);
+
+  useEffect(() => {
+    setMarkdown(setFrontmatterMarkdown(markdown, frontmatter));
+  }, [frontmatter]);
 
   return (
     <div className="view-page">

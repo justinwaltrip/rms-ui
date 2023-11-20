@@ -1,4 +1,4 @@
-import { parse } from "yaml";
+import { parse, stringify } from "yaml";
 
 /**
  * Get title from markdown
@@ -8,6 +8,13 @@ import { parse } from "yaml";
 function getTitle(markdown: string) {
   const match = markdown.match(/^#\s(.*)$/m);
   return match ? match[1] : "";
+}
+
+/**
+ * Set title in markdown
+ */
+function setTitle(markdown: string, title: string) {
+  return markdown.replace(/^#\s(.*)$/m, `# ${title}`);
 }
 
 /**
@@ -37,6 +44,18 @@ function parseFrontmatter(markdown: string) {
 }
 
 /**
+ * Set frontmatter in markdown
+ */
+function setFrontmatter(
+  markdown: string,
+  frontmatter: { [key: string]: string },
+) {
+  // convert frontmatter to yaml string
+  const yamlString = `---\n${stringify(frontmatter)}\n---`;
+  return markdown.replace(/---\n([\s\S]*)\n---/, yamlString);
+}
+
+/**
  * Get ingredients from markdown
  */
 function getIngredients(markdown: string) {
@@ -47,7 +66,7 @@ function getIngredients(markdown: string) {
   // get array of ingredients and their checked status
   const ingredients: { name: string; checked: boolean }[] = [];
   for (const line of lines) {
-    const match = line.match(/- \[(.)\] (.*)/);
+    const match = line.match(/\* \[(.)\] (.*)/);
     if (match) {
       const checked = match[1] === "x";
       const name = match[2];
@@ -86,7 +105,7 @@ function getNotes(markdown: string) {
   const notes: string[] = [];
   for (const line of lines) {
     // match a - followed by a space
-    const match = line.match(/-\s(.*)/);
+    const match = line.match(/\*\s(.*)/);
     if (match) {
       const note = match[1];
       notes.push(note);
@@ -102,4 +121,6 @@ export {
   getIngredients,
   getDirections,
   getNotes,
+  setTitle,
+  setFrontmatter,
 };

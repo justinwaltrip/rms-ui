@@ -13,8 +13,6 @@ import {
 import { FC, useEffect, useRef, useState } from "react";
 
 import view from "../../assets/view.png";
-// TODO remove
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { read, write } from "../../services/fs";
 import InfoBar from "../info-bar/InfoBar";
 
@@ -62,6 +60,7 @@ const SourceEditor: FC<SourceEditorProps> = ({
   setFilename,
   setMode,
 }) => {
+  const [fileLoaded, setFileLoaded] = useState(false);
   const [markdown, setMarkdown] = useState("");
 
   const ref = useRef<MDXEditorMethods>(null);
@@ -73,7 +72,10 @@ const SourceEditor: FC<SourceEditorProps> = ({
     if (filename) {
       // load markdown from file
       read(`${filename}.md`)
-        .then((contents) => ref.current?.setMarkdown(contents))
+        .then((contents) => {
+          ref.current?.setMarkdown(contents);
+          setFileLoaded(true);
+        })
         .catch((err) => console.error(err));
     } else {
       // prompt user to enter title
@@ -85,11 +87,10 @@ const SourceEditor: FC<SourceEditorProps> = ({
    * On markdown change
    */
   useEffect(() => {
-    if (filename) {
-      // TODO prevent data loss
-      // write(`${title}.md`, markdown)
-      //   .then(() => {})
-      //   .catch((err) => console.error(err));
+    if (filename && fileLoaded) {
+      write(`${filename}.md`, markdown)
+        .then(() => {})
+        .catch((err) => console.error(err));
     }
   }, [markdown]);
 
