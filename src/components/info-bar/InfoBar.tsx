@@ -2,28 +2,28 @@ import "./InfoBar.css";
 import { FC, useEffect, useState } from "react";
 
 interface InfoBarProps {
-  title: string;
-  setTitle: (title: string) => void;
+  filename: string;
+  setFilename: (filename: string) => void;
 }
 
-const InfoBar: FC<InfoBarProps> = ({ title, setTitle }) => {
-  const [titleInput, setTitleInput] = useState<string>(title);
+const InfoBar: FC<InfoBarProps> = ({ filename, setFilename }) => {
+  const [tempFilename, setTempFilename] = useState<string>(filename);
 
   useEffect(() => {
-    setTitleInput(title);
-  }, [title]);
+    setTempFilename(filename);
+  }, [filename]);
 
   return (
     <div className="info-bar">
       <input
         id="title-input"
         type="text"
-        value={titleInput}
-        onChange={(e) => setTitleInput(e.target.value)}
+        value={tempFilename}
+        onChange={(e) => setTempFilename(e.target.value)}
         // on tab, set title
         onKeyDown={(e) => {
           if (e.key === "Tab") {
-            setTitle(titleInput);
+            setFilename(tempFilename);
           }
         }}
       />

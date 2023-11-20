@@ -55,9 +55,39 @@
 .direction {
   margin-top: 0;
   margin-bottom: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 30px;
+  gap: 10px;
 }
 
 .note {
   margin-top: 0;
   margin-bottom: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 30px;
+  gap: 10px;
+}
+
+input {
+  text-align: left;
+  color: white;
+}
+
+input:focus {
+  outline: none;
+}
+
+.title-input {
+  font-size: 26px !important;
+  font-weight: bold !important;
+  margin-bottom: 10px;
+}
+
+.description-input {
+  margin-top: 20px;
+  margin-bottom: 10px;
 }

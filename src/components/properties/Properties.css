@@ -1,0 +1,46 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: 110px auto;
+  grid-gap: 10px;
+  padding: 10px;
+}
+
+.grid-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 36px;
+}
+
+.icon {
+    opacity: 0.6;
+    height: 25px;
+    width: 25px;
+}
+
+.label {
+    position: relative;
+    left: 10px;
+}
+
+.tag {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #353535;
+    height: 25px;
+    border-radius: 25px;
+    gap: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.remove-icon {
+    opacity: 0.6;
+    height: 15px;
+    width: 15px;
+}
+
+.remove-icon:hover {
+    cursor: pointer;
+}

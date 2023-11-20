@@ -38,8 +38,8 @@ const App: FC = () => {
         <NoFile />
       ) : mode === "view" ? (
         <ViewEditor
-          title={openFiles[activeFileIndex]}
-          setTitle={(title: string) => {
+          filename={openFiles[activeFileIndex]}
+          setFilename={(title: string) => {
             const newOpenFiles = [...openFiles];
             newOpenFiles[activeFileIndex] = title;
             setOpenFiles(newOpenFiles);
@@ -48,8 +48,8 @@ const App: FC = () => {
         />
       ) : (
         <SourceEditor
-          title={openFiles[activeFileIndex]}
-          setTitle={(title: string) => {
+          filename={openFiles[activeFileIndex]}
+          setFilename={(title: string) => {
             const newOpenFiles = [...openFiles];
             newOpenFiles[activeFileIndex] = title;
             setOpenFiles(newOpenFiles);

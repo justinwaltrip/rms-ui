@@ -19,8 +19,8 @@ import { read, write } from "../../services/fs";
 import InfoBar from "../info-bar/InfoBar";
 
 interface SourceEditorProps {
-  title: string;
-  setTitle: (title: string) => void;
+  filename: string;
+  setFilename: (filename: string) => void;
   setMode: (mode: "source" | "view") => void;
 }
 
@@ -57,7 +57,11 @@ const defaultMarkdown = `
   - second note
 `;
 
-const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle, setMode }) => {
+const SourceEditor: FC<SourceEditorProps> = ({
+  filename,
+  setFilename,
+  setMode,
+}) => {
   const [markdown, setMarkdown] = useState("");
 
   const ref = useRef<MDXEditorMethods>(null);
@@ -66,22 +70,22 @@ const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle, setMode }) => {
    * On tab load
    */
   useEffect(() => {
-    if (title) {
+    if (filename) {
       // load markdown from file
-      read(`${title}.md`)
+      read(`${filename}.md`)
         .then((contents) => ref.current?.setMarkdown(contents))
         .catch((err) => console.error(err));
     } else {
       // prompt user to enter title
       document.getElementById("title-input")?.focus();
     }
-  }, [title]);
+  }, [filename]);
 
   /**
    * On markdown change
    */
   useEffect(() => {
-    if (title) {
+    if (filename) {
       // TODO prevent data loss
       // write(`${title}.md`, markdown)
       //   .then(() => {})
@@ -111,9 +115,9 @@ const SourceEditor: FC<SourceEditorProps> = ({ title, setTitle, setMode }) => {
         onClick={() => setMode("view")}
       />
       <div className="content">
-        <InfoBar title={title} setTitle={setTitle} />
+        <InfoBar filename={filename} setFilename={setFilename} />
         <div className="md-editor">
-          {title && (
+          {filename && (
             <MDXEditor
               ref={ref}
               markdown={markdown}

@@ -43,13 +43,15 @@ function getIngredients(markdown: string) {
   const match = markdown.match(/## ingredients\n([\s\S]*?)\n##/);
   const section = match ? match[1] : "";
   const lines = section.split("\n");
-  const ingredients: { [key: string]: boolean } = {};
+
+  // get array of ingredients and their checked status
+  const ingredients: { name: string; checked: boolean }[] = [];
   for (const line of lines) {
     const match = line.match(/- \[(.)\] (.*)/);
     if (match) {
       const checked = match[1] === "x";
       const name = match[2];
-      ingredients[name] = checked;
+      ingredients.push({ name, checked });
     }
   }
   return ingredients;

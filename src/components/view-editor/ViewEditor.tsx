@@ -13,20 +13,23 @@ import {
   parseFrontmatter,
 } from "../../services/md";
 import InfoBar from "../info-bar/InfoBar";
+import Properties from "../properties/Properties";
 
 interface ViewEditorProps {
-  title: string;
-  setTitle: (title: string) => void;
+  filename: string;
+  setFilename: (filename: string) => void;
   setMode: (mode: "source" | "view") => void;
 }
 
-const ViewEditor: FC<ViewEditorProps> = ({ title, setTitle, setMode }) => {
+const ViewEditor: FC<ViewEditorProps> = ({ filename, setFilename, setMode }) => {
   const [markdown, setMarkdown] = useState("");
+
+  const [title, setTitle] = useState<string>("");
   const [alt, setAlt] = useState<string>("");
   const [image, setImage] = useState<string | undefined>("");
-  const [frontmatter, setFrontmatter] = useState<{ [key: string]: string }>({});
-  const [ingredients, setIngredients] = useState<{ [key: string]: boolean }>(
-    {},
+  const [frontmatter, setFrontmatter] = useState<{ [key: string]: unknown }>({});
+  const [ingredients, setIngredients] = useState<{ name: string; checked: boolean }[]>(
+    [],
   );
   const [directions, setDirections] = useState<string[]>([]);
   const [notes, setNotes] = useState<string[]>([]);
@@ -35,21 +38,22 @@ const ViewEditor: FC<ViewEditorProps> = ({ title, setTitle, setMode }) => {
    * On tab load
    */
   useEffect(() => {
-    if (title) {
+    if (filename) {
       // load markdown from file
-      read(`${title}.md`)
+      read(`${filename}.md`)
         .then((contents) => setMarkdown(contents))
         .catch((err) => console.error(err));
     } else {
       // prompt user to enter title
       document.getElementById("title-input")?.focus();
     }
-  }, [title]);
+  }, [filename]);
 
   /**
    * On markdown change
    */
   useEffect(() => {
+    setTitle(getTitle(markdown));
     const { src, alt } = getImage(markdown);
     if (src) {
       readImage(src)
@@ -59,7 +63,6 @@ const ViewEditor: FC<ViewEditorProps> = ({ title, setTitle, setMode }) => {
     if (alt) {
       setAlt(alt);
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
     setFrontmatter(parseFrontmatter(markdown));
     setIngredients(getIngredients(markdown));
     setDirections(getDirections(markdown));
@@ -75,34 +78,77 @@ const ViewEditor: FC<ViewEditorProps> = ({ title, setTitle, setMode }) => {
         onClick={() => setMode("source")}
       />
       <div className="content">
-        <InfoBar title={title} setTitle={setTitle} />
+        <InfoBar filename={filename} setFilename={setFilename} />
         <div className="view-editor">
-          <h1>{getTitle(markdown)}</h1>
+          <input
+            className="title-input"
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
           <img src={image} alt={alt} className="image" />
-          <p>{frontmatter["description"]}</p>
+          <input
+            className="description-input"
+            type="text"
+            value={frontmatter["description"]}
+            onChange={(e) =>
+              setFrontmatter({ ...frontmatter, description: e.target.value })
+            }
+          />
+          <Properties frontmatter={frontmatter} setFrontmatter={setFrontmatter} />
           <h2>ingredients</h2>
-          {Object.keys(ingredients).map((ingredient) => (
-            <div key={ingredient} className="ingredient">
+          {ingredients.map(({ name, checked }, index) => (
+            <div key={index} className="ingredient">
               <input
                 type="checkbox"
-                checked={ingredients[ingredient]}
-                onChange={() => {
-                  ingredients[ingredient] = !ingredients[ingredient];
-                  setIngredients({ ...ingredients });
+                checked={checked}
+                onChange={(e) => {
+                  const newIngredients = [...ingredients];
+                  newIngredients[index].checked = e.target.checked;
+                  setIngredients(newIngredients);
                 }}
               />
-              <p className="ingredient-label">{ingredient}</p>
+              <input
+                className="ingredient-label"
+                type="text"
+                value={name}
+                onChange={(e) => {
+                  const newIngredients = [...ingredients];
+                  newIngredients[index].name = e.target.value;
+                  setIngredients(newIngredients);
+                }}
+              />
             </div>
           ))}
           <h2>directions</h2>
           {directions.map((direction, index) => (
-            <p className="direction" key={index}>{`${
-              index + 1
-            }. ${direction}`}</p>
+            <div key={index} className="direction">
+              <p>{`${index + 1}.`}</p>
+              <input
+                type="text"
+                value={direction}
+                onChange={(e) => {
+                  const newDirections = [...directions];
+                  newDirections[index] = e.target.value;
+                  setDirections(newDirections);
+                }}
+              />
+            </div>
           ))}
           <h2>notes</h2>
           {notes.map((note, index) => (
-            <p className="note" key={index}>{`- ${note}`}</p>
+            <div key={index} className="note">
+              <p>{`-`}</p>
+              <input
+                type="text"
+                value={note}
+                onChange={(e) => {
+                  const newNotes = [...notes];
+                  newNotes[index] = e.target.value;
+                  setNotes(newNotes);
+                }}
+              />
+            </div>
           ))}
         </div>
       </div>
