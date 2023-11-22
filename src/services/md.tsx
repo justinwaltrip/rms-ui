@@ -48,7 +48,7 @@ function parseFrontmatter(markdown: string) {
  */
 function setFrontmatter(
   markdown: string,
-  frontmatter: { [key: string]: string },
+  frontmatter: { [key: string]: unknown },
 ) {
   // convert frontmatter to yaml string
   const yamlString = `---\n${stringify(frontmatter)}\n---`;

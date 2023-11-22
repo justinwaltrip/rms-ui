@@ -31,7 +31,25 @@
 }
 
 .view-editor {
-  width: 600px;
+  width: 60%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.view-editor > * {
+  width: 100%;
+}
+
+@media (min-width: 1200px) {
+  .view-editor {
+    width: 80%;
+  }
+  .view-editor > * {
+    width: 50%;
+  }
+}
+
+.column {
   display: flex;
   flex-direction: column;
 }

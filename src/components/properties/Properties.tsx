@@ -23,7 +23,7 @@ const PropertyLabel: FC<{
 
 interface PropertiesProps {
   frontmatter: { [key: string]: unknown };
-  setFrontmatter?: (frontmatter: { [key: string]: unknown }) => void;
+  setFrontmatter: (frontmatter: { [key: string]: unknown }) => void;
 }
 
 const Properties: FC<PropertiesProps> = ({ frontmatter, setFrontmatter }) => {
@@ -36,10 +36,12 @@ const Properties: FC<PropertiesProps> = ({ frontmatter, setFrontmatter }) => {
           alt="remove"
           className="remove-icon"
           onClick={() => {
-            const newTags = frontmatter["tags"].filter(
-              (t: string) => t !== tag,
-            );
-            setFrontmatter && setFrontmatter({ ...frontmatter, tags: newTags });
+            if (Array.isArray(frontmatter["tags"])) {
+              const newTags = frontmatter["tags"].filter(
+                (t: string) => t !== tag,
+              );
+              setFrontmatter({ ...frontmatter, tags: newTags });
+            }
           }}
         />
       </div>
@@ -50,7 +52,7 @@ const Properties: FC<PropertiesProps> = ({ frontmatter, setFrontmatter }) => {
     <div className="grid-container">
       <PropertyLabel label="tags" src={tags} />
       <div className="grid-item">
-        {frontmatter["tags"] &&
+        {Array.isArray(frontmatter["tags"]) &&
           frontmatter["tags"].map((tag: string, index: number) => (
             <Tag tag={tag} key={index} />
           ))}
@@ -59,7 +61,7 @@ const Properties: FC<PropertiesProps> = ({ frontmatter, setFrontmatter }) => {
       <div className="grid-item">
         <input
           type="date"
-          value={frontmatter["date"]}
+          value={frontmatter["date"]?.toString() || ""}
           onChange={(e) =>
             setFrontmatter &&
             setFrontmatter({ ...frontmatter, date: e.target.value })
@@ -70,7 +72,7 @@ const Properties: FC<PropertiesProps> = ({ frontmatter, setFrontmatter }) => {
       <div className="grid-item">
         <input
           type="text"
-          value={frontmatter["source"]}
+          value={frontmatter["source"]?.toString() || ""}
           onChange={(e) =>
             setFrontmatter &&
             setFrontmatter({ ...frontmatter, source: e.target.value })
@@ -81,7 +83,7 @@ const Properties: FC<PropertiesProps> = ({ frontmatter, setFrontmatter }) => {
       <div className="grid-item">
         <input
           type="text"
-          value={frontmatter["prep"]}
+          value={frontmatter["prep"]?.toString() || ""}
           onChange={(e) =>
             setFrontmatter &&
             setFrontmatter({ ...frontmatter, prep: e.target.value })
@@ -92,7 +94,7 @@ const Properties: FC<PropertiesProps> = ({ frontmatter, setFrontmatter }) => {
       <div className="grid-item">
         <input
           type="text"
-          value={frontmatter["cook"]}
+          value={frontmatter["cook"]?.toString() || ""}
           onChange={(e) =>
             setFrontmatter &&
             setFrontmatter({ ...frontmatter, cook: e.target.value })
@@ -103,7 +105,7 @@ const Properties: FC<PropertiesProps> = ({ frontmatter, setFrontmatter }) => {
       <div className="grid-item">
         <input
           type="text"
-          value={frontmatter["servings"]}
+          value={frontmatter["servings"]?.toString() || ""}
           onChange={(e) =>
             setFrontmatter &&
             setFrontmatter({ ...frontmatter, servings: e.target.value })
