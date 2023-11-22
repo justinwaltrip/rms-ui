@@ -12,8 +12,12 @@
   "dependencies": {
     "@mdxeditor/editor": "^1.8.1",
     "@tauri-apps/api": "^1.2.0",
+    "localforage": "^1.10.0",
+    "match-sorter": "^6.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "sort-by": "^1.2.0",
     "yaml": "^2.3.4"
   },
   "devDependencies": {

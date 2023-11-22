@@ -1,13 +1,13 @@
-import "./App.css";
+import "./Editor.css";
 import { FC, useEffect, useState } from "react";
 
-import NoFile from "./components/no-file/NoFile";
-import SideBar from "./components/sidebar/SideBar";
-import SourceEditor from "./components/source-editor/SourceEditor";
-import TitleBar from "./components/title-bar/TitleBar";
-import ViewEditor from "./components/view-editor/ViewEditor";
+import NoFile from "../../components/no-file/NoFile";
+import SideBar from "../../components/sidebar/SideBar";
+import SourceEditor from "../../components/source-editor/SourceEditor";
+import TitleBar from "../../components/title-bar/TitleBar";
+import ViewEditor from "../../components/view-editor/ViewEditor";
 
-const App: FC = () => {
+const Editor: FC = () => {
   // TODO uncomment
   // const [openFiles, setOpenFiles] = useState<Array<string>>([]);
   // const [activeFileIndex, setActiveFileIndex] = useState<number>(-1);
@@ -61,4 +61,4 @@ const App: FC = () => {
   );
 };
 
-export default App;
+export default Editor;
