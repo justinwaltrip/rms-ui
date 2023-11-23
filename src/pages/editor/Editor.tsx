@@ -8,11 +8,8 @@ import TitleBar from "../../components/title-bar/TitleBar";
 import ViewEditor from "../../components/view-editor/ViewEditor";
 
 const Editor: FC = () => {
-  // TODO uncomment
-  // const [openFiles, setOpenFiles] = useState<Array<string>>([]);
-  // const [activeFileIndex, setActiveFileIndex] = useState<number>(-1);
-  const [openFiles, setOpenFiles] = useState<Array<string>>(["test 01"]);
-  const [activeFileIndex, setActiveFileIndex] = useState<number>(0);
+  const [openFiles, setOpenFiles] = useState<Array<string>>([]);
+  const [activeFileIndex, setActiveFileIndex] = useState<number>(-1);
 
   const [mode, setMode] = useState<"source" | "view">("view");
 

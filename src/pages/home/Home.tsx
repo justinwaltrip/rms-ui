@@ -1,7 +1,8 @@
 import "./Home.css";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import CreateCollectionDialog from "../../components/create-collection-dialog/CreateCollectionDialog";
+import { readAppConfig } from "../../services/fs";
 
 const Option: FC<{
   text: string;
@@ -24,16 +25,42 @@ const Option: FC<{
 };
 
 const Home: FC = () => {
-  // TODO remove
+  const [collections, setCollections] = useState<
+    Array<{ name: string; path: string }>
+  >([]);
   const [createCollectionDialogVisible, setCreateCollectionDialogVisible] =
-    useState(true);
-  // const [createCollectionDialogVisible, setCreateCollectionDialogVisible] =
-  //   useState(false);
+    useState(false);
+
+  useEffect(() => {
+    readAppConfig()
+      .then((appConfig) => {
+        if (appConfig.collections) {
+          console.log(appConfig.collections);
+          setCollections(
+            appConfig.collections as Array<{ name: string; path: string }>,
+          );
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   return (
     <div>
       <div data-tauri-drag-region className="title-bar" />
-      <div className="home-sidebar"></div>
+      <div className="home-sidebar">
+        <div className="options">
+          {collections.map((collection, index) => (
+            <div key={index} className="option">
+              <div className="option-text">
+                <div className="option-title">{collection.name}</div>
+                <div className="option-description">{collection.path}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
       <div className="home-content">
         <div className="options">
           <Option

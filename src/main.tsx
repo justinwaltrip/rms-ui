@@ -12,8 +12,6 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    // TODO remove
-    // path: "/",
     path: "/editor",
     element: <Editor />,
   },
