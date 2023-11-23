@@ -31,6 +31,14 @@
       "fs": {
         "all": true,
         "scope": ["$HOME/**"]
+      },
+      "dialog": {
+        "all": true,
+        "ask": true,
+        "confirm": true,
+        "message": true,
+        "open": true,
+        "save": true
       }
     },
     "bundle": {
@@ -56,8 +64,10 @@
         "fullscreen": false,
         "resizable": true,
         "titleBarStyle": "Overlay",
-        "maximized": true,
-        "hiddenTitle": true
+        "hiddenTitle": true,
+        "width": 800,
+        "height": 600,
+        "center": true
       }
     ]
   }
