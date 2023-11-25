@@ -108,25 +108,21 @@ async function writeAppConfig(appConfig: { [name: string]: unknown }) {
 async function readAppConfig() {
   try {
     // check if app.json exists
-    console.log("Checking if app.json exists");
     const appConfigExists = await exists("app.json", {
       dir: BaseDirectory.AppConfig,
     });
-    console.log(`app.json exists: ${appConfigExists}`);
 
     if (!appConfigExists) {
       return {};
     }
 
     // read app config
-    console.log("Loading app.json");
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const appConfig: { [name: string]: unknown } = JSON.parse(
       await readTextFile("app.json", {
         dir: BaseDirectory.AppConfig,
       }),
     );
-    console.log("app.json loaded");
 
     return appConfig;
   } catch (err) {
