@@ -28,3 +28,17 @@
 .search-icon:hover {
   cursor: pointer;
 }
+
+.spacer {
+  flex: 1;
+}
+
+.change-collection-icon {
+  height: 25px;
+  width: 25px;
+  opacity: 0.6;
+}
+
+.change-collection-icon:hover {
+  cursor: pointer;
+}

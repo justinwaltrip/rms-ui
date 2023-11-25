@@ -3,17 +3,17 @@ import "./ViewEditor.css";
 import { FC, useEffect, useState } from "react";
 
 import source from "../../assets/source.png";
-import { read, readImage, write } from "../../services/fs";
-import {
-  getDirections,
-  getImage,
-  getIngredients,
-  getNotes,
-  getTitle,
-  parseFrontmatter,
-  setFrontmatter as setFrontmatterMarkdown,
-  setTitle as setTitleMarkdown,
-} from "../../services/md";
+import { readImage, readRecipe, writeRecipe } from "../../utils/fs";
+// import {
+//   getDirections,
+//   getImage,
+//   getIngredients,
+//   getNotes,
+//   getTitle,
+//   parseFrontmatter,
+//   setFrontmatter as setFrontmatterMarkdown,
+//   setTitle as setTitleMarkdown,
+// } from "../../utils/md";
 import InfoBar from "../info-bar/InfoBar";
 import Properties from "../properties/Properties";
 
@@ -49,7 +49,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
   useEffect(() => {
     if (filename) {
       // load markdown from file
-      read(`${filename}.md`)
+      readRecipe(`${filename}.md`)
         .then((contents) => {
           setMarkdown(contents);
           setFileLoaded(true);
@@ -61,40 +61,40 @@ const ViewEditor: FC<ViewEditorProps> = ({
     }
   }, [filename]);
 
-  /**
-   * On markdown change
-   */
-  useEffect(() => {
-    if (filename && fileLoaded) {
-      write(`${filename}.md`, markdown)
-        .then(() => {})
-        .catch((err) => console.error(err));
+  // /**
+  //  * On markdown change
+  //  */
+  // useEffect(() => {
+  //   if (filename && fileLoaded) {
+  //     writeRecipe(`${filename}.md`, markdown)
+  //       .then(() => {})
+  //       .catch((err) => console.error(err));
 
-      setTitle(getTitle(markdown));
-      const { src, alt } = getImage(markdown);
-      if (src) {
-        readImage(src)
-          .then((image) => setImage(image))
-          .catch((err) => console.error(err));
-      }
-      if (alt) {
-        setAlt(alt);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      setFrontmatter(parseFrontmatter(markdown));
-      setIngredients(getIngredients(markdown));
-      setDirections(getDirections(markdown));
-      setNotes(getNotes(markdown));
-    }
-  }, [markdown]);
+  //     setTitle(getTitle(markdown));
+  //     const { src, alt } = getImage(markdown);
+  //     if (src) {
+  //       readImage(src)
+  //         .then((image) => setImage(image))
+  //         .catch((err) => console.error(err));
+  //     }
+  //     if (alt) {
+  //       setAlt(alt);
+  //     }
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  //     setFrontmatter(parseFrontmatter(markdown));
+  //     setIngredients(getIngredients(markdown));
+  //     setDirections(getDirections(markdown));
+  //     setNotes(getNotes(markdown));
+  //   }
+  // }, [markdown]);
 
-  useEffect(() => {
-    setMarkdown(setTitleMarkdown(markdown, title));
-  }, [title]);
+  // useEffect(() => {
+  //   setMarkdown(setTitleMarkdown(markdown, title));
+  // }, [title]);
 
-  useEffect(() => {
-    setMarkdown(setFrontmatterMarkdown(markdown, frontmatter));
-  }, [frontmatter]);
+  // useEffect(() => {
+  //   setMarkdown(setFrontmatterMarkdown(markdown, frontmatter));
+  // }, [frontmatter]);
 
   return (
     <div className="view-page">

@@ -13,7 +13,7 @@ import {
 import { FC, useEffect, useRef, useState } from "react";
 
 import view from "../../assets/view.png";
-import { read, write } from "../../services/fs";
+import { readRecipe, writeRecipe } from "../../utils/fs";
 import InfoBar from "../info-bar/InfoBar";
 
 interface SourceEditorProps {
@@ -71,7 +71,7 @@ const SourceEditor: FC<SourceEditorProps> = ({
   useEffect(() => {
     if (filename) {
       // load markdown from file
-      read(`${filename}.md`)
+      readRecipe(`${filename}.md`)
         .then((contents) => {
           ref.current?.setMarkdown(contents);
           setFileLoaded(true);
@@ -88,7 +88,7 @@ const SourceEditor: FC<SourceEditorProps> = ({
    */
   useEffect(() => {
     if (filename && fileLoaded) {
-      write(`${filename}.md`, markdown)
+      writeRecipe(`${filename}.md`, markdown)
         .then(() => {})
         .catch((err) => console.error(err));
     }

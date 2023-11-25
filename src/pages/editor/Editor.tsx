@@ -1,5 +1,6 @@
 import "./Editor.css";
 import { FC, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import NoFile from "../../components/no-file/NoFile";
 import SideBar from "../../components/sidebar/SideBar";
@@ -12,6 +13,12 @@ const Editor: FC = () => {
   const [activeFileIndex, setActiveFileIndex] = useState<number>(-1);
 
   const [mode, setMode] = useState<"source" | "view">("view");
+
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log(location.state);
+  }, [location]);
 
   useEffect(() => {
     // update activeFileIndex when openFiles changes

@@ -7,13 +7,20 @@ import {
   writeTextFile,
 } from "@tauri-apps/api/fs";
 
-const BASE_PATH = "rms";
-const RECIPES_PATH = BASE_PATH + "/recipes";
+const RECIPES_PATH = "recipes";
 
-async function write(filename: string, contents: string) {
+/**
+ * Write recipe to file
+ * @param filename
+ * @param contents
+ */
+async function writeRecipe(
+  filename: string,
+  contents: string,
+  collectionPath: string,
+) {
   try {
-    // write markdown to file
-    const path = `${RECIPES_PATH}/${filename}`;
+    const path = `${collectionPath}/${RECIPES_PATH}/${filename}`;
     await writeTextFile(path, contents, { dir: BaseDirectory.Home });
   } catch (err) {
     console.error(err);
@@ -22,12 +29,14 @@ async function write(filename: string, contents: string) {
 }
 
 /**
- * Read markdown from file
+ * Read recipe from file
+ * @param filename
+ * @param collectionPath
+ * @returns recipe content
  */
-async function read(filename: string) {
+async function readRecipe(filename: string, collectionPath: string) {
   try {
-    // read markdown from file
-    const path = `${RECIPES_PATH}/${filename}`;
+    const path = `${collectionPath}/${RECIPES_PATH}/${filename}`;
     return await readTextFile(path, {
       dir: BaseDirectory.Home,
     });
@@ -39,11 +48,14 @@ async function read(filename: string) {
 
 /**
  * Read image from file
+ * @param filename
+ * @param collectionPath
+ * @returns image url
  */
-async function readImage(filename: string) {
+async function readImage(filename: string, collectionPath: string) {
   try {
     // read image from file
-    const path = `${BASE_PATH}/${filename}`;
+    const path = `${collectionPath}/${filename}`;
     const bytes = await readBinaryFile(path, {
       dir: BaseDirectory.Home,
     });
@@ -56,7 +68,8 @@ async function readImage(filename: string) {
 }
 
 /**
- * Write to app config
+ * Write app config
+ * @param appConfig
  */
 async function writeAppConfig(appConfig: { [name: string]: unknown }) {
   try {
@@ -90,6 +103,7 @@ async function writeAppConfig(appConfig: { [name: string]: unknown }) {
 
 /**
  * Read from app config
+ * @returns app config
  */
 async function readAppConfig() {
   try {
@@ -121,4 +135,4 @@ async function readAppConfig() {
   }
 }
 
-export { read, write, readImage, writeAppConfig, readAppConfig };
+export { readRecipe, writeRecipe, readImage, writeAppConfig, readAppConfig };

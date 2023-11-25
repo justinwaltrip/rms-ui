@@ -10,7 +10,7 @@ import { homeDir } from "@tauri-apps/api/path";
 import { FC, useState } from "react";
 
 import back from "../../assets/back.png";
-import { writeAppConfig } from "../../services/fs";
+import { writeAppConfig } from "../../utils/fs";
 
 const CreateCollectionDialog: FC<{ visible: boolean; close: () => void }> = ({
   visible,
