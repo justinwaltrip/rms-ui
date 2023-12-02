@@ -35,17 +35,12 @@ const Home: FC = () => {
     useState(false);
 
   const navigate = useNavigate();
-  let didInit = false;
+  const unlistenFunctions: Array<() => void> = [];
 
   /**
    * On mount function
    */
   useEffect(() => {
-    if (didInit) {
-      return;
-    }
-    didInit = true;
-
     // read app config and set collections
     readAppConfig()
       .then((appConfig) => {
@@ -59,27 +54,35 @@ const Home: FC = () => {
         console.error(err);
       });
 
-    // prevent window from being resized
-    let unlisten: () => void;
+    // set size and prevent window from being resized
     appWindow
-      .listen("tauri://resize", () => {
+      .setSize(new LogicalSize(800, 600))
+      .then(() => {
         appWindow
-          .setSize(new LogicalSize(800, 600))
-          .then(() => {})
+          .listen("tauri://resize", () => {
+            appWindow
+              .setSize(new LogicalSize(800, 600))
+              .then(() => {})
+              .catch((err) => {
+                console.error(err);
+              });
+          })
+          .then((unlistenFn) => {
+            unlistenFunctions.push(unlistenFn);
+          })
           .catch((err) => {
             console.error(err);
           });
-      })
-      .then((unlistenFn) => {
-        unlisten = unlistenFn;
       })
       .catch((err) => {
         console.error(err);
       });
 
     return () => {
-      if (unlisten) {
-        unlisten();
+      if (unlistenFunctions) {
+        for (const unlistenFn of unlistenFunctions) {
+          unlistenFn();
+        }
       }
     };
   }, []);
