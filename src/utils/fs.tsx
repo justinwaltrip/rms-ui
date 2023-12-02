@@ -7,6 +7,8 @@ import {
   writeTextFile,
 } from "@tauri-apps/api/fs";
 
+import { Recipe } from "./recipe";
+
 const RECIPES_PATH = "recipes";
 
 /**
@@ -16,12 +18,33 @@ const RECIPES_PATH = "recipes";
  */
 async function writeRecipe(
   filename: string,
+  recipe: Recipe,
+  collectionPath: string,
+) {
+  try {
+    const path = `${collectionPath}/${RECIPES_PATH}/${filename}.json`;
+    await writeTextFile(path, JSON.stringify(recipe, null, "\t"), {
+      dir: BaseDirectory.Home,
+    });
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+/**
+ * Write recipe contents to file
+ */
+async function writeRecipeContents(
+  filename: string,
   contents: string,
   collectionPath: string,
 ) {
   try {
-    const path = `${collectionPath}/${RECIPES_PATH}/${filename}`;
-    await writeTextFile(path, contents, { dir: BaseDirectory.Home });
+    const path = `${collectionPath}/${RECIPES_PATH}/${filename}.json`;
+    await writeTextFile(path, contents, {
+      dir: BaseDirectory.Home,
+    });
   } catch (err) {
     console.error(err);
     throw err;
@@ -36,7 +59,23 @@ async function writeRecipe(
  */
 async function readRecipe(filename: string, collectionPath: string) {
   try {
-    const path = `${collectionPath}/${RECIPES_PATH}/${filename}`;
+    const path = `${collectionPath}/${RECIPES_PATH}/${filename}.json`;
+    const json = await readTextFile(path, {
+      dir: BaseDirectory.Home,
+    });
+    return JSON.parse(json) as Recipe;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+/**
+ * Read recipe contents from file
+ */
+async function readRecipeContents(filename: string, collectionPath: string) {
+  try {
+    const path = `${collectionPath}/${RECIPES_PATH}/${filename}.json`;
     return await readTextFile(path, {
       dir: BaseDirectory.Home,
     });
@@ -131,4 +170,12 @@ async function readAppConfig() {
   }
 }
 
-export { readRecipe, writeRecipe, readImage, writeAppConfig, readAppConfig };
+export {
+  readRecipe,
+  writeRecipe,
+  readImage,
+  writeAppConfig,
+  readAppConfig,
+  writeRecipeContents,
+  readRecipeContents,
+};

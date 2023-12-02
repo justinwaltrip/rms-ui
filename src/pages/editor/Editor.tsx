@@ -1,23 +1,65 @@
 import "./Editor.css";
+import { exists } from "@tauri-apps/api/fs";
 import { FC, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+import fakeRecipe from "../../../test/fake-recipe.json";
 import NoFile from "../../components/no-file/NoFile";
 import SideBar from "../../components/sidebar/SideBar";
 import SourceEditor from "../../components/source-editor/SourceEditor";
 import TitleBar from "../../components/title-bar/TitleBar";
 import ViewEditor from "../../components/view-editor/ViewEditor";
+import { writeRecipe } from "../../utils/fs";
+import { Recipe } from "../../utils/recipe";
 
 const Editor: FC = () => {
-  const [openFiles, setOpenFiles] = useState<Array<string>>([]);
-  const [activeFileIndex, setActiveFileIndex] = useState<number>(-1);
+  const [, setCollectionName] = useState<string>("");
+  const [collectionPath, setCollectionPath] = useState<string>("");
 
-  const [mode, setMode] = useState<"source" | "view">("view");
+  // TODO remove
+  const [openFiles, setOpenFiles] = useState<Array<string>>(["test"]);
+  const [activeFileIndex, setActiveFileIndex] = useState<number>(0);
+  const [mode, setMode] = useState<"source" | "view">("source");
+  // const [openFiles, setOpenFiles] = useState<Array<string>>([]);
+  // const [activeFileIndex, setActiveFileIndex] = useState<number>(-1);
+  // const [mode, setMode] = useState<"source" | "view">("view");
 
   const location = useLocation();
 
+  // TODO remove
   useEffect(() => {
-    console.log(location.state);
+    if (collectionPath) {
+      // check if test.json exists
+      exists(`${collectionPath}/recipes/test.json`)
+        .then((exists) => {
+          if (!exists) {
+            // create test.json file
+            writeRecipe("test", fakeRecipe, collectionPath)
+              .then(() => {})
+              .catch((err) => console.error(err));
+          }
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [collectionPath]);
+
+  useEffect(() => {
+    if (location.state !== null && typeof location.state === "object") {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      const collection = location.state["collection"];
+      if (collection !== null && typeof collection === "object") {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        const name = collection["name"];
+        if (name !== null && typeof name === "string") {
+          setCollectionName(name);
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        const path = collection["path"];
+        if (path !== null && typeof path === "string") {
+          setCollectionPath(path);
+        }
+      }
+    }
   }, [location]);
 
   useEffect(() => {
@@ -49,6 +91,7 @@ const Editor: FC = () => {
             setOpenFiles(newOpenFiles);
           }}
           setMode={setMode}
+          collectionPath={collectionPath}
         />
       ) : (
         <SourceEditor
@@ -59,6 +102,7 @@ const Editor: FC = () => {
             setOpenFiles(newOpenFiles);
           }}
           setMode={setMode}
+          collectionPath={collectionPath}
         />
       )}
     </div>

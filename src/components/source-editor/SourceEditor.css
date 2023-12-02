@@ -8,16 +8,17 @@
   flex-direction: column;
 }
 
-.content {
+.source-editor-content {
   width: 100%;
-  overflow-y: scroll;
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
 }
 
-.md-editor {
+.json-editor {
   width: 700px;
+  height: 100%;
 }
 
 .view-icon {
@@ -33,29 +34,16 @@
   cursor: pointer;
 }
 
-/* remove source editor background and set font color to white */
-.ͼo {
+.json-input {
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  font-family: monospace;
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0);
   color: #fff;
-  background-color: transparent;
-}
-
-/* hide line numbers */
-.cm-gutters {
-  width: 0;
-  visibility: hidden;
-}
-
-/* prevent active line highlighting */
-.ͼo .cm-activeLine {
-  background-color: transparent;
-}
-
-/* change caret color to white */
-.ͼ4 .cm-line {
-  caret-color: #fff !important;
-}
-
-/* disable editor outline */
-.ͼ1.cm-focused {
-  outline: unset;
 }

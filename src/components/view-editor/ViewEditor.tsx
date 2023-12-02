@@ -21,12 +21,14 @@ interface ViewEditorProps {
   filename: string;
   setFilename: (filename: string) => void;
   setMode: (mode: "source" | "view") => void;
+  collectionPath: string;
 }
 
 const ViewEditor: FC<ViewEditorProps> = ({
   filename,
   setFilename,
   setMode,
+  collectionPath,
 }) => {
   const [fileLoaded, setFileLoaded] = useState<boolean>(false);
   const [markdown, setMarkdown] = useState("");
@@ -49,7 +51,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
   useEffect(() => {
     if (filename) {
       // load markdown from file
-      readRecipe(`${filename}.md`)
+      readRecipe(filename, collectionPath)
         .then((contents) => {
           setMarkdown(contents);
           setFileLoaded(true);
