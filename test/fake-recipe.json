@@ -1,0 +1,40 @@
+{
+    "tags": [
+        "tag 1",
+        "tag 2"
+    ],
+    "date": "2023-12-02",
+    "source": "www.example.com",
+    "rating": 5,
+    "prep": 15,
+    "cook": 30,
+    "servings": 4,
+    "description": "recipe description",
+    "title": "recipe title",
+    "image": {
+        "src": "attachments/recipe-image.png",
+        "alt": "recipe image"
+    },
+    "ingredients": [
+        {
+            "name": "ingredient 1 name",
+            "primary_amount": 1,
+            "primary_unit": "oz",
+            "alt_amount": 5,
+            "alt_unit": "grams"
+        },
+        {
+            "name": "ingredient 2 name",
+            "primary_amount": 3,
+            "primary_unit": "cups"
+        }
+    ],
+    "directions": [
+        "first step",
+        "second step"
+    ],
+    "notes": [
+        "first note",
+        "second note"
+    ]
+}
