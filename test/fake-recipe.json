@@ -9,7 +9,7 @@
   "description": "recipe description",
   "title": "recipe title",
   "image": {
-    "src": "attachments/recipe-image.png",
+    "src": ".rms/attachments/recipe-image.png",
     "alt": "recipe image"
   },
   "ingredients": [
@@ -18,12 +18,14 @@
       "primary_amount": 1,
       "primary_unit": "oz",
       "alt_amount": 5,
-      "alt_unit": "grams"
+      "alt_unit": "grams",
+      "is_checked": true
     },
     {
       "name": "ingredient 2 name",
       "primary_amount": 3,
-      "primary_unit": "cups"
+      "primary_unit": "cups",
+      "is_checked": false
     }
   ],
   "directions": ["first step", "second step"],

@@ -3,17 +3,8 @@ import "./ViewEditor.css";
 import { FC, useEffect, useState } from "react";
 
 import source from "../../assets/source.png";
-import { readImage, readRecipe, writeRecipe } from "../../utils/fs";
-// import {
-//   getDirections,
-//   getImage,
-//   getIngredients,
-//   getNotes,
-//   getTitle,
-//   parseFrontmatter,
-//   setFrontmatter as setFrontmatterMarkdown,
-//   setTitle as setTitleMarkdown,
-// } from "../../utils/md";
+import { readImage, readRecipe } from "../../utils/fs";
+import { Recipe } from "../../utils/recipe";
 import InfoBar from "../info-bar/InfoBar";
 import Properties from "../properties/Properties";
 
@@ -30,30 +21,19 @@ const ViewEditor: FC<ViewEditorProps> = ({
   setMode,
   collectionPath,
 }) => {
-  const [fileLoaded, setFileLoaded] = useState<boolean>(false);
-  const [markdown, setMarkdown] = useState("");
-
-  const [title, setTitle] = useState<string>("");
-  const [alt, setAlt] = useState<string>("");
-  const [image, setImage] = useState<string | undefined>("");
-  const [frontmatter, setFrontmatter] = useState<{ [key: string]: unknown }>(
-    {},
-  );
-  const [ingredients, setIngredients] = useState<
-    { name: string; checked: boolean }[]
-  >([]);
-  const [directions, setDirections] = useState<string[]>([]);
-  const [notes, setNotes] = useState<string[]>([]);
+  const [, setFileLoaded] = useState<boolean>(false);
+  const [recipe, setRecipe] = useState<Recipe | null>(null);
+  const [imgSrc, setImgSrc] = useState<string>("");
 
   /**
    * On tab load
    */
   useEffect(() => {
-    if (filename) {
+    if (filename && collectionPath) {
       // load markdown from file
       readRecipe(filename, collectionPath)
-        .then((contents) => {
-          setMarkdown(contents);
+        .then((recipe) => {
+          setRecipe(recipe);
           setFileLoaded(true);
         })
         .catch((err) => console.error(err));
@@ -63,40 +43,18 @@ const ViewEditor: FC<ViewEditorProps> = ({
     }
   }, [filename]);
 
-  // /**
-  //  * On markdown change
-  //  */
-  // useEffect(() => {
-  //   if (filename && fileLoaded) {
-  //     writeRecipe(`${filename}.md`, markdown)
-  //       .then(() => {})
-  //       .catch((err) => console.error(err));
-
-  //     setTitle(getTitle(markdown));
-  //     const { src, alt } = getImage(markdown);
-  //     if (src) {
-  //       readImage(src)
-  //         .then((image) => setImage(image))
-  //         .catch((err) => console.error(err));
-  //     }
-  //     if (alt) {
-  //       setAlt(alt);
-  //     }
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  //     setFrontmatter(parseFrontmatter(markdown));
-  //     setIngredients(getIngredients(markdown));
-  //     setDirections(getDirections(markdown));
-  //     setNotes(getNotes(markdown));
-  //   }
-  // }, [markdown]);
-
-  // useEffect(() => {
-  //   setMarkdown(setTitleMarkdown(markdown, title));
-  // }, [title]);
-
-  // useEffect(() => {
-  //   setMarkdown(setFrontmatterMarkdown(markdown, frontmatter));
-  // }, [frontmatter]);
+  /**
+   * Load image
+   */
+  useEffect(() => {
+    if (recipe) {
+      readImage(recipe.image.src, collectionPath)
+        .then((src) => {
+          setImgSrc(src);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [recipe]);
 
   return (
     <div className="view-page">
@@ -113,78 +71,86 @@ const ViewEditor: FC<ViewEditorProps> = ({
             <input
               className="title-input"
               type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={recipe ? recipe.title : ""}
+              onChange={(e) => {
+                if (recipe) {
+                  recipe.title = e.target.value;
+                }
+              }}
             />
-            <img src={image} alt={alt} className="image" />
+            <img
+              src={imgSrc}
+              alt={recipe ? recipe.image.alt : ""}
+              className="image"
+            />
             <input
               className="description-input"
               type="text"
-              value={frontmatter["description"]?.toString() || ""}
-              onChange={(e) =>
-                setFrontmatter({ ...frontmatter, description: e.target.value })
-              }
+              value={recipe ? recipe.description : ""}
+              // onChange={(e) =>
+              //   setFrontmatter({ ...frontmatter, description: e.target.value })
+              // }
             />
-            <Properties
-              frontmatter={frontmatter}
-              setFrontmatter={setFrontmatter}
-            />
+            <Properties recipe={recipe} />
           </div>
           <div className="column">
             <h2>ingredients</h2>
-            {ingredients.map(({ name, checked }, index) => (
-              <div key={index} className="ingredient">
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  onChange={(e) => {
-                    const newIngredients = [...ingredients];
-                    newIngredients[index].checked = e.target.checked;
-                    setIngredients(newIngredients);
-                  }}
-                />
-                <input
-                  className="ingredient-label"
-                  type="text"
-                  value={name}
-                  onChange={(e) => {
-                    const newIngredients = [...ingredients];
-                    newIngredients[index].name = e.target.value;
-                    setIngredients(newIngredients);
-                  }}
-                />
-              </div>
-            ))}
+            {recipe &&
+              recipe.ingredients.map(({ name, is_checked }, index) => (
+                <div key={index} className="ingredient">
+                  <input
+                    type="checkbox"
+                    checked={is_checked}
+                    // onChange={(e) => {
+                    //   const newIngredients = [...ingredients];
+                    //   newIngredients[index].checked = e.target.checked;
+                    //   setIngredients(newIngredients);
+                    // }}
+                  />
+                  <input
+                    className="ingredient-label"
+                    type="text"
+                    value={name}
+                    // onChange={(e) => {
+                    //   const newIngredients = [...ingredients];
+                    //   newIngredients[index].name = e.target.value;
+                    //   setIngredients(newIngredients);
+                    // }}
+                  />
+                </div>
+              ))}
             <h2>directions</h2>
-            {directions.map((direction, index) => (
-              <div key={index} className="direction">
-                <p>{`${index + 1}.`}</p>
-                <input
-                  type="text"
-                  value={direction}
-                  onChange={(e) => {
-                    const newDirections = [...directions];
-                    newDirections[index] = e.target.value;
-                    setDirections(newDirections);
-                  }}
-                />
-              </div>
-            ))}
+            {recipe &&
+              recipe.directions.map((direction, index) => (
+                <div key={index} className="direction">
+                  <p>{`${index + 1}.`}</p>
+                  <input
+                    type="text"
+                    value={direction}
+                    // onChange={(e) => {
+                    //   const newDirections = [...directions];
+                    //   newDirections[index] = e.target.value;
+                    //   setDirections(newDirections);
+                    // }}
+                  />
+                </div>
+              ))}
             <h2>notes</h2>
-            {notes.map((note, index) => (
-              <div key={index} className="note">
-                <p>{`-`}</p>
-                <input
-                  type="text"
-                  value={note}
-                  onChange={(e) => {
-                    const newNotes = [...notes];
-                    newNotes[index] = e.target.value;
-                    setNotes(newNotes);
-                  }}
-                />
-              </div>
-            ))}
+            {recipe &&
+              recipe.notes.map((note, index) => (
+                <div key={index} className="note">
+                  <p>{`-`}</p>
+                  <input
+                    type="text"
+                    value={note}
+                    // onChange={(e) => {
+                    //   const newNotes = [...notes];
+                    //   newNotes[index] = e.target.value;
+                    //   setNotes(newNotes);
+                    // }}
+                  />
+                </div>
+              ))}
           </div>
         </div>
       </div>

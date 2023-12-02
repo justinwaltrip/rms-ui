@@ -4,27 +4,28 @@ interface Ingredient {
   primary_unit: string;
   alt_amount: number | null;
   alt_unit: string | null;
+  is_checked: boolean;
 }
 
 interface Image {
   src: string;
-  alt: string | null;
+  alt: string | undefined;
 }
 
 class Recipe {
-  private tags: string[];
-  private date: string;
-  private source: string;
-  private rating: number;
-  private prep: number;
-  private cook: number;
-  private servings: number;
-  private description: string;
-  private title: string;
-  private image: Image;
-  private ingredients: Ingredient[];
-  private directions: string[];
-  private notes: string[];
+  public tags: string[];
+  public date: string;
+  public source: string;
+  public rating: number;
+  public prep: number;
+  public cook: number;
+  public servings: number;
+  public description: string;
+  public title: string;
+  public image: Image;
+  public ingredients: Ingredient[];
+  public directions: string[];
+  public notes: string[];
 
   constructor(
     tags: string[],

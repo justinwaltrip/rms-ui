@@ -1,16 +1,17 @@
 import "./Editor.css";
-import { exists } from "@tauri-apps/api/fs";
+
+import { BaseDirectory, exists, writeBinaryFile } from "@tauri-apps/api/fs";
 import { FC, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import fakeRecipe from "../../../test/fake-recipe.json";
+import recipeImageBase64 from "../../../test/recipe-image.txt";
 import NoFile from "../../components/no-file/NoFile";
 import SideBar from "../../components/sidebar/SideBar";
 import SourceEditor from "../../components/source-editor/SourceEditor";
 import TitleBar from "../../components/title-bar/TitleBar";
 import ViewEditor from "../../components/view-editor/ViewEditor";
 import { writeRecipe } from "../../utils/fs";
-import { Recipe } from "../../utils/recipe";
 
 const Editor: FC = () => {
   const [, setCollectionName] = useState<string>("");
@@ -19,7 +20,7 @@ const Editor: FC = () => {
   // TODO remove
   const [openFiles, setOpenFiles] = useState<Array<string>>(["test"]);
   const [activeFileIndex, setActiveFileIndex] = useState<number>(0);
-  const [mode, setMode] = useState<"source" | "view">("source");
+  const [mode, setMode] = useState<"source" | "view">("view");
   // const [openFiles, setOpenFiles] = useState<Array<string>>([]);
   // const [activeFileIndex, setActiveFileIndex] = useState<number>(-1);
   // const [mode, setMode] = useState<"source" | "view">("view");
@@ -35,6 +36,22 @@ const Editor: FC = () => {
           if (!exists) {
             // create test.json file
             writeRecipe("test", fakeRecipe, collectionPath)
+              .then(() => {})
+              .catch((err) => console.error(err));
+          }
+        })
+        .catch((err) => console.error(err));
+      // check if .rms/attachments/recipe-image.png exists
+      exists(`${collectionPath}/recipes/.rms/attachments/recipe-image.png`)
+        .then((exists) => {
+          if (!exists) {
+            // write recipe-image.png file
+            const recipeImage = Buffer.from(recipeImageBase64, "base64");
+            writeBinaryFile(
+              `${collectionPath}/recipes/.rms/attachments/recipe-image.png`,
+              recipeImage,
+              { dir: BaseDirectory.Home },
+            )
               .then(() => {})
               .catch((err) => console.error(err));
           }

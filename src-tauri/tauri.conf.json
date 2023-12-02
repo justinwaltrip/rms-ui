@@ -22,7 +22,7 @@
       },
       "fs": {
         "all": true,
-        "scope": ["$HOME/**"]
+        "scope": ["$HOME/**/.*", "$HOME/**"]
       },
       "dialog": {
         "all": true,

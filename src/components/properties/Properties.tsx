@@ -8,6 +8,7 @@ import prep from "../../assets/prep.png";
 import remove from "../../assets/remove.png";
 import servings from "../../assets/servings.png";
 import tags from "../../assets/tags.png";
+import { Recipe } from "../../utils/recipe";
 
 const PropertyLabel: FC<{
   label: string;
@@ -22,11 +23,10 @@ const PropertyLabel: FC<{
 };
 
 interface PropertiesProps {
-  frontmatter: { [key: string]: unknown };
-  setFrontmatter: (frontmatter: { [key: string]: unknown }) => void;
+  recipe: Recipe | null;
 }
 
-const Properties: FC<PropertiesProps> = ({ frontmatter, setFrontmatter }) => {
+const Properties: FC<PropertiesProps> = ({ recipe }) => {
   const Tag = ({ tag }: { tag: string }) => {
     return (
       <div className="tag">
@@ -35,14 +35,14 @@ const Properties: FC<PropertiesProps> = ({ frontmatter, setFrontmatter }) => {
           src={remove}
           alt="remove"
           className="remove-icon"
-          onClick={() => {
-            if (Array.isArray(frontmatter["tags"])) {
-              const newTags = frontmatter["tags"].filter(
-                (t: string) => t !== tag,
-              );
-              setFrontmatter({ ...frontmatter, tags: newTags });
-            }
-          }}
+          // onClick={() => {
+          //   if (Array.isArray(frontmatter["tags"])) {
+          //     const newTags = frontmatter["tags"].filter(
+          //       (t: string) => t !== tag,
+          //     );
+          //     setFrontmatter({ ...frontmatter, tags: newTags });
+          //   }
+          // }}
         />
       </div>
     );
@@ -52,8 +52,8 @@ const Properties: FC<PropertiesProps> = ({ frontmatter, setFrontmatter }) => {
     <div className="grid-container">
       <PropertyLabel label="tags" src={tags} />
       <div className="grid-item">
-        {Array.isArray(frontmatter["tags"]) &&
-          frontmatter["tags"].map((tag: string, index: number) => (
+        {recipe &&
+          recipe.tags.map((tag: string, index: number) => (
             <Tag tag={tag} key={index} />
           ))}
       </div>
@@ -61,55 +61,55 @@ const Properties: FC<PropertiesProps> = ({ frontmatter, setFrontmatter }) => {
       <div className="grid-item">
         <input
           type="date"
-          value={frontmatter["date"]?.toString() || ""}
-          onChange={(e) =>
-            setFrontmatter &&
-            setFrontmatter({ ...frontmatter, date: e.target.value })
-          }
+          value={recipe ? recipe.date : ""}
+          // onChange={(e) =>
+          //   setFrontmatter &&
+          //   setFrontmatter({ ...frontmatter, date: e.target.value })
+          // }
         />
       </div>
       <PropertyLabel label="source" src={link} />
       <div className="grid-item">
         <input
           type="text"
-          value={frontmatter["source"]?.toString() || ""}
-          onChange={(e) =>
-            setFrontmatter &&
-            setFrontmatter({ ...frontmatter, source: e.target.value })
-          }
+          value={recipe ? recipe.source : ""}
+          // onChange={(e) =>
+          //   setFrontmatter &&
+          //   setFrontmatter({ ...frontmatter, source: e.target.value })
+          // }
         />
       </div>
       <PropertyLabel label="prep" src={prep} />
       <div className="grid-item">
         <input
           type="text"
-          value={frontmatter["prep"]?.toString() || ""}
-          onChange={(e) =>
-            setFrontmatter &&
-            setFrontmatter({ ...frontmatter, prep: e.target.value })
-          }
+          value={recipe ? recipe.prep.toString() : ""}
+          // onChange={(e) =>
+          //   setFrontmatter &&
+          //   setFrontmatter({ ...frontmatter, prep: e.target.value })
+          // }
         />
       </div>
       <PropertyLabel label="cook" src={cook} />
       <div className="grid-item">
         <input
           type="text"
-          value={frontmatter["cook"]?.toString() || ""}
-          onChange={(e) =>
-            setFrontmatter &&
-            setFrontmatter({ ...frontmatter, cook: e.target.value })
-          }
+          value={recipe ? recipe.cook.toString() : ""}
+          // onChange={(e) =>
+          //   setFrontmatter &&
+          //   setFrontmatter({ ...frontmatter, cook: e.target.value })
+          // }
         />
       </div>
       <PropertyLabel label="servings" src={servings} />
       <div className="grid-item">
         <input
           type="text"
-          value={frontmatter["servings"]?.toString() || ""}
-          onChange={(e) =>
-            setFrontmatter &&
-            setFrontmatter({ ...frontmatter, servings: e.target.value })
-          }
+          value={recipe ? recipe.servings.toString() : ""}
+          // onChange={(e) =>
+          //   setFrontmatter &&
+          //   setFrontmatter({ ...frontmatter, servings: e.target.value })
+          // }
         />
       </div>
     </div>
