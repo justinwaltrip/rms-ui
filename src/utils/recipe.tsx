@@ -1,12 +1,14 @@
 interface Ingredient {
   name: string;
-  amount: string;
-  unit: string;
+  primary_amount: number;
+  primary_unit: string;
+  alt_amount: number | null;
+  alt_unit: string | null;
 }
 
 interface Image {
   src: string;
-  alt: string;
+  alt: string | null;
 }
 
 class Recipe {
