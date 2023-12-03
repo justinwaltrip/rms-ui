@@ -23,7 +23,7 @@
       "fs": {
         "all": true,
         "scope": [
-          "/Users/justinwaltrip/recipes/.rms",  // TODO: make this dynamic
+          "/Users/justinwaltrip/recipes/.rms",
           "$HOME/**/.rms/**",
           "$HOME/**"
         ]
