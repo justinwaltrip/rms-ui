@@ -1,11 +1,16 @@
 import "./Editor.css";
 
-import { BaseDirectory, exists, writeBinaryFile } from "@tauri-apps/api/fs";
+import {
+  BaseDirectory,
+  createDir,
+  exists,
+  readBinaryFile,
+  writeBinaryFile,
+} from "@tauri-apps/api/fs";
 import { FC, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import fakeRecipe from "../../../test/fake-recipe.json";
-import recipeImageBase64 from "../../../test/recipe-image.txt";
 import NoFile from "../../components/no-file/NoFile";
 import SideBar from "../../components/sidebar/SideBar";
 import SourceEditor from "../../components/source-editor/SourceEditor";
@@ -31,7 +36,7 @@ const Editor: FC = () => {
   useEffect(() => {
     if (collectionPath) {
       // check if test.json exists
-      exists(`${collectionPath}/recipes/test.json`)
+      exists(`${collectionPath}/test.json`)
         .then((exists) => {
           if (!exists) {
             // create test.json file
@@ -42,17 +47,36 @@ const Editor: FC = () => {
         })
         .catch((err) => console.error(err));
       // check if .rms/attachments/recipe-image.png exists
-      exists(`${collectionPath}/recipes/.rms/attachments/recipe-image.png`)
+      exists(`${collectionPath}/.rms/attachments/recipe-image.png`)
         .then((exists) => {
           if (!exists) {
-            // write recipe-image.png file
-            const recipeImage = Buffer.from(recipeImageBase64, "base64");
-            writeBinaryFile(
-              `${collectionPath}/recipes/.rms/attachments/recipe-image.png`,
-              recipeImage,
-              { dir: BaseDirectory.Home },
-            )
-              .then(() => {})
+            readBinaryFile("workspace/personal/rms/test/recipe-image.png", {
+              dir: BaseDirectory.Home,
+            })
+              .then((recipeImage) => {
+                // create .rms directory
+                createDir(`${collectionPath}/.rms`, {
+                  dir: BaseDirectory.Home,
+                })
+                  .then(() => {
+                    // create .rms/attachments directory
+                    createDir(`${collectionPath}/.rms/attachments`, {
+                      dir: BaseDirectory.Home,
+                    })
+                      .then(() => {
+                        // write recipe-image.png file
+                        writeBinaryFile(
+                          `${collectionPath}/.rms/attachments/recipe-image.png`,
+                          recipeImage,
+                          { dir: BaseDirectory.Home },
+                        )
+                          .then(() => {})
+                          .catch((err) => console.error(err));
+                      })
+                      .catch((err) => console.error(err));
+                  })
+                  .catch((err) => console.error(err));
+              })
               .catch((err) => console.error(err));
           }
         })

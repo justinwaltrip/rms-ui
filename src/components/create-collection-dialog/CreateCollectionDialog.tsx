@@ -37,7 +37,7 @@ const CreateCollectionDialog: FC<{ visible: boolean; close: () => void }> = ({
   async function createCollection() {
     try {
       // create new collection directory
-      await createDir(collectionName, {
+      await createDir(`${collectionLocation}/${collectionName}`, {
         dir: BaseDirectory.Home,
       });
 
@@ -70,7 +70,7 @@ const CreateCollectionDialog: FC<{ visible: boolean; close: () => void }> = ({
       if (Array.isArray(appConfig.collections)) {
         appConfig.collections.push({
           name: collectionName,
-          path: collectionLocation,
+          path: `${collectionLocation}/${collectionName}`,
         });
       }
 
@@ -112,7 +112,7 @@ const CreateCollectionDialog: FC<{ visible: boolean; close: () => void }> = ({
             <div className="dialog-option-title">Location</div>
             <div className="dialog-option-description">
               {collectionLocation
-                ? `Your collection will be stored at ${collectionLocation}`
+                ? `Your collection will be stored at ${collectionLocation}/${collectionName}`
                 : "Pick a place to store your collection"}
             </div>
           </div>

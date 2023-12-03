@@ -47,14 +47,14 @@ const ViewEditor: FC<ViewEditorProps> = ({
    * Load image
    */
   useEffect(() => {
-    if (recipe) {
+    if (recipe && recipe.image.src) {
       readImage(recipe.image.src, collectionPath)
         .then((src) => {
           setImgSrc(src);
         })
         .catch((err) => console.error(err));
     }
-  }, [recipe]);
+  }, [recipe, collectionPath]);
 
   return (
     <div className="view-page">

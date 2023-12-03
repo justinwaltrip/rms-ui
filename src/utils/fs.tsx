@@ -9,8 +9,6 @@ import {
 
 import { Recipe } from "./recipe";
 
-const RECIPES_PATH = "recipes";
-
 /**
  * Write recipe to file
  * @param filename
@@ -22,7 +20,7 @@ async function writeRecipe(
   collectionPath: string,
 ) {
   try {
-    const path = `${collectionPath}/${RECIPES_PATH}/${filename}.json`;
+    const path = `${collectionPath}/${filename}.json`;
     await writeTextFile(path, JSON.stringify(recipe, null, "\t"), {
       dir: BaseDirectory.Home,
     });
@@ -41,7 +39,7 @@ async function writeRecipeContents(
   collectionPath: string,
 ) {
   try {
-    const path = `${collectionPath}/${RECIPES_PATH}/${filename}.json`;
+    const path = `${collectionPath}/${filename}.json`;
     await writeTextFile(path, contents, {
       dir: BaseDirectory.Home,
     });
@@ -59,7 +57,7 @@ async function writeRecipeContents(
  */
 async function readRecipe(filename: string, collectionPath: string) {
   try {
-    const path = `${collectionPath}/${RECIPES_PATH}/${filename}.json`;
+    const path = `${collectionPath}/${filename}.json`;
     const json = await readTextFile(path, {
       dir: BaseDirectory.Home,
     });
@@ -75,7 +73,7 @@ async function readRecipe(filename: string, collectionPath: string) {
  */
 async function readRecipeContents(filename: string, collectionPath: string) {
   try {
-    const path = `${collectionPath}/${RECIPES_PATH}/${filename}.json`;
+    const path = `${collectionPath}/${filename}.json`;
     return await readTextFile(path, {
       dir: BaseDirectory.Home,
     });

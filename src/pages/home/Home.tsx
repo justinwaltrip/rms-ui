@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import hdots from "../../assets/hdots.png";
 import CreateCollectionDialog from "../../components/create-collection-dialog/CreateCollectionDialog";
-import { readAppConfig } from "../../utils/fs";
+import { readAppConfig, writeAppConfig } from "../../utils/fs";
 
 const Option: FC<{
   text: string;
@@ -87,6 +87,32 @@ const Home: FC = () => {
     };
   }, []);
 
+  /**
+   * On collections update, write app config
+   */
+  useEffect(() => {
+    readAppConfig()
+      .then((appConfig) => {
+        appConfig.collections = collections;
+        return appConfig;
+      })
+      .then((appConfig) => {
+        return writeAppConfig(appConfig);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [collections]);
+
+  /**
+   * Remove collection
+   */
+  function removeCollection(index: number) {
+    const newCollections = [...collections];
+    newCollections.splice(index, 1);
+    setCollections(newCollections);
+  }
+
   return (
     <div>
       <div data-tauri-drag-region className="title-bar" />
@@ -105,7 +131,15 @@ const Home: FC = () => {
                 <div className="option-description">{collection.path}</div>
               </div>
               <div className="option-spacer" />
-              <img src={hdots} alt="Horizontal dots" className="hdots-icon" />
+              <img
+                src={hdots}
+                alt="Horizontal dots"
+                className="hdots-icon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeCollection(index);
+                }}
+              />
             </div>
           ))}
         </div>
