@@ -15,19 +15,6 @@ interface Image {
 }
 
 class Recipe {
-  // public tags: string[];
-  // public date: string;
-  // public source: string;
-  // public rating: number;
-  // public prep: number;
-  // public cook: number;
-  // public servings: number;
-  // public description: string;
-  // public title: string;
-  // public image: Image;
-  // public ingredients: Ingredient[];
-  // public directions: string[];
-  // public notes: string[];
   public json: { [key: string]: unknown };
   private filename: string;
   private collectionPath: string;
@@ -77,6 +64,16 @@ class Recipe {
     try {
       const image: Image = this.json["image"] as Image;
       return image.src;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  setImageSrc(src: string) {
+    try {
+      const image: Image = this.json["image"] as Image;
+      image.src = src;
     } catch (err) {
       console.error(err);
       throw err;

@@ -1,8 +1,12 @@
+import { open } from "@tauri-apps/api/dialog";
+import { BaseDirectory, readBinaryFile } from "@tauri-apps/api/fs";
 import { FC, useEffect, useState } from "react";
 
 import styles from "./ViewEditor.module.css";
+import close from "../../assets/close.png";
 import source from "../../assets/source.png";
-import { readImage } from "../../utils/fs";
+import upload from "../../assets/upload.png";
+import { deleteImage, getImageUrl, writeImage } from "../../utils/fs";
 import { Recipe } from "../../utils/recipe";
 import InfoBar from "../info-bar/InfoBar";
 import Properties from "../properties/Properties";
@@ -25,7 +29,9 @@ const ViewEditor: FC<ViewEditorProps> = ({
 
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [imgSrc, setImgSrc] = useState<string>("");
+  const [imageSrc, setImageSrc] = useState<string>("");
+
+  const [imageUrl, setImgUrl] = useState<string>("");
 
   /**
    * On tab load
@@ -52,16 +58,24 @@ const ViewEditor: FC<ViewEditorProps> = ({
     if (recipe) {
       setTitle(recipe.getTitle());
       setDescription(recipe.getDescription());
-      const src = recipe.getImageSrc();
-      if (src) {
-        readImage(src, collectionPath)
-          .then((src) => {
-            setImgSrc(src);
-          })
-          .catch((err) => console.error(err));
-      }
+      setImageSrc(recipe.getImageSrc());
     }
   }, [recipe, collectionPath]);
+
+  /**
+   * Update image url
+   */
+  useEffect(() => {
+    if (imageSrc) {
+      getImageUrl(imageSrc, collectionPath)
+        .then((src) => {
+          setImgUrl(src);
+        })
+        .catch((err) => console.error(err));
+    } else {
+      setImgUrl("");
+    }
+  }, [imageSrc, collectionPath]);
 
   /**
    * Update recipe data
@@ -71,6 +85,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
       // set recipe data
       recipe.setTitle(title);
       recipe.setDescription(description);
+      recipe.setImageSrc(imageSrc);
 
       // save recipe
       recipe
@@ -78,7 +93,40 @@ const ViewEditor: FC<ViewEditorProps> = ({
         .then(() => {})
         .catch((err) => console.error(err));
     }
-  }, [recipe, title, description]);
+  }, [recipe, title, description, imageSrc]);
+
+  async function selectImage() {
+    try {
+      const result = await open({
+        multiple: false,
+        directory: false,
+        filters: [
+          {
+            name: "Image",
+            extensions: ["png", "jpeg"],
+          },
+        ],
+      });
+      if (result && !Array.isArray(result)) {
+        // read image from file
+        const bytes = await readBinaryFile(result, {
+          dir: BaseDirectory.Home,
+        });
+
+        // get filename
+        const filename = result.split("/").pop();
+
+        // write image to file
+        const path = `.rms/attachments/${filename}`;
+        await writeImage(path, bytes, collectionPath);
+
+        // update recipe
+        setImageSrc(path);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   return (
     <div className={styles["view-page"]}>
@@ -100,11 +148,44 @@ const ViewEditor: FC<ViewEditorProps> = ({
                 setTitle(e.target.value);
               }}
             />
-            <img
-              src={imgSrc}
-              alt={recipe ? recipe.getImageAlt() : ""}
-              className={styles["image"]}
-            />
+            <div className={styles["image-container"]}>
+              {imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt={recipe ? recipe.getImageAlt() : ""}
+                  className={styles["image"]}
+                />
+              ) : (
+                <img
+                  src={upload}
+                  alt="Upload icon"
+                  className={styles["upload-icon"]}
+                  onClick={() => {
+                    selectImage()
+                      .then(() => {})
+                      .catch((err) => console.error(err));
+                  }}
+                />
+              )}
+              {imageUrl && (
+                <div className={styles["image-overlay"]}>
+                  {imageSrc && (
+                    <img
+                      src={close}
+                      alt="Close icon"
+                      className={styles["close-icon"]}
+                      onClick={() => {
+                        deleteImage(imageSrc, collectionPath)
+                          .then(() => {
+                            setImageSrc("");
+                          })
+                          .catch((err) => console.error(err));
+                      }}
+                    />
+                  )}
+                </div>
+              )}
+            </div>
             <input
               className={styles["description-input"]}
               type="text"

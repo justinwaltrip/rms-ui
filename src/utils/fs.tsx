@@ -1,9 +1,12 @@
 import {
   BaseDirectory,
+  BinaryFileContents,
   createDir,
   exists,
   readBinaryFile,
   readTextFile,
+  removeFile,
+  writeBinaryFile,
   writeTextFile,
 } from "@tauri-apps/api/fs";
 
@@ -47,7 +50,7 @@ async function readRecipeContents(filename: string, collectionPath: string) {
  * @param collectionPath
  * @returns image url
  */
-async function readImage(filename: string, collectionPath: string) {
+async function getImageUrl(filename: string, collectionPath: string) {
   try {
     // read image from file
     const path = `${collectionPath}/${filename}`;
@@ -56,6 +59,42 @@ async function readImage(filename: string, collectionPath: string) {
     });
     const blob = new Blob([bytes]);
     return URL.createObjectURL(blob);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+/**
+ * Delete image
+ */
+async function deleteImage(filename: string, collectionPath: string) {
+  try {
+    // delete image
+    const path = `${collectionPath}/${filename}`;
+    await removeFile(path, {
+      dir: BaseDirectory.Home,
+    });
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+/**
+ * Write image
+ */
+async function writeImage(
+  filename: string,
+  image: BinaryFileContents,
+  collectionPath: string,
+) {
+  try {
+    // write image to file
+    const path = `${collectionPath}/${filename}`;
+    await writeBinaryFile(path, image, {
+      dir: BaseDirectory.Home,
+    });
   } catch (err) {
     console.error(err);
     throw err;
@@ -127,9 +166,11 @@ async function readAppConfig() {
 }
 
 export {
-  readImage,
+  getImageUrl,
   writeAppConfig,
   readAppConfig,
   writeRecipeContents,
   readRecipeContents,
+  deleteImage,
+  writeImage,
 };
