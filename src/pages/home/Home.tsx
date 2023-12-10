@@ -1,3 +1,4 @@
+import { open } from "@tauri-apps/api/dialog";
 import { LogicalSize, appWindow } from "@tauri-apps/api/window";
 import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -5,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Home.module.css";
 import hdots from "../../assets/hdots.png";
 import CreateCollectionDialog from "../../components/create-collection-dialog/CreateCollectionDialog";
+import { createCollection } from "../../utils/collection";
 import { readAppConfig, writeAppConfig } from "../../utils/fs";
 
 const Option: FC<{
@@ -113,6 +115,34 @@ const Home: FC = () => {
     setCollections(newCollections);
   }
 
+  /**
+   * Select folder
+   */
+  function openCollection() {
+    open({
+      multiple: false,
+      directory: true,
+    })
+      .then((result) => {
+        if (result && !Array.isArray(result)) {
+          const collectionName = result.split("/").pop();
+          // get all but collection name
+          const collectionLocation = result.split("/").slice(0, -1).join("/");
+          if (!collectionName || !collectionLocation) {
+            return;
+          }
+          createCollection(collectionName, collectionLocation)
+            .then(() => {})
+            .catch((err) => {
+              console.error(err);
+            });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
   return (
     <div>
       <div data-tauri-drag-region className={styles["title-bar"]} />
@@ -159,7 +189,9 @@ const Home: FC = () => {
             text="Open folder as a collection"
             description="Choose an existing folder of recipe files"
             buttonLabel="Open"
-            onClick={() => {}}
+            onClick={() => {
+              openCollection();
+            }}
           />
         </div>
       </div>

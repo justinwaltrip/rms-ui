@@ -1,12 +1,28 @@
 import { readRecipeContents, writeRecipeContents } from "./fs";
 
-interface Ingredient {
-  name: string;
-  primary_amount: number;
-  primary_unit: string;
-  alt_amount: number | null;
-  alt_unit: string | null;
-  is_checked: boolean;
+class Ingredient {
+  public name: string;
+  public primary_amount: number;
+  public primary_unit: string;
+  public alt_amount: number | null;
+  public alt_unit: string | null;
+  public is_checked: boolean;
+
+  constructor(
+    name: string,
+    primary_amount: number,
+    primary_unit: string,
+    alt_amount: number | null = null,
+    alt_unit: string | null = null,
+    is_checked = false,
+  ) {
+    this.name = name;
+    this.primary_amount = primary_amount;
+    this.primary_unit = primary_unit;
+    this.alt_amount = alt_amount;
+    this.alt_unit = alt_unit;
+    this.is_checked = is_checked;
+  }
 }
 
 interface Image {
@@ -111,6 +127,15 @@ class Recipe {
   getIngredients() {
     try {
       return this.json["ingredients"] as Ingredient[];
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  setIngredients(ingredients: Ingredient[]) {
+    try {
+      this.json["ingredients"] = ingredients;
     } catch (err) {
       console.error(err);
       throw err;
@@ -262,4 +287,4 @@ class Recipe {
   }
 }
 
-export { Recipe };
+export { Recipe, Ingredient };

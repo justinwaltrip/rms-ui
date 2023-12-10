@@ -1,13 +1,14 @@
 import { open } from "@tauri-apps/api/dialog";
 import { BaseDirectory, readBinaryFile } from "@tauri-apps/api/fs";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
+import AutosizeInput from "react-input-autosize";
 
 import styles from "./ViewEditor.module.css";
 import close from "../../assets/close.png";
 import source from "../../assets/source.png";
 import upload from "../../assets/upload.png";
 import { deleteImage, getImageUrl, writeImage } from "../../utils/fs";
-import { Recipe } from "../../utils/recipe";
+import { Ingredient, Recipe } from "../../utils/recipe";
 import InfoBar from "../info-bar/InfoBar";
 import Properties from "../properties/Properties";
 
@@ -27,11 +28,17 @@ const ViewEditor: FC<ViewEditorProps> = ({
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [recipeLoaded, setRecipeLoaded] = useState<boolean>(false);
 
+  // recipe data
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [imageSrc, setImageSrc] = useState<string>("");
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
 
+  // render data
   const [imageUrl, setImgUrl] = useState<string>("");
+
+  // refs
+  const lastIngredientRef = useRef<HTMLInputElement>(null);
 
   /**
    * On tab load
@@ -58,10 +65,30 @@ const ViewEditor: FC<ViewEditorProps> = ({
       setTitle(recipe.getTitle());
       setDescription(recipe.getDescription());
       setImageSrc(recipe.getImageSrc());
+      setIngredients(recipe.getIngredients());
 
       setRecipeLoaded(true);
     }
   }, [recipe, collectionPath]);
+
+  /**
+   * Update recipe data
+   */
+  useEffect(() => {
+    if (recipe && recipeLoaded) {
+      // set recipe data
+      recipe.setTitle(title);
+      recipe.setDescription(description);
+      recipe.setImageSrc(imageSrc);
+      recipe.setIngredients(ingredients);
+
+      // save recipe
+      recipe
+        .writeRecipe()
+        .then(() => {})
+        .catch((err) => console.error(err));
+    }
+  }, [recipe, title, description, imageSrc, ingredients, recipeLoaded]);
 
   /**
    * Update image url
@@ -79,23 +106,18 @@ const ViewEditor: FC<ViewEditorProps> = ({
   }, [imageSrc, collectionPath]);
 
   /**
-   * Update recipe data
+   * Focus on last ingredient
    */
   useEffect(() => {
-    if (recipe && recipeLoaded) {
-      // set recipe data
-      recipe.setTitle(title);
-      recipe.setDescription(description);
-      recipe.setImageSrc(imageSrc);
-
-      // save recipe
-      recipe
-        .writeRecipe()
-        .then(() => {})
-        .catch((err) => console.error(err));
+    if (lastIngredientRef.current) {
+      // TODO uncomment
+      // lastIngredientRef.current.focus();
     }
-  }, [recipe, title, description, imageSrc]);
+  }, [ingredients]);
 
+  /**
+   * Select image from file system
+   */
   async function selectImage() {
     try {
       const result = await open({
@@ -199,30 +221,73 @@ const ViewEditor: FC<ViewEditorProps> = ({
           </div>
           <div className={styles["column"]}>
             <h2>ingredients</h2>
-            {recipe &&
-              recipe.getIngredients().map(({ name, is_checked }, index) => (
+            {ingredients.map(
+              ({ name, is_checked, primary_amount, primary_unit }, index) => (
                 <div key={index} className={styles["ingredient"]}>
                   <input
                     type="checkbox"
                     checked={is_checked}
-                    // onChange={(e) => {
-                    //   const newIngredients = [...ingredients];
-                    //   newIngredients[index].checked = e.target.checked;
-                    //   setIngredients(newIngredients);
-                    // }}
+                    onChange={(e) => {
+                      const newIngredients = [...ingredients];
+                      newIngredients[index].is_checked = e.target.checked;
+                      setIngredients(newIngredients);
+                    }}
                   />
-                  <input
-                    className={styles["ingredient-label"]}
+                  <AutosizeInput
+                    className={styles["ingredient-amount"]}
+                    type="text"
+                    value={primary_amount}
+                    onChange={function (e) {
+                      const newIngredients = [...ingredients];
+                      newIngredients[index].primary_amount = e.target.value;
+                      setIngredients(newIngredients);
+                    }}
+                  />
+                  <AutosizeInput
+                    className={styles["ingredient-unit"]}
+                    type="text"
+                    value={primary_unit}
+                    onChange={function (e) {
+                      const newIngredients = [...ingredients];
+                      newIngredients[index].primary_unit = e.target.value;
+                      setIngredients(newIngredients);
+                    }}
+                  />
+                  <AutosizeInput
+                    ref={
+                      index === ingredients.length - 1
+                        ? lastIngredientRef
+                        : null
+                    }
+                    className={styles["ingredient-name"]}
                     type="text"
                     value={name}
-                    // onChange={(e) => {
-                    //   const newIngredients = [...ingredients];
-                    //   newIngredients[index].name = e.target.value;
-                    //   setIngredients(newIngredients);
-                    // }}
+                    onChange={function (e) {
+                      const newIngredients = [...ingredients];
+                      newIngredients[index].name = e.target.value;
+                      setIngredients(newIngredients);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        setIngredients([
+                          ...ingredients,
+                          new Ingredient("", 1, "unit"),
+                        ]);
+                      } else if (
+                        e.key === "Backspace" &&
+                        e.currentTarget.value === ""
+                      ) {
+                        e.preventDefault();
+                        setIngredients(
+                          ingredients.slice(0, ingredients.length - 1),
+                        );
+                      }
+                    }}
                   />
                 </div>
-              ))}
+              ),
+            )}
             <h2>directions</h2>
             {recipe &&
               recipe.getDirections().map((direction, index) => (

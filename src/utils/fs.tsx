@@ -108,27 +108,21 @@ async function writeImage(
 async function writeAppConfig(appConfig: { [name: string]: unknown }) {
   try {
     // check if AppConfig directory exists
-    console.log("Checking if AppConfig directory exists");
     const appConfigDirExists = await exists("", {
       dir: BaseDirectory.AppConfig,
     });
-    console.log(`AppConfig directory exists: ${appConfigDirExists}`);
 
     if (!appConfigDirExists) {
       // create AppConfig directory
-      console.log("Creating AppConfig directory");
       await createDir("", {
         dir: BaseDirectory.AppConfig,
       });
-      console.log("AppConfig directory created");
     }
 
     // write app config
-    console.log("Saving app.json");
     await writeTextFile("app.json", JSON.stringify(appConfig, null, 2), {
       dir: BaseDirectory.AppConfig,
     });
-    console.log("app.json saved");
   } catch (err) {
     console.error(err);
     throw err;

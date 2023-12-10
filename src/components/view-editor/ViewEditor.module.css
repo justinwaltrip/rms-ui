@@ -97,9 +97,16 @@
   height: 30px;
 }
 
-.ingredient-label {
-  position: relative;
-  left: 10px;
+.ingredient-amount {
+  margin-left: 10px;
+}
+
+.ingredient-unit {
+  margin-left: 3px;
+}
+
+.ingredient-name {
+  margin-left: 3px;
 }
 
 .direction {

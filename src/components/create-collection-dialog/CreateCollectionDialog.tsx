@@ -1,16 +1,10 @@
 import { open } from "@tauri-apps/api/dialog";
-import {
-  BaseDirectory,
-  createDir,
-  exists,
-  readTextFile,
-} from "@tauri-apps/api/fs";
 import { homeDir } from "@tauri-apps/api/path";
 import { FC, useState } from "react";
 
 import styles from "./CreateCollectionDialog.module.css";
 import back from "../../assets/back.png";
-import { writeAppConfig } from "../../utils/fs";
+import { createCollection } from "../../utils/collection";
 
 const CreateCollectionDialog: FC<{ visible: boolean; close: () => void }> = ({
   visible,
@@ -29,56 +23,6 @@ const CreateCollectionDialog: FC<{ visible: boolean; close: () => void }> = ({
       if (selected && !Array.isArray(selected)) {
         setCollectionLocation(selected);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function createCollection() {
-    try {
-      // create new collection directory
-      await createDir(`${collectionLocation}/${collectionName}`, {
-        dir: BaseDirectory.Home,
-      });
-
-      // check if app.json exists
-      console.log("Checking if app.json exists");
-      const appConfigExists = await exists("app.json", {
-        dir: BaseDirectory.AppConfig,
-      });
-      console.log(`app.json exists: ${appConfigExists}`);
-
-      let appConfig: { [name: string]: unknown };
-      if (appConfigExists) {
-        // load app config
-        console.log("Loading app.json");
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        appConfig = JSON.parse(
-          await readTextFile("app.json", {
-            dir: BaseDirectory.AppConfig,
-          }),
-        );
-        console.log("app.json loaded");
-      } else {
-        appConfig = {};
-      }
-
-      // add collection to app config
-      if (!appConfig.collections) {
-        appConfig.collections = [];
-      }
-      if (Array.isArray(appConfig.collections)) {
-        appConfig.collections.push({
-          name: collectionName,
-          path: `${collectionLocation}/${collectionName}`,
-        });
-      }
-
-      // save app config
-      await writeAppConfig(appConfig);
-
-      // close dialog
-      close();
     } catch (error) {
       console.log(error);
     }
@@ -124,8 +68,13 @@ const CreateCollectionDialog: FC<{ visible: boolean; close: () => void }> = ({
           <div className={styles["dialog-option-spacer"]} />
           <button
             className={styles["dialog-option-button"]}
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onClick={() => selectFolder()}
+            onClick={() => {
+              selectFolder()
+                .then(() => {})
+                .catch((err) => {
+                  console.error(err);
+                });
+            }}
           >
             Browse
           </button>
@@ -133,8 +82,15 @@ const CreateCollectionDialog: FC<{ visible: boolean; close: () => void }> = ({
         <div className={styles["dialog-option-footer"]}>
           <button
             className={styles["dialog-option-button create-button"]}
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onClick={() => createCollection()}
+            onClick={() => {
+              createCollection(collectionName, collectionLocation)
+                .then(() => {
+                  close();
+                })
+                .catch((err) => {
+                  console.error(err);
+                });
+            }}
           >
             Create
           </button>
