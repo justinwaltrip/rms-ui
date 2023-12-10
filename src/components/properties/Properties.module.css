@@ -44,3 +44,7 @@
 .remove-icon:hover {
   cursor: pointer;
 }
+
+.tag-input {
+  width: auto;
+}

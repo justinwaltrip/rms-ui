@@ -144,9 +144,27 @@ class Recipe {
     }
   }
 
+  setTags(tags: string[]) {
+    try {
+      this.json["tags"] = tags;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
   getPrep() {
     try {
       return this.json["prep"] as number;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  setPrep(prep: number) {
+    try {
+      this.json["prep"] = prep;
     } catch (err) {
       console.error(err);
       throw err;
@@ -162,9 +180,27 @@ class Recipe {
     }
   }
 
+  setCook(cook: number) {
+    try {
+      this.json["cook"] = cook;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
   getServings() {
     try {
       return this.json["servings"] as number;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  setServings(servings: number) {
+    try {
+      this.json["servings"] = servings;
     } catch (err) {
       console.error(err);
       throw err;
@@ -180,9 +216,27 @@ class Recipe {
     }
   }
 
+  setSource(source: string) {
+    try {
+      this.json["source"] = source;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
   getDate() {
     try {
       return this.json["date"] as string;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  setDate(date: string) {
+    try {
+      this.json["date"] = date;
     } catch (err) {
       console.error(err);
       throw err;

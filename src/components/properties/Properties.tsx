@@ -1,13 +1,13 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 
 import styles from "./Properties.module.css";
-import cook from "../../assets/cook.png";
-import date from "../../assets/date.png";
+import cookIcon from "../../assets/cook.png";
+import dateIcon from "../../assets/date.png";
 import link from "../../assets/link.png";
-import prep from "../../assets/prep.png";
+import prepIcon from "../../assets/prep.png";
 import remove from "../../assets/remove.png";
-import servings from "../../assets/servings.png";
-import tags from "../../assets/tags.png";
+import servingsIcon from "../../assets/servings.png";
+import tagsIcon from "../../assets/tags.png";
 import { Recipe } from "../../utils/recipe";
 
 const PropertyLabel: FC<{
@@ -27,6 +27,57 @@ interface PropertiesProps {
 }
 
 const Properties: FC<PropertiesProps> = ({ recipe }) => {
+  const [recipeLoaded, setRecipeLoaded] = useState<boolean>(false);
+
+  const [tags, setTags] = useState<string[]>([]);
+  const [date, setDate] = useState<string>("");
+  const [source, setSource] = useState<string>("");
+  const [prep, setPrep] = useState<number | null>(null);
+  const [cook, setCook] = useState<number | null>(null);
+  const [servings, setServings] = useState<number | null>(null);
+
+  /**
+   * Load data from recipe
+   */
+  useEffect(() => {
+    if (recipe) {
+      setTags(recipe.getTags());
+      setDate(recipe.getDate());
+      setSource(recipe.getSource());
+      setPrep(recipe.getPrep());
+      setCook(recipe.getCook());
+      setServings(recipe.getServings());
+
+      setRecipeLoaded(true);
+    }
+  }, [recipe]);
+
+  /**
+   * Update recipe data
+   */
+  useEffect(() => {
+    if (recipe && recipeLoaded) {
+      recipe.setTags(tags);
+      recipe.setDate(date);
+      recipe.setSource(source);
+      if (prep) {
+        recipe.setPrep(prep);
+      }
+      if (cook) {
+        recipe.setCook(cook);
+      }
+      if (servings) {
+        recipe.setServings(servings);
+      }
+
+      // save recipe
+      recipe
+        .writeRecipe()
+        .then(() => {})
+        .catch((err) => console.error(err));
+    }
+  }, [recipe, tags, date, source, prep, cook, servings, recipeLoaded]);
+
   const Tag = ({ tag }: { tag: string }) => {
     return (
       <div className={styles["tag"]}>
@@ -35,14 +86,9 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
           src={remove}
           alt="remove"
           className={styles["remove-icon"]}
-          // onClick={() => {
-          //   if (Array.isArray(frontmatter["tags"])) {
-          //     const newTags = frontmatter["tags"].filter(
-          //       (t: string) => t !== tag,
-          //     );
-          //     setFrontmatter({ ...frontmatter, tags: newTags });
-          //   }
-          // }}
+          onClick={() => {
+            setTags(tags.filter((t) => t !== tag));
+          }}
         />
       </div>
     );
@@ -50,66 +96,61 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
 
   return (
     <div className={styles["grid-container"]}>
-      <PropertyLabel label="tags" src={tags} />
+      <PropertyLabel label="tags" src={tagsIcon} />
       <div className={styles["grid-item"]}>
-        {recipe &&
-          recipe
-            .getTags()
-            .map((tag: string, index: number) => <Tag tag={tag} key={index} />)}
+        {tags.map((tag: string, index: number) => (
+          <Tag tag={tag} key={index} />
+        ))}
+        <input
+          type="text"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              setTags([...tags, e.currentTarget.value]);
+              e.currentTarget.value = "";
+            } else if (e.key === "Backspace" && e.currentTarget.value === "") {
+              setTags(tags.slice(0, tags.length - 1));
+            }
+          }}
+        />
       </div>
-      <PropertyLabel label="date" src={date} />
+      <PropertyLabel label="date" src={dateIcon} />
       <div className={styles["grid-item"]}>
         <input
           type="date"
-          value={recipe ? recipe.getDate() : ""}
-          // onChange={(e) =>
-          //   setFrontmatter &&
-          //   setFrontmatter({ ...frontmatter, date: e.target.value })
-          // }
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
         />
       </div>
       <PropertyLabel label="source" src={link} />
       <div className={styles["grid-item"]}>
         <input
           type="text"
-          value={recipe ? recipe.getSource() : ""}
-          // onChange={(e) =>
-          //   setFrontmatter &&
-          //   setFrontmatter({ ...frontmatter, source: e.target.value })
-          // }
+          value={source}
+          onChange={(e) => setSource(e.target.value)}
         />
       </div>
-      <PropertyLabel label="prep" src={prep} />
+      <PropertyLabel label="prep" src={prepIcon} />
       <div className={styles["grid-item"]}>
         <input
           type="text"
-          value={recipe ? recipe.getPrep().toString() : ""}
-          // onChange={(e) =>
-          //   setFrontmatter &&
-          //   setFrontmatter({ ...frontmatter, prep: e.target.value })
-          // }
+          value={prep ? prep.toString() : ""}
+          onChange={(e) => setPrep(parseInt(e.target.value))}
         />
       </div>
-      <PropertyLabel label="cook" src={cook} />
+      <PropertyLabel label="cook" src={cookIcon} />
       <div className={styles["grid-item"]}>
         <input
           type="text"
-          value={recipe ? recipe.getCook().toString() : ""}
-          // onChange={(e) =>
-          //   setFrontmatter &&
-          //   setFrontmatter({ ...frontmatter, cook: e.target.value })
-          // }
+          value={cook ? cook.toString() : ""}
+          onChange={(e) => setCook(parseInt(e.target.value))}
         />
       </div>
-      <PropertyLabel label="servings" src={servings} />
+      <PropertyLabel label="servings" src={servingsIcon} />
       <div className={styles["grid-item"]}>
         <input
           type="text"
-          value={recipe ? recipe.getServings().toString() : ""}
-          // onChange={(e) =>
-          //   setFrontmatter &&
-          //   setFrontmatter({ ...frontmatter, servings: e.target.value })
-          // }
+          value={servings ? servings.toString() : ""}
+          onChange={(e) => setServings(parseInt(e.target.value))}
         />
       </div>
     </div>

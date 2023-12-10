@@ -24,8 +24,8 @@ const ViewEditor: FC<ViewEditorProps> = ({
   setMode,
   collectionPath,
 }) => {
-  const [, setFileLoaded] = useState<boolean>(false);
   const [recipe, setRecipe] = useState<Recipe | null>(null);
+  const [recipeLoaded, setRecipeLoaded] = useState<boolean>(false);
 
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -42,7 +42,6 @@ const ViewEditor: FC<ViewEditorProps> = ({
       Recipe.loadRecipe(filename, collectionPath)
         .then((recipe) => {
           setRecipe(recipe);
-          setFileLoaded(true);
         })
         .catch((err) => console.error(err));
     } else {
@@ -59,6 +58,8 @@ const ViewEditor: FC<ViewEditorProps> = ({
       setTitle(recipe.getTitle());
       setDescription(recipe.getDescription());
       setImageSrc(recipe.getImageSrc());
+
+      setRecipeLoaded(true);
     }
   }, [recipe, collectionPath]);
 
@@ -81,7 +82,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
    * Update recipe data
    */
   useEffect(() => {
-    if (recipe) {
+    if (recipe && recipeLoaded) {
       // set recipe data
       recipe.setTitle(title);
       recipe.setDescription(description);
