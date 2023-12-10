@@ -1,7 +1,7 @@
-import "./SideBar.module.css";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
+import styles from "./SideBar.module.css";
 import changeCollection from "../../assets/change-collection.png";
 import search from "../../assets/search.png";
 

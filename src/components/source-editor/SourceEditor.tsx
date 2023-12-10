@@ -1,6 +1,6 @@
-import "./SourceEditor.module.css";
 import { FC, useEffect, useState } from "react";
 
+import styles from "./SourceEditor.module.css";
 import view from "../../assets/view.png";
 import { readRecipeContents, writeRecipeContents } from "../../utils/fs";
 import InfoBar from "../info-bar/InfoBar";

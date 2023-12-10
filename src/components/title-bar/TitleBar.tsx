@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import "./TitleBar.module.css";
 import { FC } from "react";
 
+import styles from "./TitleBar.module.css";
 import close from "../../assets/close.png";
 import create from "../../assets/create.png";
 

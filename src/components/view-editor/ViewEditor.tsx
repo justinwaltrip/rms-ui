@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import "./ViewEditor.module.css";
 import { FC, useEffect, useState } from "react";
 
+import styles from "./ViewEditor.module.css";
 import source from "../../assets/source.png";
 import { readImage, readRecipe } from "../../utils/fs";
 import { Recipe } from "../../utils/recipe";

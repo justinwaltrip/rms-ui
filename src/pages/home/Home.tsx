@@ -1,8 +1,8 @@
-import "./Home.module.css";
 import { LogicalSize, appWindow } from "@tauri-apps/api/window";
 import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import styles from "./Home.module.css";
 import hdots from "../../assets/hdots.png";
 import CreateCollectionDialog from "../../components/create-collection-dialog/CreateCollectionDialog";
 import { readAppConfig, writeAppConfig } from "../../utils/fs";
@@ -117,11 +117,11 @@ const Home: FC = () => {
     <div>
       <div data-tauri-drag-region className={styles["title-bar"]} />
       <div className={styles["home-sidebar"]}>
-        <div className={styles["options sidebar-options"]}>
+        <div className={`${styles["options"]} ${styles["sidebar-options"]}`}>
           {collections.map((collection, index) => (
             <div
               key={index}
-              className={styles["option sidebar-option"]}
+              className={`${styles["option"]} ${styles["sidebar-option"]}`}
               onClick={() => {
                 navigate("/editor", { state: { collection } });
               }}
@@ -147,7 +147,7 @@ const Home: FC = () => {
         </div>
       </div>
       <div className={styles["home-content"]}>
-        <div className={styles["options content-options"]}>
+        <div className={`${styles["options"]} ${styles["content-options"]}`}>
           <Option
             text="Create a new collection"
             description="Create a new recipe collection in your local file system"

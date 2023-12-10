@@ -1,6 +1,6 @@
-import "./NoFile.module.css";
-
 import { FC } from "react";
+
+import styles from "./NoFile.module.css";
 
 const NoFile: FC = () => {
   return (

@@ -1,5 +1,6 @@
-import "./InfoBar.module.css";
 import { FC, useEffect, useState } from "react";
+
+import styles from "./InfoBar.module.css";
 
 interface InfoBarProps {
   filename: string;

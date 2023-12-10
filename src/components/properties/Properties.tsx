@@ -1,6 +1,6 @@
-import "./Properties.module.css";
 import { FC } from "react";
 
+import styles from "./Properties.module.css";
 import cook from "../../assets/cook.png";
 import date from "../../assets/date.png";
 import link from "../../assets/link.png";

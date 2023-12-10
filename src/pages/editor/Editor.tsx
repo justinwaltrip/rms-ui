@@ -1,5 +1,3 @@
-import "./Editor.module.css";
-
 import {
   BaseDirectory,
   createDir,
@@ -10,6 +8,7 @@ import {
 import { FC, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+import styles from "./Editor.module.css";
 import fakeRecipe from "../../../test/fake-recipe.json";
 import NoFile from "../../components/no-file/NoFile";
 import SideBar from "../../components/sidebar/SideBar";
