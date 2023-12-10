@@ -59,8 +59,10 @@ const TitleBar: FC<TitleBarProps> = ({
       {openFiles.map((file, index) => (
         <div
           key={index}
-          className={`tab ${
-            index === activeFileIndex ? "active-tab" : "inactive-tab"
+          className={`${styles["tab"]} ${
+            index === activeFileIndex
+              ? styles["active-tab"]
+              : styles["inactive-tab"]
           }`}
           onClick={() => setActiveFileIndex(index)}
         >

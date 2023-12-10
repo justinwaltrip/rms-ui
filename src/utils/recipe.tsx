@@ -1,4 +1,4 @@
-import { readRecipeContents } from "./fs";
+import { readRecipeContents, writeRecipeContents } from "./fs";
 
 interface Ingredient {
   name: string;
@@ -28,51 +28,186 @@ class Recipe {
   // public ingredients: Ingredient[];
   // public directions: string[];
   // public notes: string[];
-  public json: string;
+  public json: { [key: string]: unknown };
+  private filename: string;
+  private collectionPath: string;
 
   constructor(
-    // tags: string[],
-    // date: string,
-    // source: string,
-    // rating: number,
-    // prep: number,
-    // cook: number,
-    // servings: number,
-    // description: string,
-    // title: string,
-    // image: Image,
-    // ingredients: Ingredient[],
-    // directions: string[],
-    // notes: string[],
-    json: string,
+    json: { [key: string]: unknown },
+    filename = "",
+    collectionPath = "",
   ) {
-    // this.tags = tags;
-    // this.date = date;
-    // this.source = source;
-    // this.rating = rating;
-    // this.prep = prep;
-    // this.cook = cook;
-    // this.servings = servings;
-    // this.description = description;
-    // this.title = title;
-    // this.image = image;
-    // this.ingredients = ingredients;
-    // this.directions = directions;
-    // this.notes = notes;
     this.json = json;
+    this.filename = filename;
+    this.collectionPath = collectionPath;
   }
 
-  static loadRecipe(filename: string, collectionPath: string) {
-    readRecipeContents(filename, collectionPath)
-      .then((json) => {
-        const recipe = JSON.parse(json);
+  static async loadRecipe(
+    filename: string,
+    collectionPath: string,
+  ): Promise<Recipe> {
+    try {
+      const contents = await readRecipeContents(filename, collectionPath);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const json: { [key: string]: unknown } = JSON.parse(contents);
 
-        // TODO validate args
+      if (json !== null && typeof json === "object") {
+        return new Recipe(json, filename, collectionPath);
+      } else {
+        throw new Error("Invalid recipe file");
+      }
+    } catch (err) {
+      // Make sure to properly log or handle the error
+      console.error(err);
+      throw err;
+    }
+  }
 
-        // TODO create recipe
-        return recipe as Recipe;
-      })
-      .catch((err) => console.log(err));
+  async writeRecipe(): Promise<void> {
+    try {
+      const contents = JSON.stringify(this.json, null, 4);
+      await writeRecipeContents(this.filename, contents, this.collectionPath);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  getImageSrc() {
+    try {
+      const image: Image = this.json["image"] as Image;
+      return image.src;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  getImageAlt() {
+    try {
+      const image: Image = this.json["image"] as Image;
+      return image.alt;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  getTitle() {
+    try {
+      return this.json["title"] as string;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  setTitle(title: string) {
+    try {
+      this.json["title"] = title;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  getIngredients() {
+    try {
+      return this.json["ingredients"] as Ingredient[];
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  getDirections() {
+    try {
+      return this.json["directions"] as string[];
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  getNotes() {
+    try {
+      return this.json["notes"] as string[];
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  getTags() {
+    try {
+      return this.json["tags"] as string[];
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  getPrep() {
+    try {
+      return this.json["prep"] as number;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  getCook() {
+    try {
+      return this.json["cook"] as number;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  getServings() {
+    try {
+      return this.json["servings"] as number;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  getSource() {
+    try {
+      return this.json["source"] as string;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  getDate() {
+    try {
+      return this.json["date"] as string;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  getDescription() {
+    try {
+      return this.json["description"] as string;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  setDescription(description: string) {
+    try {
+      this.json["description"] = description;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   }
 }
 

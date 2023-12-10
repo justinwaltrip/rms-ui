@@ -1,3 +1,17 @@
+.title-bar {
+  background-color: #1e1e1e;
+  user-select: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow-y: hidden;
+}
+
 .home-sidebar {
   position: fixed;
   top: 40px;

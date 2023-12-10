@@ -53,15 +53,15 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       <PropertyLabel label="tags" src={tags} />
       <div className={styles["grid-item"]}>
         {recipe &&
-          recipe.tags.map((tag: string, index: number) => (
-            <Tag tag={tag} key={index} />
-          ))}
+          recipe
+            .getTags()
+            .map((tag: string, index: number) => <Tag tag={tag} key={index} />)}
       </div>
       <PropertyLabel label="date" src={date} />
       <div className={styles["grid-item"]}>
         <input
           type="date"
-          value={recipe ? recipe.date : ""}
+          value={recipe ? recipe.getDate() : ""}
           // onChange={(e) =>
           //   setFrontmatter &&
           //   setFrontmatter({ ...frontmatter, date: e.target.value })
@@ -72,7 +72,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       <div className={styles["grid-item"]}>
         <input
           type="text"
-          value={recipe ? recipe.source : ""}
+          value={recipe ? recipe.getSource() : ""}
           // onChange={(e) =>
           //   setFrontmatter &&
           //   setFrontmatter({ ...frontmatter, source: e.target.value })
@@ -83,7 +83,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       <div className={styles["grid-item"]}>
         <input
           type="text"
-          value={recipe ? recipe.prep.toString() : ""}
+          value={recipe ? recipe.getPrep().toString() : ""}
           // onChange={(e) =>
           //   setFrontmatter &&
           //   setFrontmatter({ ...frontmatter, prep: e.target.value })
@@ -94,7 +94,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       <div className={styles["grid-item"]}>
         <input
           type="text"
-          value={recipe ? recipe.cook.toString() : ""}
+          value={recipe ? recipe.getCook().toString() : ""}
           // onChange={(e) =>
           //   setFrontmatter &&
           //   setFrontmatter({ ...frontmatter, cook: e.target.value })
@@ -105,7 +105,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       <div className={styles["grid-item"]}>
         <input
           type="text"
-          value={recipe ? recipe.servings.toString() : ""}
+          value={recipe ? recipe.getServings().toString() : ""}
           // onChange={(e) =>
           //   setFrontmatter &&
           //   setFrontmatter({ ...frontmatter, servings: e.target.value })

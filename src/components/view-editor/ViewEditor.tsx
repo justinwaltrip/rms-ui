@@ -1,9 +1,8 @@
-/* eslint-disable prettier/prettier */
 import { FC, useEffect, useState } from "react";
 
 import styles from "./ViewEditor.module.css";
 import source from "../../assets/source.png";
-import { readImage, readRecipe } from "../../utils/fs";
+import { readImage } from "../../utils/fs";
 import { Recipe } from "../../utils/recipe";
 import InfoBar from "../info-bar/InfoBar";
 import Properties from "../properties/Properties";
@@ -23,6 +22,9 @@ const ViewEditor: FC<ViewEditorProps> = ({
 }) => {
   const [, setFileLoaded] = useState<boolean>(false);
   const [recipe, setRecipe] = useState<Recipe | null>(null);
+
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [imgSrc, setImgSrc] = useState<string>("");
 
   /**
@@ -31,7 +33,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
   useEffect(() => {
     if (filename && collectionPath) {
       // load markdown from file
-      readRecipe(filename, collectionPath)
+      Recipe.loadRecipe(filename, collectionPath)
         .then((recipe) => {
           setRecipe(recipe);
           setFileLoaded(true);
@@ -44,17 +46,39 @@ const ViewEditor: FC<ViewEditorProps> = ({
   }, [filename, collectionPath]);
 
   /**
-   * Load image
+   * Load data from recipe
    */
   useEffect(() => {
-    if (recipe && recipe.image.src) {
-      readImage(recipe.image.src, collectionPath)
-        .then((src) => {
-          setImgSrc(src);
-        })
-        .catch((err) => console.error(err));
+    if (recipe) {
+      setTitle(recipe.getTitle());
+      setDescription(recipe.getDescription());
+      const src = recipe.getImageSrc();
+      if (src) {
+        readImage(src, collectionPath)
+          .then((src) => {
+            setImgSrc(src);
+          })
+          .catch((err) => console.error(err));
+      }
     }
   }, [recipe, collectionPath]);
+
+  /**
+   * Update recipe data
+   */
+  useEffect(() => {
+    if (recipe) {
+      // set recipe data
+      recipe.setTitle(title);
+      recipe.setDescription(description);
+
+      // save recipe
+      recipe
+        .writeRecipe()
+        .then(() => {})
+        .catch((err) => console.error(err));
+    }
+  }, [recipe, title, description]);
 
   return (
     <div className={styles["view-page"]}>
@@ -71,32 +95,30 @@ const ViewEditor: FC<ViewEditorProps> = ({
             <input
               className={styles["title-input"]}
               type="text"
-              value={recipe ? recipe.title : ""}
+              value={title}
               onChange={(e) => {
-                if (recipe) {
-                  recipe.title = e.target.value;
-                }
+                setTitle(e.target.value);
               }}
             />
             <img
               src={imgSrc}
-              alt={recipe ? recipe.image.alt : ""}
+              alt={recipe ? recipe.getImageAlt() : ""}
               className={styles["image"]}
             />
             <input
               className={styles["description-input"]}
               type="text"
-              value={recipe ? recipe.description : ""}
-              // onChange={(e) =>
-              //   setFrontmatter({ ...frontmatter, description: e.target.value })
-              // }
+              value={description}
+              onChange={(e) => {
+                setDescription(e.target.value);
+              }}
             />
             <Properties recipe={recipe} />
           </div>
           <div className={styles["column"]}>
             <h2>ingredients</h2>
             {recipe &&
-              recipe.ingredients.map(({ name, is_checked }, index) => (
+              recipe.getIngredients().map(({ name, is_checked }, index) => (
                 <div key={index} className={styles["ingredient"]}>
                   <input
                     type="checkbox"
@@ -121,7 +143,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
               ))}
             <h2>directions</h2>
             {recipe &&
-              recipe.directions.map((direction, index) => (
+              recipe.getDirections().map((direction, index) => (
                 <div key={index} className={styles["direction"]}>
                   <p>{`${index + 1}.`}</p>
                   <input
@@ -137,7 +159,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
               ))}
             <h2>notes</h2>
             {recipe &&
-              recipe.notes.map((note, index) => (
+              recipe.getNotes().map((note, index) => (
                 <div key={index} className={styles["note"]}>
                   <p>{`-`}</p>
                   <input

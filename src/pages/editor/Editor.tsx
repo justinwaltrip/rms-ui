@@ -8,14 +8,14 @@ import {
 import { FC, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import styles from "./Editor.module.css";
+// import styles from "./Editor.module.css";
 import fakeRecipe from "../../../test/fake-recipe.json";
 import NoFile from "../../components/no-file/NoFile";
 import SideBar from "../../components/sidebar/SideBar";
 import SourceEditor from "../../components/source-editor/SourceEditor";
 import TitleBar from "../../components/title-bar/TitleBar";
 import ViewEditor from "../../components/view-editor/ViewEditor";
-import { writeRecipe } from "../../utils/fs";
+import { writeRecipeContents } from "../../utils/fs";
 
 const Editor: FC = () => {
   const [, setCollectionName] = useState<string>("");
@@ -39,7 +39,7 @@ const Editor: FC = () => {
         .then((exists) => {
           if (!exists) {
             // create test.json file
-            writeRecipe("test", fakeRecipe, collectionPath)
+            writeRecipeContents("test", fakeRecipe, collectionPath)
               .then(() => {})
               .catch((err) => console.error(err));
           }

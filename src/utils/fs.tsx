@@ -7,29 +7,6 @@ import {
   writeTextFile,
 } from "@tauri-apps/api/fs";
 
-import { Recipe } from "./recipe";
-
-/**
- * Write recipe to file
- * @param filename
- * @param contents
- */
-async function writeRecipe(
-  filename: string,
-  recipe: Recipe,
-  collectionPath: string,
-) {
-  try {
-    const path = `${collectionPath}/${filename}.json`;
-    await writeTextFile(path, JSON.stringify(recipe, null, "\t"), {
-      dir: BaseDirectory.Home,
-    });
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-}
-
 /**
  * Write recipe contents to file
  */
@@ -43,25 +20,6 @@ async function writeRecipeContents(
     await writeTextFile(path, contents, {
       dir: BaseDirectory.Home,
     });
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-}
-
-/**
- * Read recipe from file
- * @param filename
- * @param collectionPath
- * @returns recipe content
- */
-async function readRecipe(filename: string, collectionPath: string) {
-  try {
-    const path = `${collectionPath}/${filename}.json`;
-    const json = await readTextFile(path, {
-      dir: BaseDirectory.Home,
-    });
-    return JSON.parse(json) as Recipe;
   } catch (err) {
     console.error(err);
     throw err;
@@ -169,8 +127,6 @@ async function readAppConfig() {
 }
 
 export {
-  readRecipe,
-  writeRecipe,
   readImage,
   writeAppConfig,
   readAppConfig,
