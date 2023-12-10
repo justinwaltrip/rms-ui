@@ -1,11 +1,11 @@
-import "./NoFile.css";
+import "./NoFile.module.css";
 
 import { FC } from "react";
 
 const NoFile: FC = () => {
   return (
-    <div className="no-file">
-      <div className="no-file-message">No file selected</div>
+    <div className={styles["no-file"]}>
+      <div className={styles["no-file-message"]}>No file selected</div>
     </div>
   );
 };

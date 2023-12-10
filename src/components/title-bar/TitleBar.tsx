@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import "./TitleBar.css";
+import "./TitleBar.module.css";
 import { FC } from "react";
 
 import close from "../../assets/close.png";
@@ -49,9 +49,9 @@ const TitleBar: FC<TitleBarProps> = ({
     }
   });
   return (
-    <div data-tauri-drag-region className="title-bar">
+    <div data-tauri-drag-region className={styles["title-bar"]}>
       <img
-        className="create-icon"
+        className={styles["create-icon"]}
         src={create}
         alt="Create icon"
         onClick={() => createFile(openFiles, setOpenFiles, setActiveFileIndex)}
@@ -64,9 +64,9 @@ const TitleBar: FC<TitleBarProps> = ({
           }`}
           onClick={() => setActiveFileIndex(index)}
         >
-          <p className="tab-label">{file ? file : "New tab"}</p>
+          <p className={styles["tab-label"]}>{file ? file : "New tab"}</p>
           <img
-            className="close-icon"
+            className={styles["close-icon"]}
             src={close}
             alt="Close icon"
             onClick={() => closeTab(index, openFiles, setOpenFiles)}

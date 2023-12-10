@@ -1,4 +1,4 @@
-import "./SideBar.css";
+import "./SideBar.module.css";
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -8,14 +8,14 @@ import search from "../../assets/search.png";
 const SideBar: FC = () => {
   const navigate = useNavigate();
   return (
-    <div className="sidebar">
-      <div className="sidebar-item">
-        <img className="search-icon" src={search} alt="Search icon" />
+    <div className={styles["sidebar"]}>
+      <div className={styles["sidebar-item"]}>
+        <img className={styles["search-icon"]} src={search} alt="Search icon" />
       </div>
-      <div className="spacer" />
-      <div className="sidebar-item">
+      <div className={styles["spacer"]} />
+      <div className={styles["sidebar-item"]}>
         <img
-          className="change-collection-icon"
+          className={styles["change-collection-icon"]}
           src={changeCollection}
           alt="Change collection icon"
           onClick={() => {

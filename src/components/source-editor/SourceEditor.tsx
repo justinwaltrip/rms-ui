@@ -1,4 +1,4 @@
-import "./SourceEditor.css";
+import "./SourceEditor.module.css";
 import { FC, useEffect, useState } from "react";
 
 import view from "../../assets/view.png";
@@ -51,19 +51,19 @@ const SourceEditor: FC<SourceEditorProps> = ({
   }, [json]);
 
   return (
-    <div className="source-page">
+    <div className={styles["source-page"]}>
       <img
-        className="view-icon"
+        className={styles["view-icon"]}
         src={view}
         alt="View icon"
         onClick={() => setMode("view")}
       />
-      <div className="source-editor-content">
+      <div className={styles["source-editor-content"]}>
         <InfoBar filename={filename} setFilename={setFilename} />
-        <div className="json-editor">
+        <div className={styles["json-editor"]}>
           {filename && (
             <textarea
-              className="json-input"
+              className={styles["json-input"]}
               value={json}
               onChange={(e) => setJson(e.target.value)}
             />

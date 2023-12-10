@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import "./ViewEditor.css";
+import "./ViewEditor.module.css";
 import { FC, useEffect, useState } from "react";
 
 import source from "../../assets/source.png";
@@ -41,7 +41,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
       // prompt user to enter title
       document.getElementById("title-input")?.focus();
     }
-  }, [filename]);
+  }, [filename, collectionPath]);
 
   /**
    * Load image
@@ -57,19 +57,19 @@ const ViewEditor: FC<ViewEditorProps> = ({
   }, [recipe, collectionPath]);
 
   return (
-    <div className="view-page">
+    <div className={styles["view-page"]}>
       <img
-        className="source-icon"
+        className={styles["source-icon"]}
         src={source}
         alt="Source icon"
         onClick={() => setMode("source")}
       />
-      <div className="content">
+      <div className={styles["content"]}>
         <InfoBar filename={filename} setFilename={setFilename} />
-        <div className="view-editor">
-          <div className="column">
+        <div className={styles["view-editor"]}>
+          <div className={styles["column"]}>
             <input
-              className="title-input"
+              className={styles["title-input"]}
               type="text"
               value={recipe ? recipe.title : ""}
               onChange={(e) => {
@@ -81,10 +81,10 @@ const ViewEditor: FC<ViewEditorProps> = ({
             <img
               src={imgSrc}
               alt={recipe ? recipe.image.alt : ""}
-              className="image"
+              className={styles["image"]}
             />
             <input
-              className="description-input"
+              className={styles["description-input"]}
               type="text"
               value={recipe ? recipe.description : ""}
               // onChange={(e) =>
@@ -93,11 +93,11 @@ const ViewEditor: FC<ViewEditorProps> = ({
             />
             <Properties recipe={recipe} />
           </div>
-          <div className="column">
+          <div className={styles["column"]}>
             <h2>ingredients</h2>
             {recipe &&
               recipe.ingredients.map(({ name, is_checked }, index) => (
-                <div key={index} className="ingredient">
+                <div key={index} className={styles["ingredient"]}>
                   <input
                     type="checkbox"
                     checked={is_checked}
@@ -108,7 +108,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                     // }}
                   />
                   <input
-                    className="ingredient-label"
+                    className={styles["ingredient-label"]}
                     type="text"
                     value={name}
                     // onChange={(e) => {
@@ -122,7 +122,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
             <h2>directions</h2>
             {recipe &&
               recipe.directions.map((direction, index) => (
-                <div key={index} className="direction">
+                <div key={index} className={styles["direction"]}>
                   <p>{`${index + 1}.`}</p>
                   <input
                     type="text"
@@ -138,7 +138,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
             <h2>notes</h2>
             {recipe &&
               recipe.notes.map((note, index) => (
-                <div key={index} className="note">
+                <div key={index} className={styles["note"]}>
                   <p>{`-`}</p>
                   <input
                     type="text"

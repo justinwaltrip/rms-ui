@@ -1,4 +1,4 @@
-import "./Home.css";
+import "./Home.module.css";
 import { LogicalSize, appWindow } from "@tauri-apps/api/window";
 import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -14,13 +14,13 @@ const Option: FC<{
   onClick: () => void;
 }> = ({ text, description, buttonLabel, onClick }) => {
   return (
-    <div className="option">
-      <div className="option-text">
-        <div className="option-title">{text}</div>
-        <div className="option-description">{description}</div>
+    <div className={styles["option"]}>
+      <div className={styles["option-text"]}>
+        <div className={styles["option-title"]}>{text}</div>
+        <div className={styles["option-description"]}>{description}</div>
       </div>
-      <div className="option-spacer" />
-      <button className="option-button" onClick={onClick}>
+      <div className={styles["option-spacer"]} />
+      <button className={styles["option-button"]} onClick={onClick}>
         {buttonLabel}
       </button>
     </div>
@@ -115,26 +115,28 @@ const Home: FC = () => {
 
   return (
     <div>
-      <div data-tauri-drag-region className="title-bar" />
-      <div className="home-sidebar">
-        <div className="options sidebar-options">
+      <div data-tauri-drag-region className={styles["title-bar"]} />
+      <div className={styles["home-sidebar"]}>
+        <div className={styles["options sidebar-options"]}>
           {collections.map((collection, index) => (
             <div
               key={index}
-              className="option sidebar-option"
+              className={styles["option sidebar-option"]}
               onClick={() => {
                 navigate("/editor", { state: { collection } });
               }}
             >
-              <div className="option-text">
-                <div className="option-title">{collection.name}</div>
-                <div className="option-description">{collection.path}</div>
+              <div className={styles["option-text"]}>
+                <div className={styles["option-title"]}>{collection.name}</div>
+                <div className={styles["option-description"]}>
+                  {collection.path}
+                </div>
               </div>
-              <div className="option-spacer" />
+              <div className={styles["option-spacer"]} />
               <img
                 src={hdots}
                 alt="Horizontal dots"
-                className="hdots-icon"
+                className={styles["hdots-icon"]}
                 onClick={(e) => {
                   e.stopPropagation();
                   removeCollection(index);
@@ -144,15 +146,15 @@ const Home: FC = () => {
           ))}
         </div>
       </div>
-      <div className="home-content">
-        <div className="options content-options">
+      <div className={styles["home-content"]}>
+        <div className={styles["options content-options"]}>
           <Option
             text="Create a new collection"
             description="Create a new recipe collection in your local file system"
             buttonLabel="Create"
             onClick={() => setCreateCollectionDialogVisible(true)}
           />
-          <div className="divider" />
+          <div className={styles["divider"]} />
           <Option
             text="Open folder as a collection"
             description="Choose an existing folder of recipe files"

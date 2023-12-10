@@ -1,4 +1,4 @@
-import "./Editor.css";
+import "./Editor.module.css";
 
 import {
   BaseDirectory,

@@ -1,4 +1,4 @@
-import "./Properties.css";
+import "./Properties.module.css";
 import { FC } from "react";
 
 import cook from "../../assets/cook.png";
@@ -15,9 +15,9 @@ const PropertyLabel: FC<{
   src: string;
 }> = ({ label, src }) => {
   return (
-    <div className="grid-item">
-      <img src={src} alt="tags" className="icon" />
-      <p className="label">{label}</p>
+    <div className={styles["grid-item"]}>
+      <img src={src} alt="tags" className={styles["icon"]} />
+      <p className={styles["label"]}>{label}</p>
     </div>
   );
 };
@@ -29,12 +29,12 @@ interface PropertiesProps {
 const Properties: FC<PropertiesProps> = ({ recipe }) => {
   const Tag = ({ tag }: { tag: string }) => {
     return (
-      <div className="tag">
+      <div className={styles["tag"]}>
         <p>{tag}</p>
         <img
           src={remove}
           alt="remove"
-          className="remove-icon"
+          className={styles["remove-icon"]}
           // onClick={() => {
           //   if (Array.isArray(frontmatter["tags"])) {
           //     const newTags = frontmatter["tags"].filter(
@@ -49,16 +49,16 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
   };
 
   return (
-    <div className="grid-container">
+    <div className={styles["grid-container"]}>
       <PropertyLabel label="tags" src={tags} />
-      <div className="grid-item">
+      <div className={styles["grid-item"]}>
         {recipe &&
           recipe.tags.map((tag: string, index: number) => (
             <Tag tag={tag} key={index} />
           ))}
       </div>
       <PropertyLabel label="date" src={date} />
-      <div className="grid-item">
+      <div className={styles["grid-item"]}>
         <input
           type="date"
           value={recipe ? recipe.date : ""}
@@ -69,7 +69,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
         />
       </div>
       <PropertyLabel label="source" src={link} />
-      <div className="grid-item">
+      <div className={styles["grid-item"]}>
         <input
           type="text"
           value={recipe ? recipe.source : ""}
@@ -80,7 +80,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
         />
       </div>
       <PropertyLabel label="prep" src={prep} />
-      <div className="grid-item">
+      <div className={styles["grid-item"]}>
         <input
           type="text"
           value={recipe ? recipe.prep.toString() : ""}
@@ -91,7 +91,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
         />
       </div>
       <PropertyLabel label="cook" src={cook} />
-      <div className="grid-item">
+      <div className={styles["grid-item"]}>
         <input
           type="text"
           value={recipe ? recipe.cook.toString() : ""}
@@ -102,7 +102,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
         />
       </div>
       <PropertyLabel label="servings" src={servings} />
-      <div className="grid-item">
+      <div className={styles["grid-item"]}>
         <input
           type="text"
           value={recipe ? recipe.servings.toString() : ""}

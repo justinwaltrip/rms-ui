@@ -1,4 +1,4 @@
-import "./InfoBar.css";
+import "./InfoBar.module.css";
 import { FC, useEffect, useState } from "react";
 
 interface InfoBarProps {
@@ -14,7 +14,7 @@ const InfoBar: FC<InfoBarProps> = ({ filename, setFilename }) => {
   }, [filename]);
 
   return (
-    <div className="info-bar">
+    <div className={styles["info-bar"]}>
       <input
         id="title-input"
         type="text"
