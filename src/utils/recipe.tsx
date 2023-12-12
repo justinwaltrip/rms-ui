@@ -2,18 +2,18 @@ import { readRecipeContents, writeRecipeContents } from "./fs";
 
 class Ingredient {
   public name: string;
-  public primary_amount: number;
+  public primary_amount: string;
   public primary_unit: string;
-  public alt_amount: number | null;
-  public alt_unit: string | null;
+  public alt_amount: string;
+  public alt_unit: string;
   public is_checked: boolean;
 
   constructor(
     name: string,
-    primary_amount: number,
-    primary_unit: string,
-    alt_amount: number | null = null,
-    alt_unit: string | null = null,
+    primary_amount: string = "",
+    primary_unit: string = "",
+    alt_amount: string = "",
+    alt_unit: string = "",
     is_checked = false,
   ) {
     this.name = name;
@@ -180,14 +180,14 @@ class Recipe {
 
   getPrep() {
     try {
-      return this.json["prep"] as number;
+      return this.json["prep"] as string;
     } catch (err) {
       console.error(err);
       throw err;
     }
   }
 
-  setPrep(prep: number) {
+  setPrep(prep: string) {
     try {
       this.json["prep"] = prep;
     } catch (err) {
@@ -198,14 +198,14 @@ class Recipe {
 
   getCook() {
     try {
-      return this.json["cook"] as number;
+      return this.json["cook"] as string;
     } catch (err) {
       console.error(err);
       throw err;
     }
   }
 
-  setCook(cook: number) {
+  setCook(cook: string) {
     try {
       this.json["cook"] = cook;
     } catch (err) {
@@ -216,14 +216,14 @@ class Recipe {
 
   getServings() {
     try {
-      return this.json["servings"] as number;
+      return this.json["servings"] as string;
     } catch (err) {
       console.error(err);
       throw err;
     }
   }
 
-  setServings(servings: number) {
+  setServings(servings: string) {
     try {
       this.json["servings"] = servings;
     } catch (err) {

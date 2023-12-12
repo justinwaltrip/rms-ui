@@ -1,6 +1,6 @@
 import { open } from "@tauri-apps/api/dialog";
 import { BaseDirectory, readBinaryFile } from "@tauri-apps/api/fs";
-import { FC, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import AutosizeInput from "react-input-autosize";
 
 import styles from "./ViewEditor.module.css";
@@ -37,8 +37,9 @@ const ViewEditor: FC<ViewEditorProps> = ({
   // render data
   const [imageUrl, setImgUrl] = useState<string>("");
 
-  // refs
-  const lastIngredientRef = useRef<HTMLInputElement>(null);
+  // new ingredient
+  const newIngredientRef = useRef<HTMLInputElement>(null);
+  const [newIngredientIndex, setNewIngredientIndex] = useState<number>(-1);
 
   /**
    * On tab load
@@ -106,14 +107,14 @@ const ViewEditor: FC<ViewEditorProps> = ({
   }, [imageSrc, collectionPath]);
 
   /**
-   * Focus on last ingredient
+   * If new ingredient, focus on ingredient name
    */
   useEffect(() => {
-    if (lastIngredientRef.current) {
-      // TODO uncomment
-      // lastIngredientRef.current.focus();
+    if (newIngredientIndex !== -1 && newIngredientRef.current) {
+      newIngredientRef.current.focus();
+      setNewIngredientIndex(-1);
     }
-  }, [ingredients]);
+  }, [newIngredientIndex]);
 
   /**
    * Select image from file system
@@ -234,54 +235,129 @@ const ViewEditor: FC<ViewEditorProps> = ({
                     }}
                   />
                   <AutosizeInput
+                    ref={newIngredientIndex === index ? newIngredientRef : null}
                     className={styles["ingredient-amount"]}
                     type="text"
                     value={primary_amount}
-                    onChange={function (e) {
+                    onChange={function (e: ChangeEvent<HTMLInputElement>) {
                       const newIngredients = [...ingredients];
                       newIngredients[index].primary_amount = e.target.value;
                       setIngredients(newIngredients);
+                    }}
+                    onKeyDown={function (
+                      e: React.KeyboardEvent<HTMLInputElement>,
+                    ) {
+                      if (
+                        e.key === "Backspace" &&
+                        (e.currentTarget as HTMLInputElement).value === ""
+                      ) {
+                        e.preventDefault();
+
+                        // remove ingredient at index
+                        const newIngredients = [...ingredients];
+                        newIngredients.splice(index, 1);
+                        setIngredients(newIngredients);
+
+                        // focus on previous ingredient name
+                        if (index > 0) {
+                          const ingredientNameDiv =
+                            document.getElementsByClassName(
+                              styles["ingredient-name"],
+                            )[index - 1] as HTMLInputElement;
+                          const ingredientName =
+                            ingredientNameDiv.getElementsByTagName("input")[0];
+                          ingredientName.focus();
+                        }
+                      } else if (e.key === " ") {
+                        e.preventDefault();
+
+                        // focus on ingredient unit
+                        const ingredientUnitDiv =
+                          document.getElementsByClassName(
+                            styles["ingredient-unit"],
+                          )[index] as HTMLInputElement;
+                        const ingredientUnit =
+                          ingredientUnitDiv.getElementsByTagName("input")[0];
+                        ingredientUnit.focus();
+                      }
                     }}
                   />
                   <AutosizeInput
                     className={styles["ingredient-unit"]}
                     type="text"
                     value={primary_unit}
-                    onChange={function (e) {
+                    onChange={function (e: ChangeEvent<HTMLInputElement>) {
                       const newIngredients = [...ingredients];
                       newIngredients[index].primary_unit = e.target.value;
                       setIngredients(newIngredients);
                     }}
+                    onKeyDown={function (
+                      e: React.KeyboardEvent<HTMLInputElement>,
+                    ) {
+                      if (
+                        e.key === "Backspace" &&
+                        (e.currentTarget as HTMLInputElement).value === ""
+                      ) {
+                        e.preventDefault();
+
+                        // focus on ingredient amount
+                        const ingredientAmountDiv =
+                          document.getElementsByClassName(
+                            styles["ingredient-amount"],
+                          )[index] as HTMLInputElement;
+                        const ingredientAmount =
+                          ingredientAmountDiv.getElementsByTagName("input")[0];
+                        ingredientAmount.focus();
+                      } else if (e.key === " ") {
+                        e.preventDefault();
+
+                        // focus on ingredient name
+                        const ingredientNameDiv =
+                          document.getElementsByClassName(
+                            styles["ingredient-name"],
+                          )[index] as HTMLInputElement;
+                        const ingredientName =
+                          ingredientNameDiv.getElementsByTagName("input")[0];
+                        ingredientName.focus();
+                      }
+                    }}
                   />
                   <AutosizeInput
-                    ref={
-                      index === ingredients.length - 1
-                        ? lastIngredientRef
-                        : null
-                    }
                     className={styles["ingredient-name"]}
                     type="text"
                     value={name}
-                    onChange={function (e) {
+                    onChange={function (e: ChangeEvent<HTMLInputElement>) {
                       const newIngredients = [...ingredients];
                       newIngredients[index].name = e.target.value;
                       setIngredients(newIngredients);
                     }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        setIngredients([
-                          ...ingredients,
-                          new Ingredient("", 1, "unit"),
-                        ]);
-                      } else if (
+                    onKeyDown={function (
+                      e: React.KeyboardEvent<HTMLInputElement>,
+                    ) {
+                      if (
                         e.key === "Backspace" &&
-                        e.currentTarget.value === ""
+                        (e.currentTarget as HTMLInputElement).value === ""
                       ) {
                         e.preventDefault();
-                        setIngredients(
-                          ingredients.slice(0, ingredients.length - 1),
-                        );
+
+                        // how to focus on current ingredient unit
+                        const ingredientUnitDiv =
+                          document.getElementsByClassName(
+                            styles["ingredient-unit"],
+                          )[index] as HTMLInputElement;
+                        const ingredientUnit =
+                          ingredientUnitDiv.getElementsByTagName("input")[0];
+                        ingredientUnit.focus();
+                      } else if (e.key === "Enter") {
+                        e.preventDefault();
+
+                        // add new ingredient at index + 1
+                        const newIngredients = [...ingredients];
+                        newIngredients.splice(index + 1, 0, new Ingredient(""));
+                        setIngredients(newIngredients);
+
+                        // focus on new ingredient amount
+                        setNewIngredientIndex(index + 1);
                       }
                     }}
                   />

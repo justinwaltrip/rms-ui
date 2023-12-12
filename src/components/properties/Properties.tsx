@@ -32,9 +32,9 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
   const [tags, setTags] = useState<string[]>([]);
   const [date, setDate] = useState<string>("");
   const [source, setSource] = useState<string>("");
-  const [prep, setPrep] = useState<number | null>(null);
-  const [cook, setCook] = useState<number | null>(null);
-  const [servings, setServings] = useState<number | null>(null);
+  const [prep, setPrep] = useState<string>("");
+  const [cook, setCook] = useState<string>("");
+  const [servings, setServings] = useState<string>("");
 
   /**
    * Load data from recipe
@@ -134,7 +134,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
         <input
           type="text"
           value={prep ? prep.toString() : ""}
-          onChange={(e) => setPrep(parseInt(e.target.value))}
+          onChange={(e) => setPrep(e.target.value)}
         />
       </div>
       <PropertyLabel label="cook" src={cookIcon} />
@@ -142,7 +142,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
         <input
           type="text"
           value={cook ? cook.toString() : ""}
-          onChange={(e) => setCook(parseInt(e.target.value))}
+          onChange={(e) => setCook(e.target.value)}
         />
       </div>
       <PropertyLabel label="servings" src={servingsIcon} />
@@ -150,7 +150,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
         <input
           type="text"
           value={servings ? servings.toString() : ""}
-          onChange={(e) => setServings(parseInt(e.target.value))}
+          onChange={(e) => setServings(e.target.value)}
         />
       </div>
     </div>
