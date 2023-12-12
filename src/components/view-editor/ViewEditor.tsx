@@ -235,6 +235,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                     }}
                   />
                   <AutosizeInput
+                    //@ts-expect-error no overload matches this call
                     ref={newIngredientIndex === index ? newIngredientRef : null}
                     className={styles["ingredient-amount"]}
                     type="text"
