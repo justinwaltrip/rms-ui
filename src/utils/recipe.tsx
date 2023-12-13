@@ -151,9 +151,27 @@ class Recipe {
     }
   }
 
+  setDirections(directions: string[]) {
+    try {
+      this.json["directions"] = directions;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
   getNotes() {
     try {
       return this.json["notes"] as string[];
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  setNotes(notes: string[]) {
+    try {
+      this.json["notes"] = notes;
     } catch (err) {
       console.error(err);
       throw err;

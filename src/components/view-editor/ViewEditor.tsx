@@ -33,13 +33,19 @@ const ViewEditor: FC<ViewEditorProps> = ({
   const [description, setDescription] = useState<string>("");
   const [imageSrc, setImageSrc] = useState<string>("");
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [directions, setDirections] = useState<string[]>([]);
+  const [notes, setNotes] = useState<string[]>([]);
 
   // render data
   const [imageUrl, setImgUrl] = useState<string>("");
 
-  // new ingredient
+  // focus refs
   const newIngredientRef = useRef<HTMLInputElement>(null);
   const [newIngredientIndex, setNewIngredientIndex] = useState<number>(-1);
+  const newDirectionRef = useRef<HTMLInputElement>(null);
+  const [newDirectionIndex, setNewDirectionIndex] = useState<number>(-1);
+  const newNoteRef = useRef<HTMLInputElement>(null);
+  const [newNoteIndex, setNewNoteIndex] = useState<number>(-1);
 
   /**
    * On tab load
@@ -67,6 +73,8 @@ const ViewEditor: FC<ViewEditorProps> = ({
       setDescription(recipe.getDescription());
       setImageSrc(recipe.getImageSrc());
       setIngredients(recipe.getIngredients());
+      setDirections(recipe.getDirections());
+      setNotes(recipe.getNotes());
 
       setRecipeLoaded(true);
     }
@@ -82,6 +90,8 @@ const ViewEditor: FC<ViewEditorProps> = ({
       recipe.setDescription(description);
       recipe.setImageSrc(imageSrc);
       recipe.setIngredients(ingredients);
+      recipe.setDirections(directions);
+      recipe.setNotes(notes);
 
       // save recipe
       recipe
@@ -89,7 +99,16 @@ const ViewEditor: FC<ViewEditorProps> = ({
         .then(() => {})
         .catch((err) => console.error(err));
     }
-  }, [recipe, title, description, imageSrc, ingredients, recipeLoaded]);
+  }, [
+    recipe,
+    title,
+    description,
+    imageSrc,
+    ingredients,
+    recipeLoaded,
+    directions,
+    notes,
+  ]);
 
   /**
    * Update image url
@@ -115,6 +134,26 @@ const ViewEditor: FC<ViewEditorProps> = ({
       setNewIngredientIndex(-1);
     }
   }, [newIngredientIndex]);
+
+  /**
+   * If new direction, focus on direction
+   */
+  useEffect(() => {
+    if (newDirectionIndex !== -1 && newDirectionRef.current) {
+      newDirectionRef.current.focus();
+      setNewDirectionIndex(-1);
+    }
+  }, [newDirectionIndex]);
+
+  /**
+   * If new note, focus on note
+   */
+  useEffect(() => {
+    if (newNoteIndex !== -1 && newNoteRef.current) {
+      newNoteRef.current.focus();
+      setNewNoteIndex(-1);
+    }
+  }, [newNoteIndex]);
 
   /**
    * Select image from file system
@@ -323,7 +362,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                       }
                     }}
                   />
-                  <AutosizeInput
+                  <input
                     className={styles["ingredient-name"]}
                     type="text"
                     value={name}
@@ -366,37 +405,83 @@ const ViewEditor: FC<ViewEditorProps> = ({
               ),
             )}
             <h2>directions</h2>
-            {recipe &&
-              recipe.getDirections().map((direction, index) => (
-                <div key={index} className={styles["direction"]}>
-                  <p>{`${index + 1}.`}</p>
-                  <input
-                    type="text"
-                    value={direction}
-                    // onChange={(e) => {
-                    //   const newDirections = [...directions];
-                    //   newDirections[index] = e.target.value;
-                    //   setDirections(newDirections);
-                    // }}
-                  />
-                </div>
-              ))}
+            {directions.map((direction, index) => (
+              <div key={index} className={styles["direction"]}>
+                <p>{`${index + 1}.`}</p>
+                <input
+                  ref={newDirectionIndex === index ? newDirectionRef : null}
+                  type="text"
+                  value={direction}
+                  onChange={(e) => {
+                    const newDirections = [...directions];
+                    newDirections[index] = e.target.value;
+                    setDirections(newDirections);
+                  }}
+                  onKeyDown={(e) => {
+                    if (
+                      e.key === "Backspace" &&
+                      (e.currentTarget as HTMLInputElement).value === ""
+                    ) {
+                      e.preventDefault();
+
+                      // remove direction at index
+                      const newDirections = [...directions];
+                      newDirections.splice(index, 1);
+                      setDirections(newDirections);
+                    } else if (e.key === "Enter") {
+                      e.preventDefault();
+
+                      // add new direction at index + 1
+                      const newDirections = [...directions];
+                      newDirections.splice(index + 1, 0, "");
+                      setDirections(newDirections);
+
+                      // focus on new direction
+                      setNewDirectionIndex(index + 1);
+                    }
+                  }}
+                />
+              </div>
+            ))}
             <h2>notes</h2>
-            {recipe &&
-              recipe.getNotes().map((note, index) => (
-                <div key={index} className={styles["note"]}>
-                  <p>{`-`}</p>
-                  <input
-                    type="text"
-                    value={note}
-                    // onChange={(e) => {
-                    //   const newNotes = [...notes];
-                    //   newNotes[index] = e.target.value;
-                    //   setNotes(newNotes);
-                    // }}
-                  />
-                </div>
-              ))}
+            {notes.map((note, index) => (
+              <div key={index} className={styles["note"]}>
+                <p>{`-`}</p>
+                <input
+                  ref={newNoteIndex === index ? newNoteRef : null}
+                  type="text"
+                  value={note}
+                  onChange={(e) => {
+                    const newNotes = [...notes];
+                    newNotes[index] = e.target.value;
+                    setNotes(newNotes);
+                  }}
+                  onKeyDown={(e) => {
+                    if (
+                      e.key === "Backspace" &&
+                      (e.currentTarget as HTMLInputElement).value === ""
+                    ) {
+                      e.preventDefault();
+
+                      // remove note at index
+                      const newNotes = [...notes];
+                      newNotes.splice(index, 1);
+                      setNotes(newNotes);
+                    } else if (e.key === "Enter") {
+                      e.preventDefault();
+
+                      // add new note at index + 1
+                      const newNotes = [...notes];
+                      newNotes.splice(index + 1, 0, "");
+                      setNotes(newNotes);
+
+                      // focus on new note
+                      setNewNoteIndex(index + 1);
+                    }
+                  }}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>
