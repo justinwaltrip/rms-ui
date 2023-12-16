@@ -18,7 +18,14 @@ const Grid: FC = () => {
   // #endregion
 
   // #region effects
+
+  /**
+   * Load recipes from collectionPath
+   */
   useEffect(() => {
+    // TODO remove
+    console.log("collectionPath", collectionPath);
+
     if (collectionPath) {
       // get all files at collectionPath
       readDir(collectionPath, {
@@ -26,21 +33,21 @@ const Grid: FC = () => {
         recursive: true,
       })
         .then((files) => {
-          const recipes: Array<Recipe> = [];
+          const promises: Array<Promise<Recipe>> = [];
           for (const file of files) {
             if (file.name?.endsWith(".json")) {
               const filename = file.name.substring(
                 0,
                 file.name.length - ".json".length,
               );
-              Recipe.loadRecipe(filename, collectionPath)
-                .then((recipe) => {
-                  recipes.push(recipe);
-                })
-                .catch((err) => console.error(err));
+              promises.push(Recipe.loadRecipe(filename, collectionPath));
             }
           }
-          setRecipes(recipes);
+          Promise.all(promises)
+            .then((recipes) => {
+              setRecipes(recipes);
+            })
+            .catch((err) => console.error(err));
         })
         .catch((err) => console.error(err));
     }
@@ -64,7 +71,7 @@ const Grid: FC = () => {
           <div className={styles["grid"]}>
             {recipes.map((recipe, index) => (
               <div key={index}>
-                <GridItem recipe={recipe} collectionPath={collectionPath} />
+                <GridItem recipe={recipe} />
               </div>
             ))}
           </div>

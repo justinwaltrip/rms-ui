@@ -15,7 +15,8 @@ const GridItem: FC<{
 
   // #region contexts
   const appContext = useContext(AppContext);
-  const { collectionPath } = appContext;
+  const { collectionPath, openFiles, setOpenFiles } = appContext;
+  // #endregion
 
   // #region states
   const [imageSrc, setImageSrc] = useState<string>("");
@@ -53,11 +54,8 @@ const GridItem: FC<{
     <div
       className={styles["grid-item"]}
       onClick={() => {
-        navigate("/editor", {
-          state: {
-            openFiles: [recipe.filename],
-          },
-        });
+        setOpenFiles([...openFiles, recipe.filename]);
+        navigate("/editor");
       }}
     >
       <img src={imageUrl} alt="recipe" className={styles["grid-item-image"]} />

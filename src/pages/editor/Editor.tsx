@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 
 // import styles from "./Editor.module.css";
 import NoFile from "../../components/no-file/NoFile";
@@ -6,16 +6,16 @@ import SideBar from "../../components/sidebar/SideBar";
 import SourceEditor from "../../components/source-editor/SourceEditor";
 import TitleBar from "../../components/title-bar/TitleBar";
 import ViewEditor from "../../components/view-editor/ViewEditor";
+import { AppContext } from "../../main";
 
 const Editor: FC = () => {
+  // #region contexts
+  const appContext = useContext(AppContext);
+  const { openFiles, setOpenFiles } = appContext;
+
   // #region states
-  // TODO remove
-  const [openFiles, setOpenFiles] = useState<Array<string>>(["test"]);
-  const [activeFileIndex, setActiveFileIndex] = useState<number>(0);
+  const [activeFileIndex, setActiveFileIndex] = useState<number>(-1);
   const [mode, setMode] = useState<"source" | "view">("view");
-  // const [openFiles, setOpenFiles] = useState<Array<string>>([]);
-  // const [activeFileIndex, setActiveFileIndex] = useState<number>(-1);
-  // const [mode, setMode] = useState<"source" | "view">("view");
   // #endregion
 
   // #region effects

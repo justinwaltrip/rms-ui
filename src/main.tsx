@@ -1,4 +1,10 @@
-import React, { FC, ReactNode, createContext, useState } from "react";
+import React, {
+  FC,
+  ReactNode,
+  createContext,
+  useEffect,
+  useState,
+} from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
@@ -20,8 +26,21 @@ export const AppContext = createContext<{
 });
 
 const AppContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [collectionPath, setCollectionPath] = useState<string>("");
-  const [openFiles, setOpenFiles] = useState<Array<string>>([]);
+  const [collectionPath, setCollectionPath] = useState<string>(() => {
+    return sessionStorage.getItem("collectionPath") || "";
+  });
+  const [openFiles, setOpenFiles] = useState<Array<string>>(() => {
+    const files = sessionStorage.getItem("openFiles");
+    return files ? (JSON.parse(files) as Array<string>) : [];
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem("collectionPath", collectionPath);
+  }, [collectionPath]);
+  useEffect(() => {
+    sessionStorage.setItem("openFiles", JSON.stringify(openFiles));
+  }, [openFiles]);
+
   return (
     <AppContext.Provider
       value={{

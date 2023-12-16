@@ -141,21 +141,31 @@ async function readAppConfig() {
     });
 
     if (!appConfigExists) {
-      return {};
+      return {
+        collections: [],
+      };
     }
 
     // read app config
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const appConfig: { [name: string]: unknown } = JSON.parse(
-      await readTextFile("app.json", {
-        dir: BaseDirectory.AppConfig,
-      }),
-    );
-
+    const content = await readTextFile("app.json", {
+      dir: BaseDirectory.AppConfig,
+    });
+    const appConfig: { collections: Array<string> } = JSON.parse(content) as {
+      collections: Array<string>;
+    };
     return appConfig;
   } catch (err) {
+    console.log("Error reading app config");
     console.error(err);
-    throw err;
+
+    // delete app.json
+    await removeFile("app.json", {
+      dir: BaseDirectory.AppConfig,
+    });
+
+    return {
+      collections: [],
+    };
   }
 }
 
