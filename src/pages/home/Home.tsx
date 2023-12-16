@@ -54,7 +54,7 @@ const Home: FC = () => {
     readAppConfig()
       .then((appConfig) => {
         if (appConfig.collections) {
-          setCollections(appConfig.collections as Array<string>);
+          setCollections(appConfig.collections);
         }
       })
       .catch((err) => {
