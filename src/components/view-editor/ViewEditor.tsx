@@ -1,12 +1,20 @@
 import { open } from "@tauri-apps/api/dialog";
 import { BaseDirectory, readBinaryFile } from "@tauri-apps/api/fs";
-import React, { ChangeEvent, FC, useEffect, useRef, useState } from "react";
+import React, {
+  ChangeEvent,
+  FC,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import AutosizeInput from "react-input-autosize";
 
 import styles from "./ViewEditor.module.css";
 import close from "../../assets/close.png";
 import source from "../../assets/source.png";
 import upload from "../../assets/upload.png";
+import { AppContext } from "../../main";
 import { deleteImage, getImageUrl, writeImage } from "../../utils/fs";
 import { Ingredient, Recipe } from "../../utils/recipe";
 import InfoBar from "../info-bar/InfoBar";
@@ -16,15 +24,27 @@ interface ViewEditorProps {
   filename: string;
   setFilename: (filename: string) => void;
   setMode: (mode: "source" | "view") => void;
-  collectionPath: string;
 }
 
 const ViewEditor: FC<ViewEditorProps> = ({
   filename,
   setFilename,
   setMode,
-  collectionPath,
 }) => {
+  // #region variables
+  const newIngredientRef = useRef<HTMLInputElement>(null);
+  const newDirectionRef = useRef<HTMLInputElement>(null);
+  const newNoteRef = useRef<HTMLInputElement>(null);
+  // #endregion
+
+  // #region contexts
+  const appContext = useContext(AppContext);
+  const { collectionPath } = appContext;
+  // #endregion
+
+  // #region states
+
+  // recipe
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [recipeLoaded, setRecipeLoaded] = useState<boolean>(false);
 
@@ -39,13 +59,13 @@ const ViewEditor: FC<ViewEditorProps> = ({
   // render data
   const [imageUrl, setImgUrl] = useState<string>("");
 
-  // focus refs
-  const newIngredientRef = useRef<HTMLInputElement>(null);
+  // new ingredient, direction, note
   const [newIngredientIndex, setNewIngredientIndex] = useState<number>(-1);
-  const newDirectionRef = useRef<HTMLInputElement>(null);
   const [newDirectionIndex, setNewDirectionIndex] = useState<number>(-1);
-  const newNoteRef = useRef<HTMLInputElement>(null);
   const [newNoteIndex, setNewNoteIndex] = useState<number>(-1);
+  // #endregion
+
+  // #region effects
 
   /**
    * On tab load
@@ -154,6 +174,9 @@ const ViewEditor: FC<ViewEditorProps> = ({
       setNewNoteIndex(-1);
     }
   }, [newNoteIndex]);
+  // #endregion
+
+  // #region functions
 
   /**
    * Select image from file system
@@ -190,6 +213,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
       console.error(err);
     }
   }
+  // #endregion
 
   return (
     <div className={styles["view-page"]}>

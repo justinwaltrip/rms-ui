@@ -1,0 +1,36 @@
+.content {
+  position: fixed;
+  top: 40px;
+  left: 50px;
+  right: 0;
+  bottom: 0;
+}
+
+.container {
+  margin: 0 auto;
+  width: 800px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 25px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.grid {
+  height: 100%;
+  display: grid;
+  grid-gap: 13px;
+  grid-auto-columns: fit-content(150px);
+  grid-auto-flow: column;
+}

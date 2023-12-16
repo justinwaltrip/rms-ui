@@ -1,7 +1,8 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 
 import styles from "./SourceEditor.module.css";
 import view from "../../assets/view.png";
+import { AppContext } from "../../main";
 import { readRecipeContents, writeRecipeContents } from "../../utils/fs";
 import InfoBar from "../info-bar/InfoBar";
 
@@ -9,17 +10,24 @@ interface SourceEditorProps {
   filename: string;
   setFilename: (filename: string) => void;
   setMode: (mode: "source" | "view") => void;
-  collectionPath: string;
 }
 
 const SourceEditor: FC<SourceEditorProps> = ({
   filename,
   setFilename,
   setMode,
-  collectionPath,
 }) => {
+  // #region contexts
+  const appContext = useContext(AppContext);
+  const { collectionPath } = appContext;
+  // #endregion
+
+  // #region states
   const [fileLoaded, setFileLoaded] = useState(false);
   const [json, setJson] = useState("");
+  // #endregion
+
+  // #region effects
 
   /**
    * On tab load
@@ -49,6 +57,8 @@ const SourceEditor: FC<SourceEditorProps> = ({
         .catch((err) => console.error(err));
     }
   }, [json]);
+
+  // #endregion
 
   return (
     <div className={styles["source-page"]}>

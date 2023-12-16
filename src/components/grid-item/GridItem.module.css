@@ -1,0 +1,15 @@
+.grid-item {
+  height: 200px;
+  width: 150px;
+  background: #353535;
+}
+
+.grid-item:hover {
+  cursor: pointer;
+  background: #454545;
+}
+
+.grid-item-image {
+  height: 150px;
+  width: 150px;
+}

@@ -32,8 +32,8 @@ interface Image {
 
 class Recipe {
   public json: { [key: string]: unknown };
-  private filename: string;
-  private collectionPath: string;
+  public filename: string;
+  public collectionPath: string;
 
   constructor(
     json: { [key: string]: unknown },

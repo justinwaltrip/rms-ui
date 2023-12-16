@@ -1,55 +1,60 @@
+import { tauri } from "@tauri-apps/api";
 import { open } from "@tauri-apps/api/dialog";
 import { LogicalSize, appWindow } from "@tauri-apps/api/window";
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import styles from "./Home.module.css";
+import close from "../../assets/close.png";
+import folder from "../../assets/folder.png";
 import hdots from "../../assets/hdots.png";
+// import rename from "../../assets/rename.png";
 import CreateCollectionDialog from "../../components/create-collection-dialog/CreateCollectionDialog";
+import { AppContext } from "../../main";
 import { createCollection } from "../../utils/collection";
 import { readAppConfig, writeAppConfig } from "../../utils/fs";
 
-const Option: FC<{
-  text: string;
-  description: string;
-  buttonLabel: string;
-  onClick: () => void;
-}> = ({ text, description, buttonLabel, onClick }) => {
-  return (
-    <div className={styles["option"]}>
-      <div className={styles["option-text"]}>
-        <div className={styles["option-title"]}>{text}</div>
-        <div className={styles["option-description"]}>{description}</div>
-      </div>
-      <div className={styles["option-spacer"]} />
-      <button className={styles["option-button"]} onClick={onClick}>
-        {buttonLabel}
-      </button>
-    </div>
-  );
-};
-
 const Home: FC = () => {
-  const [collections, setCollections] = useState<
-    Array<{ name: string; path: string }>
-  >([]);
+  // #region variables
+  const navigate = useNavigate();
+  const unlistenFunctions: Array<() => void> = [];
+  // #endregion
+
+  // #region contexts
+  const appContext = useContext(AppContext);
+  const { setCollectionPath } = appContext;
+  // #endregion
+
+  // #region states
+
+  // collections
+  const [collections, setCollections] = useState<Array<string>>([]);
+
+  // create collection
   const [createCollectionDialogVisible, setCreateCollectionDialogVisible] =
     useState(false);
 
-  const navigate = useNavigate();
-  const unlistenFunctions: Array<() => void> = [];
+  // collection options
+  const [collectionOptionsIndex, setCollectionOptionsIndex] = useState(-1);
+  const [collectionOptionsVisible, setCollectionOptionsVisible] =
+    useState(false);
+  const [collectionOptionsPosition, setCollectionOptionsPosition] = useState({
+    x: 0,
+    y: 0,
+  });
+  // #endregion
+
+  // #region effects
 
   /**
-   * On mount function
+   * On mount, read app config and set collections
    */
   useEffect(() => {
     // read app config and set collections
     readAppConfig()
       .then((appConfig) => {
         if (appConfig.collections) {
-          setCollections(
-            appConfig.collections as Array<{ name: string; path: string }>,
-          );
+          setCollections(appConfig.collections as Array<string>);
         }
       })
       .catch((err) => {
@@ -80,6 +85,11 @@ const Home: FC = () => {
         console.error(err);
       });
 
+    // register click events to close collection options
+    document.addEventListener("click", () => {
+      setCollectionOptionsVisible(false);
+    });
+
     return () => {
       if (unlistenFunctions) {
         for (const unlistenFn of unlistenFunctions) {
@@ -90,7 +100,7 @@ const Home: FC = () => {
   }, []);
 
   /**
-   * On collections update, write app config
+   * On collections change, write app config
    */
   useEffect(() => {
     readAppConfig()
@@ -105,9 +115,14 @@ const Home: FC = () => {
         console.error(err);
       });
   }, [collections]);
+  // #endregion
+
+  // #region functions
 
   /**
    * Remove collection
+   *
+   * @param index Index of collection to remove
    */
   function removeCollection(index: number) {
     const newCollections = [...collections];
@@ -123,16 +138,12 @@ const Home: FC = () => {
       multiple: false,
       directory: true,
     })
-      .then((result) => {
-        if (result && !Array.isArray(result)) {
-          const collectionName = result.split("/").pop();
-          // get all but collection name
-          const collectionLocation = result.split("/").slice(0, -1).join("/");
-          if (!collectionName || !collectionLocation) {
-            return;
-          }
-          createCollection(collectionName, collectionLocation)
-            .then(() => {})
+      .then((collectionPath) => {
+        if (collectionPath && !Array.isArray(collectionPath)) {
+          createCollection(collectionPath)
+            .then(() => {
+              setCollections([...collections, collectionPath]);
+            })
             .catch((err) => {
               console.error(err);
             });
@@ -142,24 +153,50 @@ const Home: FC = () => {
         console.error(err);
       });
   }
+  // #endregion
+
+  // #region components
+  const Option: FC<{
+    text: string;
+    description: string;
+    buttonLabel: string;
+    onClick: () => void;
+  }> = ({ text, description, buttonLabel, onClick }) => {
+    return (
+      <div className={styles["option"]}>
+        <div className={styles["option-text"]}>
+          <div className={styles["option-title"]}>{text}</div>
+          <div className={styles["option-description"]}>{description}</div>
+        </div>
+        <div className={styles["option-spacer"]} />
+        <button className={styles["option-button"]} onClick={onClick}>
+          {buttonLabel}
+        </button>
+      </div>
+    );
+  };
+  // #endregion
 
   return (
     <div>
       <div data-tauri-drag-region className={styles["title-bar"]} />
-      <div className={styles["home-sidebar"]}>
+      <div className={styles["sidebar"]}>
         <div className={`${styles["options"]} ${styles["sidebar-options"]}`}>
-          {collections.map((collection, index) => (
+          {collections.map((collectionPath, index) => (
             <div
               key={index}
               className={`${styles["option"]} ${styles["sidebar-option"]}`}
               onClick={() => {
-                navigate("/editor", { state: { collection } });
+                setCollectionPath(collectionPath);
+                navigate("/grid");
               }}
             >
               <div className={styles["option-text"]}>
-                <div className={styles["option-title"]}>{collection.name}</div>
+                <div className={styles["option-title"]}>
+                  {collectionPath.split("/").pop()}
+                </div>
                 <div className={styles["option-description"]}>
-                  {collection.path}
+                  {collectionPath}
                 </div>
               </div>
               <div className={styles["option-spacer"]} />
@@ -169,7 +206,12 @@ const Home: FC = () => {
                 className={styles["hdots-icon"]}
                 onClick={(e) => {
                   e.stopPropagation();
-                  removeCollection(index);
+                  setCollectionOptionsIndex(index);
+                  setCollectionOptionsVisible(true);
+                  setCollectionOptionsPosition({
+                    x: e.clientX,
+                    y: e.clientY,
+                  });
                 }}
               />
             </div>
@@ -199,6 +241,51 @@ const Home: FC = () => {
         visible={createCollectionDialogVisible}
         close={() => setCreateCollectionDialogVisible(false)}
       />
+      {collectionOptionsVisible && (
+        <div
+          className={styles["collection-options"]}
+          style={{
+            left: collectionOptionsPosition.x,
+            top: collectionOptionsPosition.y,
+          }}
+        >
+          <div
+            className={styles["collection-option"]}
+            onClick={() => {
+              tauri
+                .invoke("show_in_folder", {
+                  path: collections[collectionOptionsIndex],
+                })
+                .then(() => {})
+                .catch((err) => {
+                  console.error(err);
+                });
+            }}
+          >
+            <img src={folder} alt="Folder" className={styles["option-icon"]} />
+            <div className={styles["collection-option-text"]}>
+              Reveal in Finder
+            </div>
+          </div>
+          {/* <div className={styles["collection-option"]} onClick={() => {}}>
+            <img src={rename} alt="Rename" className={styles["option-icon"]} />
+            <div className={styles["collection-option-text"]}>
+              Rename collection
+            </div>
+          </div> */}
+          <div
+            className={styles["collection-option"]}
+            onClick={() => {
+              removeCollection(collectionOptionsIndex);
+            }}
+          >
+            <img src={close} alt="Remove" className={styles["option-icon"]} />
+            <div className={styles["collection-option-text"]}>
+              Remove from list
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

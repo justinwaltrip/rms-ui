@@ -19,13 +19,13 @@
   justify-content: center;
 }
 
-.search-icon {
+.sidebar-icon {
   height: 25px;
   width: 25px;
   opacity: 0.6;
 }
 
-.search-icon:hover {
+.sidebar-icon:hover {
   cursor: pointer;
 }
 

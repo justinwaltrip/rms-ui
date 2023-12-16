@@ -21,3 +21,15 @@ Local-first recipe management system inspired by Obsidian. Built with Tauri, Rea
 ## Recommended IDE Setup
 
 - [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+
+## Style Guide
+
+### React Functional Components
+
+- Use `// #region` and `// #endregion` to group related sections of code together. This makes it easier to collapse and expand sections of code in VS Code. Inside of the functional component, the order of the regions should be:
+  1. variables - simple `const` declarations
+  2. contexts - `useContext` declarations
+  3. states - `useState` declarations
+  4. effects - `useEffect` declarations
+  5. functions - `function` declarations
+  6. components - `const` declarations of components
