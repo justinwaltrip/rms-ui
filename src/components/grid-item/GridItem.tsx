@@ -59,13 +59,15 @@ const GridItem: FC<{
       }}
     >
       <img src={imageUrl} alt="recipe" className={styles["grid-item-image"]} />
-      <div className={styles["grid-item-title"]}>{recipe.getTitle()}</div>
-      <div className="grid-item-tags">
-        {recipe.getTags().map((tag, index) => (
-          <div key={index} className="grid-item-tag">
-            {tag}
-          </div>
-        ))}
+      <div className={styles["grid-item-data"]}>
+        <div className={styles["grid-item-title"]}>{recipe.getTitle()}</div>
+        <div className={styles["grid-item-tags"]}>
+          {recipe.getTags().map((tag, index) => (
+            <div key={index} className={styles["grid-item-tag"]}>
+              {tag}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

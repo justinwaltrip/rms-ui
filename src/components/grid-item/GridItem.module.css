@@ -1,4 +1,5 @@
 .grid-item {
+  position: relative;
   height: 200px;
   width: 150px;
   background: #353535;
@@ -10,6 +11,42 @@
 }
 
 .grid-item-image {
+  position: absolute;
   height: 150px;
   width: 150px;
+}
+
+.grid-item-data {
+  position: absolute;
+  top: 150px;
+  bottom: 0;
+}
+
+.grid-item-title {
+  font-weight: bold;
+  font-size: 12px;
+  position: relative;
+  left: 5px;
+  top: 3px;
+}
+
+.grid-item-tags {
+  position: relative;
+  left: 5px;
+  bottom: -5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.grid-item-tag {
+  font-size: 9px;
+  font-weight: bold;
+  background-color: #282828;
+  border-radius: 5px;
+  width: fit-content;
+  padding-left: 5px;
+  padding-right: 5px;
+  line-height: 15px;
 }
