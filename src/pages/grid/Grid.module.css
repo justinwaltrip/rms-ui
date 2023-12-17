@@ -127,10 +127,30 @@
 }
 
 .sort-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.sort-dropdown-button {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 5px;
+}
+
+.sort-dropdown-button:hover {
+  cursor: pointer;
+}
+
+.sort-dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #353535;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  border-radius: 5px;
+  padding: 10px;
 }
 
 .sort-dropdown-text {

@@ -19,6 +19,7 @@ const Grid: FC = () => {
 
   // #region states
   const [recipes, setRecipes] = useState<Array<Recipe>>([]);
+  const [sortedRecipes, setSortedRecipes] = useState<Array<Recipe>>([]);
   // #endregion
 
   // #region effects
@@ -53,6 +54,26 @@ const Grid: FC = () => {
         .catch((err) => console.error(err));
     }
   }, [collectionPath]);
+
+  /**
+   * Sort recipes by getTitle()
+   */
+  useEffect(() => {
+    const sortedRecipes = [...recipes];
+    sortedRecipes.sort((a, b) => {
+      const titleA = a.getTitle();
+      const titleB = b.getTitle();
+      if (titleA < titleB) {
+        return -1;
+      }
+      if (titleA > titleB) {
+        return 1;
+      }
+      return 0;
+    });
+    setSortedRecipes(sortedRecipes);
+  }, [recipes]);
+
   // #endregion
 
   return (
@@ -95,13 +116,16 @@ const Grid: FC = () => {
             </div>
             <div className={styles["spacer"]}></div>
             <div className={styles["sort-dropdown"]}>
-              <div className={styles["sort-dropdown-text"]}>sort</div>
-              <div className={styles["sort-dropdown-arrow"]}></div>
+              <div className={styles["sort-dropdown-button"]}>
+                <div className={styles["sort-dropdown-text"]}>sort</div>
+                <div className={styles["sort-dropdown-arrow"]}></div>
+              </div>
+              <div className={styles["sort-dropdown-content"]}></div>
             </div>
             <img src={sort} alt="Sort icon" className={styles["sort-icon"]} />
           </div>
           <div className={styles["grid"]}>
-            {recipes.map((recipe, index) => (
+            {sortedRecipes.map((recipe, index) => (
               <div key={index}>
                 <GridItem recipe={recipe} />
               </div>
