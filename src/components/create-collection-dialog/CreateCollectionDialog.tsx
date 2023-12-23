@@ -81,9 +81,9 @@ const CreateCollectionDialog: FC<{ visible: boolean; close: () => void }> = ({
         </div>
         <div className={styles["dialog-option-footer"]}>
           <button
-            className={styles["dialog-option-button create-button"]}
+            className={`${styles["dialog-option-button"]} ${styles["create-button"]}`}
             onClick={() => {
-              createCollection(collectionName, collectionLocation)
+              createCollection(`${collectionName}{collectionLocation}`)
                 .then(() => {
                   close();
                 })

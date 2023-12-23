@@ -31,13 +31,12 @@ const Home: FC = () => {
   const [collections, setCollections] = useState<Array<string>>([]);
 
   // create collection
-  const [createCollectionDialogVisible, setCreateCollectionDialogVisible] =
+  const [showCreateCollectionDialog, setShowCreateCollectionDialog] =
     useState(false);
 
   // collection options
   const [collectionOptionsIndex, setCollectionOptionsIndex] = useState(-1);
-  const [collectionOptionsVisible, setCollectionOptionsVisible] =
-    useState(false);
+  const [showCollectionOptions, setShowCollectionOptions] = useState(false);
   const [collectionOptionsPosition, setCollectionOptionsPosition] = useState({
     x: 0,
     y: 0,
@@ -87,7 +86,7 @@ const Home: FC = () => {
 
     // register click events to close collection options
     document.addEventListener("click", () => {
-      setCollectionOptionsVisible(false);
+      setShowCollectionOptions(false);
     });
 
     return () => {
@@ -188,7 +187,7 @@ const Home: FC = () => {
               className={`${styles["option"]} ${styles["sidebar-option"]}`}
               onClick={() => {
                 setCollectionPath(collectionPath);
-                navigate("/grid");
+                navigate("/grid", { state: { maximizeWindow: true } });
               }}
             >
               <div className={styles["option-text"]}>
@@ -207,7 +206,7 @@ const Home: FC = () => {
                 onClick={(e) => {
                   e.stopPropagation();
                   setCollectionOptionsIndex(index);
-                  setCollectionOptionsVisible(true);
+                  setShowCollectionOptions(true);
                   setCollectionOptionsPosition({
                     x: e.clientX,
                     y: e.clientY,
@@ -224,7 +223,7 @@ const Home: FC = () => {
             text="Create a new collection"
             description="Create a new recipe collection in your local file system"
             buttonLabel="Create"
-            onClick={() => setCreateCollectionDialogVisible(true)}
+            onClick={() => setShowCreateCollectionDialog(true)}
           />
           <div className={styles["divider"]} />
           <Option
@@ -238,10 +237,10 @@ const Home: FC = () => {
         </div>
       </div>
       <CreateCollectionDialog
-        visible={createCollectionDialogVisible}
-        close={() => setCreateCollectionDialogVisible(false)}
+        visible={showCreateCollectionDialog}
+        close={() => setShowCreateCollectionDialog(false)}
       />
-      {collectionOptionsVisible && (
+      {showCollectionOptions && (
         <div
           className={styles["collection-options"]}
           style={{

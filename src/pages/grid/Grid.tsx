@@ -1,5 +1,7 @@
 import { BaseDirectory, readDir } from "@tauri-apps/api/fs";
+import { appWindow } from "@tauri-apps/api/window";
 import { FC, useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import styles from "./Grid.module.css";
 import close from "../../assets/close.png";
@@ -11,18 +13,53 @@ import TitleBar from "../../components/title-bar/TitleBar";
 import { AppContext } from "../../main";
 import { Recipe } from "../../utils/recipe";
 
+interface Filter {
+  field: string;
+  operator: string;
+  value: string;
+}
+
+const SORT_FIELDS = ["name"];
+
 const Grid: FC = () => {
   // #region contexts
   const appContext = useContext(AppContext);
   const { collectionPath } = appContext;
+  const location = useLocation();
   // #endregion
 
   // #region states
   const [recipes, setRecipes] = useState<Array<Recipe>>([]);
   const [sortedRecipes, setSortedRecipes] = useState<Array<Recipe>>([]);
+  const [filters, setFilters] = useState<Array<Filter>>([
+    {
+      field: "name",
+      operator: "is",
+      value: "value",
+    },
+  ]);
+  const [sortField, setSortField] = useState<string>(SORT_FIELDS[0]);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [booleanField, setBooleanField] = useState<"any" | "all">("all");
   // #endregion
 
   // #region effects
+
+  /**
+   * On mount, check if maximizeWindow is in location.state
+   */
+  let isMaximized = false;
+  useEffect(() => {
+    if (location.state) {
+      const { maximizeWindow } = location.state as {
+        maximizeWindow: boolean;
+      };
+      if (maximizeWindow && !isMaximized) {
+        isMaximized = true;
+        appWindow.maximize().catch((err) => console.error(err));
+      }
+    }
+  }, [location.state]);
 
   /**
    * Load recipes from collectionPath
@@ -71,8 +108,13 @@ const Grid: FC = () => {
       }
       return 0;
     });
+
+    if (sortOrder === "desc") {
+      sortedRecipes.reverse();
+    }
+
     setSortedRecipes(sortedRecipes);
-  }, [recipes]);
+  }, [recipes, sortOrder]);
 
   // #endregion
 
@@ -100,29 +142,57 @@ const Grid: FC = () => {
           </div>
           <div className={styles["filters"]}>
             <div className={styles["boolean-dropdown"]}>
-              <div className={styles["boolean-dropdown-text"]}>all</div>
+              <select
+                value={booleanField}
+                onChange={(event) =>
+                  setBooleanField(event.target.value as "any" | "all")
+                }
+              >
+                <option value="any">any</option>
+                <option value="all">all</option>
+              </select>
               <div className={styles["boolean-dropdown-arrow"]}></div>
             </div>
             <div className={styles["filter-of-text"]}>of:</div>
-            <div className={styles["filter"]}>
-              <div className={styles["field"]}>name</div>
-              <div className={styles["operator"]}>is</div>
-              <div className={styles["value"]}>value</div>
-              <img
-                src={close}
-                alt="Remove icon"
-                className={styles["remove-icon"]}
-              />
-            </div>
+            {filters.map((filter, index) => (
+              <div key={index} className={styles["filter"]}>
+                <div className={styles["field"]}>{filter.field}</div>
+                <div className={styles["operator"]}>{filter.operator}</div>
+                <div className={styles["value"]}>{filter.value}</div>
+                <img
+                  src={close}
+                  alt="Remove icon"
+                  className={styles["remove-icon"]}
+                  onClick={() => {
+                    const newFilters = [...filters];
+                    newFilters.splice(index, 1);
+                    setFilters(newFilters);
+                  }}
+                />
+              </div>
+            ))}
             <div className={styles["spacer"]}></div>
             <div className={styles["sort-dropdown"]}>
-              <div className={styles["sort-dropdown-button"]}>
-                <div className={styles["sort-dropdown-text"]}>sort</div>
-                <div className={styles["sort-dropdown-arrow"]}></div>
-              </div>
-              <div className={styles["sort-dropdown-content"]}></div>
+              <select
+                value={sortField}
+                onChange={(event) => setSortField(event.target.value)}
+              >
+                {SORT_FIELDS.map((field, index) => (
+                  <option key={index} value={field}>
+                    {field}
+                  </option>
+                ))}
+              </select>
+              <div className={styles["sort-dropdown-arrow"]}></div>
             </div>
-            <img src={sort} alt="Sort icon" className={styles["sort-icon"]} />
+            <img
+              src={sort}
+              alt="Sort icon"
+              className={`${styles["sort-icon"]} ${
+                sortOrder === "desc" ? styles["sort-icon-desc"] : ""
+              }`}
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+            />
           </div>
           <div className={styles["grid"]}>
             {sortedRecipes.map((recipe, index) => (
