@@ -7,6 +7,7 @@ import styles from "./Grid.module.css";
 import close from "../../assets/close.png";
 import filter from "../../assets/filter.png";
 import sort from "../../assets/sort.png";
+import AddFilterDialog from "../../components/add-filter-dialog/AddFilterDialog";
 import GridItem from "../../components/grid-item/GridItem";
 import SideBar from "../../components/sidebar/SideBar";
 import TitleBar from "../../components/title-bar/TitleBar";
@@ -40,7 +41,10 @@ const Grid: FC = () => {
   ]);
   const [sortField, setSortField] = useState<string>(SORT_FIELDS[0]);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [booleanField, setBooleanField] = useState<"any" | "all">("all");
+  const [booleanField, setBooleanField] = useState<"any" | "all">("any");
+
+  // add filter dialog
+  const [showAddFilterDialog, setShowAddFilterDialog] = useState(true);
   // #endregion
 
   // #region effects
@@ -132,13 +136,21 @@ const Grid: FC = () => {
           <div className={styles["header"]}>
             <div className={styles["title"]}>recipes</div>
           </div>
-          <div className={styles["filter-selector"]}>
-            <img
-              src={filter}
-              alt="Filter icon"
-              className={styles["filter-icon"]}
-            />
-            <div className={styles["filter-text"]}>filter</div>
+          <div>
+            <div
+              className={styles["add-filter-button"]}
+              onClick={() => {
+                setShowAddFilterDialog(true);
+              }}
+            >
+              <img
+                src={filter}
+                alt="Filter icon"
+                className={styles["filter-icon"]}
+              />
+              <div className={styles["filter-text"]}>filter</div>
+            </div>
+            {showAddFilterDialog && <AddFilterDialog />}
           </div>
           <div className={styles["filters"]}>
             <div className={styles["boolean-dropdown"]}>
