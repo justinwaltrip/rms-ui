@@ -313,6 +313,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
               onChange={(e) => {
                 setDescription(e.target.value);
               }}
+              placeholder="description"
             />
             <Properties recipe={recipe} />
           </div>

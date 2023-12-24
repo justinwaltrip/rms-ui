@@ -93,7 +93,13 @@ class Recipe {
   setImageSrc(src: string) {
     try {
       const image: Image = this.json["image"] as Image;
-      image.src = src;
+      if (!image) {
+        this.json["image"] = {
+          src: src,
+        };
+      } else {
+        image.src = src;
+      }
     } catch (err) {
       console.error(err);
       throw err;

@@ -136,6 +136,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
               setTags(tags.slice(0, tags.length - 1));
             }
           }}
+          autoCorrect="off"
         />
       </div>
       <PropertyLabel label="date" src={dateIcon} />

@@ -91,6 +91,21 @@ async function writeImage(
   collectionPath: string,
 ) {
   try {
+    // create parent directories if they don't exist
+    const parentDirectories = filename.split("/");
+    for (let i = 0; i < parentDirectories.length - 1; i++) {
+      const dir = parentDirectories.slice(0, i + 1).join("/");
+      const dirExists = await exists(`${collectionPath}/${dir}`, {
+        dir: BaseDirectory.Home,
+      });
+
+      if (!dirExists) {
+        await createDir(`${collectionPath}/${dir}`, {
+          dir: BaseDirectory.Home,
+        });
+      }
+    }
+
     // write image to file
     const path = `${collectionPath}/${filename}`;
     await writeBinaryFile(path, image, {

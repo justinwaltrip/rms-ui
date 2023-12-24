@@ -20,8 +20,8 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
   // #endregion
 
   // #region states
-  const [imageSrc, setImageSrc] = useState<string>("");
-  const [imageUrl, setImageUrl] = useState<string>("");
+  const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
+  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
   // #endregion
 
   // #region effects
@@ -63,11 +63,12 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
       <div className={styles["grid-item-data"]}>
         <div className={styles["grid-item-title"]}>{recipe.title}</div>
         <div className={styles["grid-item-tags"]}>
-          {recipe.getTags().map((tag, index) => (
-            <div key={index} className={styles["grid-item-tag"]}>
-              {tag}
-            </div>
-          ))}
+          {recipe.getTags() &&
+            recipe.getTags().map((tag, index) => (
+              <div key={index} className={styles["grid-item-tag"]}>
+                {tag}
+              </div>
+            ))}
         </div>
         <img src={hdots} alt="More icon" className={styles["more-icon"]} />
       </div>
