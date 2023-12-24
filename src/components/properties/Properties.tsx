@@ -10,31 +10,22 @@ import servingsIcon from "../../assets/servings.png";
 import tagsIcon from "../../assets/tags.png";
 import { Recipe } from "../../utils/recipe";
 
-const PropertyLabel: FC<{
-  label: string;
-  src: string;
-}> = ({ label, src }) => {
-  return (
-    <div className={styles["grid-item"]}>
-      <img src={src} alt="tags" className={styles["icon"]} />
-      <p className={styles["label"]}>{label}</p>
-    </div>
-  );
-};
-
 interface PropertiesProps {
   recipe: Recipe | null;
 }
 
 const Properties: FC<PropertiesProps> = ({ recipe }) => {
+  // #region states
   const [recipeLoaded, setRecipeLoaded] = useState<boolean>(false);
-
   const [tags, setTags] = useState<string[]>([]);
   const [date, setDate] = useState<string>("");
   const [source, setSource] = useState<string>("");
   const [prep, setPrep] = useState<string>("");
   const [cook, setCook] = useState<string>("");
   const [servings, setServings] = useState<string>("");
+  // #endregion
+
+  // #region effects
 
   /**
    * Load data from recipe
@@ -78,6 +69,10 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
     }
   }, [recipe, tags, date, source, prep, cook, servings, recipeLoaded]);
 
+  // #endregion
+
+  // #region components
+
   const Tag = ({ tag }: { tag: string }) => {
     return (
       <div className={styles["tag"]}>
@@ -93,6 +88,20 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       </div>
     );
   };
+
+  const PropertyLabel: FC<{
+    label: string;
+    src: string;
+  }> = ({ label, src }) => {
+    return (
+      <div className={styles["grid-item"]}>
+        <img src={src} alt="tags" className={styles["icon"]} />
+        <p className={styles["label"]}>{label}</p>
+      </div>
+    );
+  };
+
+  // #endregion
 
   return (
     <div className={styles["grid-container"]}>

@@ -16,12 +16,12 @@ import { Filter } from "../../utils/filter";
 import { filterRecipes } from "../../utils/filter";
 import { Recipe } from "../../utils/recipe";
 
-const SORT_FIELDS = ["name"];
+const SORT_FIELDS = ["title"];
 
 const Grid: FC = () => {
   // #region contexts
   const appContext = useContext(AppContext);
-  const { collectionPath } = appContext;
+  const { collectionPath, openFiles, setOpenFiles } = appContext;
   const location = useLocation();
   // #endregion
 
@@ -129,8 +129,8 @@ const Grid: FC = () => {
   return (
     <div>
       <TitleBar
-        openFiles={[]}
-        setOpenFiles={() => {}}
+        openFiles={openFiles}
+        setOpenFiles={setOpenFiles}
         activeFileIndex={-1}
         setActiveFileIndex={() => {}}
       />

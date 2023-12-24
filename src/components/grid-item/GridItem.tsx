@@ -7,12 +7,12 @@ import { AppContext } from "../../main";
 import { getImageUrl } from "../../utils/fs";
 import { Recipe } from "../../utils/recipe";
 
-const GridItem: FC<{
+interface GridItemProps {
   recipe: Recipe;
-}> = ({ recipe }) => {
-  // #region variables
+}
+
+const GridItem: FC<GridItemProps> = ({ recipe }) => {
   const navigate = useNavigate();
-  // #endregion
 
   // #region contexts
   const appContext = useContext(AppContext);

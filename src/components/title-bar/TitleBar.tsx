@@ -1,5 +1,5 @@
-/* eslint-disable prettier/prettier */
-import { FC } from "react";
+import { FC, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import styles from "./TitleBar.module.css";
 import close from "../../assets/close.png";
@@ -12,42 +12,66 @@ interface TitleBarProps {
   setActiveFileIndex: (activeFileIndex: number) => void;
 }
 
-function createFile(
-  openFiles: Array<string>,
-  setOpenFiles: (openFiles: Array<string>) => void,
-  setActiveFileIndex: (activeFileIndex: number) => void,
-) {
-  setOpenFiles([...openFiles, ""]);
-  setActiveFileIndex(openFiles.length);
-}
-
-function closeTab(
-  index: number,
-  openFiles: Array<string>,
-  setOpenFiles: (openFiles: Array<string>) => void,
-) {
-  if (openFiles.length === 1) {
-    setOpenFiles([]);
-  } else {
-    setOpenFiles(openFiles.filter((_, i) => i !== index));
-  }
-}
-
 const TitleBar: FC<TitleBarProps> = ({
   openFiles,
   setOpenFiles,
   activeFileIndex,
   setActiveFileIndex,
 }) => {
-  document.addEventListener("keydown", (e) => {
-    // on command + w, close the active tab
-    if (e.metaKey && e.key === "w") {
-      closeTab(activeFileIndex, openFiles, setOpenFiles);
-      // on command + n, create a new tab
-    } else if (e.metaKey && e.key === "n") {
-      createFile(openFiles, setOpenFiles, setActiveFileIndex);
+  const navigate = useNavigate();
+
+  /**
+   * On mount, register keydown events
+   */
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      // on command + w, close the active tab
+      if (e.metaKey && e.key === "w") {
+        closeTab(activeFileIndex, openFiles, setOpenFiles);
+        // on command + n, create a new tab
+      } else if (e.metaKey && e.key === "n") {
+        createFile(openFiles, setOpenFiles, setActiveFileIndex);
+      }
+    });
+  }, []);
+
+  // #region functions
+
+  /**
+   * Create a new file
+   * @param openFiles
+   * @param setOpenFiles
+   * @param setActiveFileIndex
+   */
+  function createFile(
+    openFiles: Array<string>,
+    setOpenFiles: (openFiles: Array<string>) => void,
+    setActiveFileIndex: (activeFileIndex: number) => void,
+  ) {
+    setOpenFiles([...openFiles, ""]);
+    setActiveFileIndex(openFiles.length);
+  }
+
+  /**
+   * Close a tab
+   * @param index
+   * @param openFiles
+   * @param setOpenFiles
+   */
+  function closeTab(
+    index: number,
+    openFiles: Array<string>,
+    setOpenFiles: (openFiles: Array<string>) => void,
+  ) {
+    if (openFiles.length === 1) {
+      setOpenFiles([]);
+    } else {
+      setOpenFiles(openFiles.filter((_, i) => i !== index));
     }
-  });
+  }
+
+  // #endregion
+
   return (
     <div data-tauri-drag-region className={styles["title-bar"]}>
       <img
@@ -64,7 +88,9 @@ const TitleBar: FC<TitleBarProps> = ({
               ? styles["active-tab"]
               : styles["inactive-tab"]
           }`}
-          onClick={() => setActiveFileIndex(index)}
+          onClick={() => {
+            navigate("/editor", { state: { activeFileIndex: index } });
+          }}
         >
           <p className={styles["tab-label"]}>{file ? file : "New tab"}</p>
           <img

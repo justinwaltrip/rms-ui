@@ -1,6 +1,6 @@
 import { FC, useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
-// import styles from "./Editor.module.css";
 import NoFile from "../../components/no-file/NoFile";
 import SideBar from "../../components/sidebar/SideBar";
 import SourceEditor from "../../components/source-editor/SourceEditor";
@@ -12,6 +12,8 @@ const Editor: FC = () => {
   // #region contexts
   const appContext = useContext(AppContext);
   const { openFiles, setOpenFiles } = appContext;
+  const location = useLocation();
+  // #endregion
 
   // #region states
   const [activeFileIndex, setActiveFileIndex] = useState<number>(-1);
@@ -19,14 +21,30 @@ const Editor: FC = () => {
   // #endregion
 
   // #region effects
+
+  /**
+   * Update activeFileIndex when openFiles changes
+   */
   useEffect(() => {
-    // update activeFileIndex when openFiles changes
     if (openFiles.length > 0) {
       setActiveFileIndex(openFiles.length - 1);
     } else {
       setActiveFileIndex(-1);
     }
   }, [openFiles]);
+
+  /**
+   * Get activeFileIndex from location.state
+   */
+  useEffect(() => {
+    if (location.state) {
+      const { activeFileIndex } = location.state as {
+        activeFileIndex: number;
+      };
+      setActiveFileIndex(activeFileIndex);
+    }
+  }, [location.state]);
+
   // #endregion
 
   return (

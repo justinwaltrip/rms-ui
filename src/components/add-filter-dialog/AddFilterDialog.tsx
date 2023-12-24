@@ -14,10 +14,15 @@ const AddFilterDialog: FC<AddFilterDialogProps> = ({
   filters,
   setFilters,
 }) => {
+  // #region states
   const [filterField, setFilterField] = useState<"title">("title");
   const [filterOperator, setFilterOperator] = useState<string | null>(null);
   const [filterValue, setFilterValue] = useState<string>("");
+  // #endregion
 
+  /**
+   * Apply the filter to the grid
+   */
   function applyFilter() {
     const newFilters = [...filters];
     newFilters.push({

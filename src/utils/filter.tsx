@@ -8,7 +8,7 @@ const FILTERS: {
 } = {
   title: {
     operators: ["is", "is not", "contains", "does not contain"],
-    placeholder: "name",
+    placeholder: "title",
   },
 };
 

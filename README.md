@@ -26,10 +26,27 @@ Local-first recipe management system inspired by Obsidian. Built with Tauri, Rea
 
 ### React Functional Components
 
-- Use `// #region` and `// #endregion` to group related sections of code together. This makes it easier to collapse and expand sections of code in VS Code. Inside of the functional component, the order of the regions should be:
+- Create a new folder for each component. The folder name should be the name of the component in lowercase, separated by hyphens (ex. `add-filter-dialog`).
+
+  - Inside of the folder, create a file for the component. The file name should be the name of the component in PascalCase, followed by `.tsx`. For example, `AddFilterDialog.tsx`. The only exported item from the file should be the component itself.
+
+  - If the component has any custom styles, create a file for the styles. The file name should be the name of the component in PascalCase, followed by `.module.scss`. For example, `AddFilterDialog.module.scss`.
+
+- If the component has any props, create a type for the props. The name of the type should be the name of the component in PascalCase, followed by `Props`. For example, `AddFilterDialogProps`.
+
+- Use `// #region` and `// #endregion` to group 2 or more related sections of code together. This makes it easier to collapse and expand sections of code in VS Code. Inside of the functional component, the order of the regions should be:
+
   1. variables - simple `const` declarations
   2. contexts - `useContext` declarations
   3. states - `useState` declarations
   4. effects - `useEffect` declarations
   5. functions - `function` declarations
   6. components - `const` declarations of components
+
+- Use inline functions whenever possible to reduce complexity and improve readability.
+
+- Create JSDoc comments for all functions. The JSDoc comment should be placed directly above the function declaration. The JSDoc comment should include the following:
+  - `@param` for each parameter
+  - `@returns` for the return value
+  - `@throws` for any errors that can be thrown
+  - `@example` for an example of how to use the function

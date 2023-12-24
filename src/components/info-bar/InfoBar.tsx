@@ -10,6 +10,9 @@ interface InfoBarProps {
 const InfoBar: FC<InfoBarProps> = ({ filename, setFilename }) => {
   const [tempFilename, setTempFilename] = useState<string>(filename);
 
+  /**
+   * Update temp filename when filename changes
+   */
   useEffect(() => {
     setTempFilename(filename);
   }, [filename]);
@@ -21,8 +24,8 @@ const InfoBar: FC<InfoBarProps> = ({ filename, setFilename }) => {
         type="text"
         value={tempFilename}
         onChange={(e) => setTempFilename(e.target.value)}
-        // on tab, set title
         onKeyDown={(e) => {
+          // on tab, set title
           if (e.key === "Tab") {
             setFilename(tempFilename);
           }

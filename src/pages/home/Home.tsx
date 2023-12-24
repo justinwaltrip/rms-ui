@@ -155,6 +155,7 @@ const Home: FC = () => {
   // #endregion
 
   // #region components
+
   const Option: FC<{
     text: string;
     description: string;

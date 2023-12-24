@@ -6,13 +6,23 @@ import styles from "./CreateCollectionDialog.module.css";
 import back from "../../assets/back.png";
 import { createCollection } from "../../utils/collection";
 
-const CreateCollectionDialog: FC<{ visible: boolean; close: () => void }> = ({
+interface CreateCollectionDialogProps {
+  visible: boolean;
+  close: () => void;
+}
+
+const CreateCollectionDialog: FC<CreateCollectionDialogProps> = ({
   visible,
   close,
 }) => {
+  // #region states
   const [collectionName, setCollectionName] = useState("");
   const [collectionLocation, setCollectionLocation] = useState("");
+  // #endregion
 
+  /**
+   * Select a folder to store the collection
+   */
   async function selectFolder(): Promise<void> {
     try {
       const selected = await open({
