@@ -64,15 +64,12 @@
   opacity: 0.6;
 }
 
-.dialog-option-button {
-  right: 0;
-}
-
 .dialog-option-spacer {
   flex-grow: 1;
 }
 
 .dialog-option-button {
+  right: 0;
   width: 100px;
   height: 25px;
   border-radius: 10px;

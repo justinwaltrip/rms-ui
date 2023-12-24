@@ -89,7 +89,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
    */
   useEffect(() => {
     if (recipe) {
-      setTitle(recipe.getTitle());
+      setTitle(recipe.title);
       setDescription(recipe.getDescription());
       setImageSrc(recipe.getImageSrc());
       setIngredients(recipe.getIngredients());

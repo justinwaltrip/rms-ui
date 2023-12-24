@@ -1,31 +1,41 @@
 import { FC, useState } from "react";
 
 import styles from "./AddFilterDialog.module.css";
+import { FILTERS, Filter } from "../../utils/filter";
 
-const FILTERS: {
-  [key: string]: {
-    operators: Array<string>;
-    placeholder: string;
-  };
-} = {
-  name: {
-    operators: ["is", "is not", "contains", "does not contain"],
-    placeholder: "name",
-  },
-};
+interface AddFilterDialogProps {
+  setShowAddFilterDialog: (showAddFilterDialog: boolean) => void;
+  filters: Array<Filter>;
+  setFilters: (filters: Array<Filter>) => void;
+}
 
-const AddFilterDialog: FC = () => {
-  const [filterField, setFilterField] = useState<string>("name");
+const AddFilterDialog: FC<AddFilterDialogProps> = ({
+  setShowAddFilterDialog,
+  filters,
+  setFilters,
+}) => {
+  const [filterField, setFilterField] = useState<"title">("title");
   const [filterOperator, setFilterOperator] = useState<string | null>(null);
   const [filterValue, setFilterValue] = useState<string>("");
 
+  function applyFilter() {
+    const newFilters = [...filters];
+    newFilters.push({
+      field: filterField,
+      operator: filterOperator!,
+      value: filterValue,
+    });
+    setFilters(newFilters);
+    setShowAddFilterDialog(false);
+  }
+
   return (
-    <div className={styles["dialog"]}>
+    <div className={styles["dialog"]} onClick={(e) => e.stopPropagation()}>
       <div className={styles["filter-dropdown"]}>
         <select
           className={styles["filter-dropdown-select"]}
           value={filterField}
-          onChange={(event) => setFilterField(event.target.value)}
+          onChange={(event) => setFilterField(event.target.value as "title")}
         >
           {Object.keys(FILTERS).map((filter) => (
             <option key={filter} value={filter}>
@@ -44,7 +54,10 @@ const AddFilterDialog: FC = () => {
                 ? styles["selected-filter-operator"]
                 : ""
             }`}
-            onClick={() => setFilterOperator(operator)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setFilterOperator(operator);
+            }}
           >
             {operator}
           </div>
@@ -59,6 +72,10 @@ const AddFilterDialog: FC = () => {
       <button
         className={styles["apply-filter-button"]}
         disabled={!filterOperator || !filterValue}
+        onClick={(e) => {
+          e.stopPropagation();
+          applyFilter();
+        }}
       >
         apply
       </button>

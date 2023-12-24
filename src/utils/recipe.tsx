@@ -106,7 +106,7 @@ class Recipe {
     }
   }
 
-  getTitle() {
+  get title() {
     try {
       return this.json["title"] as string;
     } catch (err) {

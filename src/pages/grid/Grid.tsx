@@ -12,13 +12,9 @@ import GridItem from "../../components/grid-item/GridItem";
 import SideBar from "../../components/sidebar/SideBar";
 import TitleBar from "../../components/title-bar/TitleBar";
 import { AppContext } from "../../main";
+import { Filter } from "../../utils/filter";
+import { filterRecipes } from "../../utils/filter";
 import { Recipe } from "../../utils/recipe";
-
-interface Filter {
-  field: string;
-  operator: string;
-  value: string;
-}
 
 const SORT_FIELDS = ["name"];
 
@@ -30,27 +26,33 @@ const Grid: FC = () => {
   // #endregion
 
   // #region states
+
+  // recipes
   const [recipes, setRecipes] = useState<Array<Recipe>>([]);
-  const [sortedRecipes, setSortedRecipes] = useState<Array<Recipe>>([]);
-  const [filters, setFilters] = useState<Array<Filter>>([
-    {
-      field: "name",
-      operator: "is",
-      value: "value",
-    },
-  ]);
+  const [displayRecipes, setDisplayRecipes] = useState<Array<Recipe>>([]);
+
+  const [filters, setFilters] = useState<Array<Filter>>([]);
   const [sortField, setSortField] = useState<string>(SORT_FIELDS[0]);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [booleanField, setBooleanField] = useState<"any" | "all">("any");
 
   // add filter dialog
-  const [showAddFilterDialog, setShowAddFilterDialog] = useState(true);
+  const [showAddFilterDialog, setShowAddFilterDialog] = useState(false);
   // #endregion
 
   // #region effects
 
   /**
-   * On mount, check if maximizeWindow is in location.state
+   * On mount, register click events to close add filter dialog
+   */
+  useEffect(() => {
+    document.addEventListener("click", () => {
+      setShowAddFilterDialog(false);
+    });
+  }, []);
+
+  /**
+   * Check if maximizeWindow is in location.state
    */
   let isMaximized = false;
   useEffect(() => {
@@ -97,13 +99,15 @@ const Grid: FC = () => {
   }, [collectionPath]);
 
   /**
-   * Sort recipes by getTitle()
+   * Sort and filter recipes
    */
   useEffect(() => {
-    const sortedRecipes = [...recipes];
+    const filteredRecipes = filterRecipes(recipes, filters);
+
+    const sortedRecipes = [...filteredRecipes];
     sortedRecipes.sort((a, b) => {
-      const titleA = a.getTitle();
-      const titleB = b.getTitle();
+      const titleA = a.title;
+      const titleB = b.title;
       if (titleA < titleB) {
         return -1;
       }
@@ -117,8 +121,8 @@ const Grid: FC = () => {
       sortedRecipes.reverse();
     }
 
-    setSortedRecipes(sortedRecipes);
-  }, [recipes, sortOrder]);
+    setDisplayRecipes(sortedRecipes);
+  }, [recipes, sortOrder, filters]);
 
   // #endregion
 
@@ -139,7 +143,8 @@ const Grid: FC = () => {
           <div>
             <div
               className={styles["add-filter-button"]}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 setShowAddFilterDialog(true);
               }}
             >
@@ -150,7 +155,13 @@ const Grid: FC = () => {
               />
               <div className={styles["filter-text"]}>filter</div>
             </div>
-            {showAddFilterDialog && <AddFilterDialog />}
+            {showAddFilterDialog && (
+              <AddFilterDialog
+                setShowAddFilterDialog={setShowAddFilterDialog}
+                filters={filters}
+                setFilters={setFilters}
+              />
+            )}
           </div>
           <div className={styles["filters"]}>
             <div className={styles["boolean-dropdown"]}>
@@ -207,7 +218,7 @@ const Grid: FC = () => {
             />
           </div>
           <div className={styles["grid"]}>
-            {sortedRecipes.map((recipe, index) => (
+            {displayRecipes.map((recipe, index) => (
               <div key={index}>
                 <GridItem recipe={recipe} />
               </div>

@@ -90,16 +90,15 @@
   border-radius: 5px;
   padding-left: 10px;
   padding-right: 10px;
+  font-size: 14px;
 }
 
 .field {
-  font-size: 14px;
   font-weight: 600;
   opacity: 0.6;
 }
 
 .value {
-  font-size: 14px;
   font-weight: 600;
   opacity: 0.6;
 }
