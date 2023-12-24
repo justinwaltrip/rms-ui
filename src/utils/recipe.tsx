@@ -79,7 +79,11 @@ class Recipe {
   getImageSrc() {
     try {
       const image: Image = this.json["image"] as Image;
-      return image.src;
+      if (image) {
+        return image.src;
+      } else {
+        return undefined;
+      }
     } catch (err) {
       console.error(err);
       throw err;

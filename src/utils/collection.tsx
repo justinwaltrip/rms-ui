@@ -3,9 +3,10 @@ import {
   createDir,
   exists,
   readTextFile,
+  renameFile,
 } from "@tauri-apps/api/fs";
 
-import { writeAppConfig } from "./fs";
+import { readAppConfig, writeAppConfig } from "./fs";
 
 async function createCollection(collectionPath: string) {
   try {
@@ -56,4 +57,22 @@ async function createCollection(collectionPath: string) {
   }
 }
 
-export { createCollection };
+async function renameCollection(oldPath: string, newPath: string) {
+  try {
+    // rename file
+    await renameFile(oldPath, newPath, {
+      dir: BaseDirectory.Home,
+    });
+
+    // update app config
+    const appConfig = await readAppConfig();
+    const index = appConfig.collections.indexOf(oldPath);
+    appConfig.collections[index] = newPath;
+    await writeAppConfig(appConfig);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+export { createCollection, renameCollection };

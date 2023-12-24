@@ -49,12 +49,17 @@ const ViewEditor: FC<ViewEditorProps> = ({
   const [recipeLoaded, setRecipeLoaded] = useState<boolean>(false);
 
   // recipe data
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [imageSrc, setImageSrc] = useState<string>("");
-  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
-  const [directions, setDirections] = useState<string[]>([]);
-  const [notes, setNotes] = useState<string[]>([]);
+  const [title, setTitle] = useState<string | undefined>(undefined);
+  const [description, setDescription] = useState<string | undefined>(undefined);
+  const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
+  const [ingredients, setIngredients] = useState<Ingredient[] | undefined>(
+    undefined,
+  );
+  const [directions, setDirections] = useState<string[] | undefined>(undefined);
+  const [notes, setNotes] = useState<string[] | undefined>(undefined);
+
+  // set title from filename
+  const [defaultTitle, setDefaultTitle] = useState<string>("");
 
   // render data
   const [imageUrl, setImgUrl] = useState<string>("");
@@ -80,7 +85,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
         .catch((err) => console.error(err));
     } else {
       // prompt user to enter title
-      document.getElementById("title-input")?.focus();
+      document.getElementById("filename-input")?.focus();
     }
   }, [filename, collectionPath]);
 
@@ -106,12 +111,24 @@ const ViewEditor: FC<ViewEditorProps> = ({
   useEffect(() => {
     if (recipe && recipeLoaded) {
       // set recipe data
-      recipe.setTitle(title);
-      recipe.setDescription(description);
-      recipe.setImageSrc(imageSrc);
-      recipe.setIngredients(ingredients);
-      recipe.setDirections(directions);
-      recipe.setNotes(notes);
+      if (title !== undefined) {
+        recipe.setTitle(title);
+      }
+      if (description !== undefined) {
+        recipe.setDescription(description);
+      }
+      if (imageSrc !== undefined) {
+        recipe.setImageSrc(imageSrc);
+      }
+      if (ingredients !== undefined) {
+        recipe.setIngredients(ingredients);
+      }
+      if (directions !== undefined) {
+        recipe.setDirections(directions);
+      }
+      if (notes !== undefined) {
+        recipe.setNotes(notes);
+      }
 
       // save recipe
       recipe
@@ -174,6 +191,17 @@ const ViewEditor: FC<ViewEditorProps> = ({
       setNewNoteIndex(-1);
     }
   }, [newNoteIndex]);
+
+  /**
+   * If default title changes, update title
+   */
+  useEffect(() => {
+    if (defaultTitle && recipeLoaded) {
+      setTitle(defaultTitle);
+      setDefaultTitle("");
+    }
+  }, [defaultTitle, recipeLoaded]);
+
   // #endregion
 
   // #region functions
@@ -224,16 +252,21 @@ const ViewEditor: FC<ViewEditorProps> = ({
         onClick={() => setMode("source")}
       />
       <div className={styles["content"]}>
-        <InfoBar filename={filename} setFilename={setFilename} />
+        <InfoBar
+          filename={filename}
+          setFilename={setFilename}
+          setDefaultTitle={setDefaultTitle}
+        />
         <div className={styles["view-editor"]}>
           <div className={styles["column"]}>
             <input
               className={styles["title-input"]}
               type="text"
-              value={title}
+              value={title || ""}
               onChange={(e) => {
                 setTitle(e.target.value);
               }}
+              placeholder="title"
             />
             <div className={styles["image-container"]}>
               {imageUrl ? (
@@ -276,7 +309,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
             <input
               className={styles["description-input"]}
               type="text"
-              value={description}
+              value={description || ""}
               onChange={(e) => {
                 setDescription(e.target.value);
               }}
@@ -285,227 +318,240 @@ const ViewEditor: FC<ViewEditorProps> = ({
           </div>
           <div className={styles["column"]}>
             <h2>ingredients</h2>
-            {ingredients.map(
-              ({ name, is_checked, primary_amount, primary_unit }, index) => (
-                <div key={index} className={styles["ingredient"]}>
-                  <input
-                    type="checkbox"
-                    checked={is_checked}
-                    onChange={(e) => {
-                      const newIngredients = [...ingredients];
-                      newIngredients[index].is_checked = e.target.checked;
-                      setIngredients(newIngredients);
-                    }}
-                  />
-                  <AutosizeInput
-                    //@ts-expect-error no overload matches this call
-                    ref={newIngredientIndex === index ? newIngredientRef : null}
-                    className={styles["ingredient-amount"]}
-                    type="text"
-                    value={primary_amount}
-                    onChange={function (e: ChangeEvent<HTMLInputElement>) {
-                      const newIngredients = [...ingredients];
-                      newIngredients[index].primary_amount = e.target.value;
-                      setIngredients(newIngredients);
-                    }}
-                    onKeyDown={function (
-                      e: React.KeyboardEvent<HTMLInputElement>,
-                    ) {
-                      if (
-                        e.key === "Backspace" &&
-                        (e.currentTarget as HTMLInputElement).value === ""
-                      ) {
-                        e.preventDefault();
-
-                        // remove ingredient at index
+            {ingredients &&
+              ingredients.map(
+                ({ name, is_checked, primary_amount, primary_unit }, index) => (
+                  <div key={index} className={styles["ingredient"]}>
+                    <input
+                      type="checkbox"
+                      checked={is_checked}
+                      onChange={(e) => {
                         const newIngredients = [...ingredients];
-                        newIngredients.splice(index, 1);
+                        newIngredients[index].is_checked = e.target.checked;
                         setIngredients(newIngredients);
+                      }}
+                    />
+                    <AutosizeInput
+                      //@ts-expect-error no overload matches this call
+                      ref={
+                        newIngredientIndex === index ? newIngredientRef : null
+                      }
+                      className={styles["ingredient-amount"]}
+                      type="text"
+                      value={primary_amount || ""}
+                      onChange={function (e: ChangeEvent<HTMLInputElement>) {
+                        const newIngredients = [...ingredients];
+                        newIngredients[index].primary_amount = e.target.value;
+                        setIngredients(newIngredients);
+                      }}
+                      onKeyDown={function (
+                        e: React.KeyboardEvent<HTMLInputElement>,
+                      ) {
+                        if (
+                          e.key === "Backspace" &&
+                          (e.currentTarget as HTMLInputElement).value === ""
+                        ) {
+                          e.preventDefault();
 
-                        // focus on previous ingredient name
-                        if (index > 0) {
+                          // remove ingredient at index
+                          const newIngredients = [...ingredients];
+                          newIngredients.splice(index, 1);
+                          setIngredients(newIngredients);
+
+                          // focus on previous ingredient name
+                          if (index > 0) {
+                            const ingredientNameDiv =
+                              document.getElementsByClassName(
+                                styles["ingredient-name"],
+                              )[index - 1] as HTMLInputElement;
+                            const ingredientName =
+                              ingredientNameDiv.getElementsByTagName(
+                                "input",
+                              )[0];
+                            ingredientName.focus();
+                          }
+                        } else if (e.key === " ") {
+                          e.preventDefault();
+
+                          // focus on ingredient unit
+                          const ingredientUnitDiv =
+                            document.getElementsByClassName(
+                              styles["ingredient-unit"],
+                            )[index] as HTMLInputElement;
+                          const ingredientUnit =
+                            ingredientUnitDiv.getElementsByTagName("input")[0];
+                          ingredientUnit.focus();
+                        }
+                      }}
+                    />
+                    <AutosizeInput
+                      className={styles["ingredient-unit"]}
+                      type="text"
+                      value={primary_unit || ""}
+                      onChange={function (e: ChangeEvent<HTMLInputElement>) {
+                        const newIngredients = [...ingredients];
+                        newIngredients[index].primary_unit = e.target.value;
+                        setIngredients(newIngredients);
+                      }}
+                      onKeyDown={function (
+                        e: React.KeyboardEvent<HTMLInputElement>,
+                      ) {
+                        if (
+                          e.key === "Backspace" &&
+                          (e.currentTarget as HTMLInputElement).value === ""
+                        ) {
+                          e.preventDefault();
+
+                          // focus on ingredient amount
+                          const ingredientAmountDiv =
+                            document.getElementsByClassName(
+                              styles["ingredient-amount"],
+                            )[index] as HTMLInputElement;
+                          const ingredientAmount =
+                            ingredientAmountDiv.getElementsByTagName(
+                              "input",
+                            )[0];
+                          ingredientAmount.focus();
+                        } else if (e.key === " ") {
+                          e.preventDefault();
+
+                          // focus on ingredient name
                           const ingredientNameDiv =
                             document.getElementsByClassName(
                               styles["ingredient-name"],
-                            )[index - 1] as HTMLInputElement;
+                            )[index] as HTMLInputElement;
                           const ingredientName =
                             ingredientNameDiv.getElementsByTagName("input")[0];
                           ingredientName.focus();
                         }
-                      } else if (e.key === " ") {
-                        e.preventDefault();
-
-                        // focus on ingredient unit
-                        const ingredientUnitDiv =
-                          document.getElementsByClassName(
-                            styles["ingredient-unit"],
-                          )[index] as HTMLInputElement;
-                        const ingredientUnit =
-                          ingredientUnitDiv.getElementsByTagName("input")[0];
-                        ingredientUnit.focus();
-                      }
-                    }}
-                  />
-                  <AutosizeInput
-                    className={styles["ingredient-unit"]}
-                    type="text"
-                    value={primary_unit}
-                    onChange={function (e: ChangeEvent<HTMLInputElement>) {
-                      const newIngredients = [...ingredients];
-                      newIngredients[index].primary_unit = e.target.value;
-                      setIngredients(newIngredients);
-                    }}
-                    onKeyDown={function (
-                      e: React.KeyboardEvent<HTMLInputElement>,
-                    ) {
-                      if (
-                        e.key === "Backspace" &&
-                        (e.currentTarget as HTMLInputElement).value === ""
+                      }}
+                    />
+                    <input
+                      className={styles["ingredient-name"]}
+                      type="text"
+                      value={name || ""}
+                      onChange={function (e: ChangeEvent<HTMLInputElement>) {
+                        const newIngredients = [...ingredients];
+                        newIngredients[index].name = e.target.value;
+                        setIngredients(newIngredients);
+                      }}
+                      onKeyDown={function (
+                        e: React.KeyboardEvent<HTMLInputElement>,
                       ) {
-                        e.preventDefault();
+                        if (
+                          e.key === "Backspace" &&
+                          (e.currentTarget as HTMLInputElement).value === ""
+                        ) {
+                          e.preventDefault();
 
-                        // focus on ingredient amount
-                        const ingredientAmountDiv =
-                          document.getElementsByClassName(
-                            styles["ingredient-amount"],
-                          )[index] as HTMLInputElement;
-                        const ingredientAmount =
-                          ingredientAmountDiv.getElementsByTagName("input")[0];
-                        ingredientAmount.focus();
-                      } else if (e.key === " ") {
-                        e.preventDefault();
+                          // how to focus on current ingredient unit
+                          const ingredientUnitDiv =
+                            document.getElementsByClassName(
+                              styles["ingredient-unit"],
+                            )[index] as HTMLInputElement;
+                          const ingredientUnit =
+                            ingredientUnitDiv.getElementsByTagName("input")[0];
+                          ingredientUnit.focus();
+                        } else if (e.key === "Enter") {
+                          e.preventDefault();
 
-                        // focus on ingredient name
-                        const ingredientNameDiv =
-                          document.getElementsByClassName(
-                            styles["ingredient-name"],
-                          )[index] as HTMLInputElement;
-                        const ingredientName =
-                          ingredientNameDiv.getElementsByTagName("input")[0];
-                        ingredientName.focus();
-                      }
-                    }}
-                  />
+                          // add new ingredient at index + 1
+                          const newIngredients = [...ingredients];
+                          newIngredients.splice(
+                            index + 1,
+                            0,
+                            new Ingredient(""),
+                          );
+                          setIngredients(newIngredients);
+
+                          // focus on new ingredient amount
+                          setNewIngredientIndex(index + 1);
+                        }
+                      }}
+                    />
+                  </div>
+                ),
+              )}
+            <h2>directions</h2>
+            {directions &&
+              directions.map((direction, index) => (
+                <div key={index} className={styles["direction"]}>
+                  <p>{`${index + 1}.`}</p>
                   <input
-                    className={styles["ingredient-name"]}
+                    ref={newDirectionIndex === index ? newDirectionRef : null}
                     type="text"
-                    value={name}
-                    onChange={function (e: ChangeEvent<HTMLInputElement>) {
-                      const newIngredients = [...ingredients];
-                      newIngredients[index].name = e.target.value;
-                      setIngredients(newIngredients);
+                    value={direction || ""}
+                    onChange={(e) => {
+                      const newDirections = [...directions];
+                      newDirections[index] = e.target.value;
+                      setDirections(newDirections);
                     }}
-                    onKeyDown={function (
-                      e: React.KeyboardEvent<HTMLInputElement>,
-                    ) {
+                    onKeyDown={(e) => {
                       if (
                         e.key === "Backspace" &&
                         (e.currentTarget as HTMLInputElement).value === ""
                       ) {
                         e.preventDefault();
 
-                        // how to focus on current ingredient unit
-                        const ingredientUnitDiv =
-                          document.getElementsByClassName(
-                            styles["ingredient-unit"],
-                          )[index] as HTMLInputElement;
-                        const ingredientUnit =
-                          ingredientUnitDiv.getElementsByTagName("input")[0];
-                        ingredientUnit.focus();
+                        // remove direction at index
+                        const newDirections = [...directions];
+                        newDirections.splice(index, 1);
+                        setDirections(newDirections);
                       } else if (e.key === "Enter") {
                         e.preventDefault();
 
-                        // add new ingredient at index + 1
-                        const newIngredients = [...ingredients];
-                        newIngredients.splice(index + 1, 0, new Ingredient(""));
-                        setIngredients(newIngredients);
+                        // add new direction at index + 1
+                        const newDirections = [...directions];
+                        newDirections.splice(index + 1, 0, "");
+                        setDirections(newDirections);
 
-                        // focus on new ingredient amount
-                        setNewIngredientIndex(index + 1);
+                        // focus on new direction
+                        setNewDirectionIndex(index + 1);
                       }
                     }}
                   />
                 </div>
-              ),
-            )}
-            <h2>directions</h2>
-            {directions.map((direction, index) => (
-              <div key={index} className={styles["direction"]}>
-                <p>{`${index + 1}.`}</p>
-                <input
-                  ref={newDirectionIndex === index ? newDirectionRef : null}
-                  type="text"
-                  value={direction}
-                  onChange={(e) => {
-                    const newDirections = [...directions];
-                    newDirections[index] = e.target.value;
-                    setDirections(newDirections);
-                  }}
-                  onKeyDown={(e) => {
-                    if (
-                      e.key === "Backspace" &&
-                      (e.currentTarget as HTMLInputElement).value === ""
-                    ) {
-                      e.preventDefault();
-
-                      // remove direction at index
-                      const newDirections = [...directions];
-                      newDirections.splice(index, 1);
-                      setDirections(newDirections);
-                    } else if (e.key === "Enter") {
-                      e.preventDefault();
-
-                      // add new direction at index + 1
-                      const newDirections = [...directions];
-                      newDirections.splice(index + 1, 0, "");
-                      setDirections(newDirections);
-
-                      // focus on new direction
-                      setNewDirectionIndex(index + 1);
-                    }
-                  }}
-                />
-              </div>
-            ))}
+              ))}
             <h2>notes</h2>
-            {notes.map((note, index) => (
-              <div key={index} className={styles["note"]}>
-                <p>{`-`}</p>
-                <input
-                  ref={newNoteIndex === index ? newNoteRef : null}
-                  type="text"
-                  value={note}
-                  onChange={(e) => {
-                    const newNotes = [...notes];
-                    newNotes[index] = e.target.value;
-                    setNotes(newNotes);
-                  }}
-                  onKeyDown={(e) => {
-                    if (
-                      e.key === "Backspace" &&
-                      (e.currentTarget as HTMLInputElement).value === ""
-                    ) {
-                      e.preventDefault();
-
-                      // remove note at index
+            {notes &&
+              notes.map((note, index) => (
+                <div key={index} className={styles["note"]}>
+                  <p>{`-`}</p>
+                  <input
+                    ref={newNoteIndex === index ? newNoteRef : null}
+                    type="text"
+                    value={note || ""}
+                    onChange={(e) => {
                       const newNotes = [...notes];
-                      newNotes.splice(index, 1);
+                      newNotes[index] = e.target.value;
                       setNotes(newNotes);
-                    } else if (e.key === "Enter") {
-                      e.preventDefault();
+                    }}
+                    onKeyDown={(e) => {
+                      if (
+                        e.key === "Backspace" &&
+                        (e.currentTarget as HTMLInputElement).value === ""
+                      ) {
+                        e.preventDefault();
 
-                      // add new note at index + 1
-                      const newNotes = [...notes];
-                      newNotes.splice(index + 1, 0, "");
-                      setNotes(newNotes);
+                        // remove note at index
+                        const newNotes = [...notes];
+                        newNotes.splice(index, 1);
+                        setNotes(newNotes);
+                      } else if (e.key === "Enter") {
+                        e.preventDefault();
 
-                      // focus on new note
-                      setNewNoteIndex(index + 1);
-                    }
-                  }}
-                />
-              </div>
-            ))}
+                        // add new note at index + 1
+                        const newNotes = [...notes];
+                        newNotes.splice(index + 1, 0, "");
+                        setNotes(newNotes);
+
+                        // focus on new note
+                        setNewNoteIndex(index + 1);
+                      }
+                    }}
+                  />
+                </div>
+              ))}
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import {
   readBinaryFile,
   readTextFile,
   removeFile,
+  renameFile,
   writeBinaryFile,
   writeTextFile,
 } from "@tauri-apps/api/fs";
@@ -169,6 +170,26 @@ async function readAppConfig() {
   }
 }
 
+async function renameRecipe(
+  oldPath: string,
+  newPath: string,
+  collectionPath: string,
+) {
+  try {
+    // rename file
+    await renameFile(
+      `${collectionPath}/${oldPath}.json`,
+      `${collectionPath}/${newPath}.json`,
+      {
+        dir: BaseDirectory.Home,
+      },
+    );
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export {
   getImageUrl,
   writeAppConfig,
@@ -177,4 +198,5 @@ export {
   readRecipeContents,
   deleteImage,
   writeImage,
+  renameRecipe,
 };

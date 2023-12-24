@@ -8,10 +8,10 @@ import styles from "./Home.module.css";
 import close from "../../assets/close.png";
 import folder from "../../assets/folder.png";
 import hdots from "../../assets/hdots.png";
-// import rename from "../../assets/rename.png";
+import rename from "../../assets/rename.png";
 import CreateCollectionDialog from "../../components/create-collection-dialog/CreateCollectionDialog";
 import { AppContext } from "../../main";
-import { createCollection } from "../../utils/collection";
+import { createCollection, renameCollection } from "../../utils/collection";
 import { readAppConfig, writeAppConfig } from "../../utils/fs";
 
 const Home: FC = () => {
@@ -29,6 +29,7 @@ const Home: FC = () => {
 
   // collections
   const [collections, setCollections] = useState<Array<string>>([]);
+  const [reloadCollections, setReloadCollections] = useState(true);
 
   // create collection
   const [showCreateCollectionDialog, setShowCreateCollectionDialog] =
@@ -41,25 +42,19 @@ const Home: FC = () => {
     x: 0,
     y: 0,
   });
+
+  // rename collection
+  const [renameCollectionIndex, setRenameCollectionIndex] = useState(-1);
+  const [tempCollectionName, setTempCollectionName] = useState("");
+
   // #endregion
 
   // #region effects
 
   /**
-   * On mount, read app config and set collections
+   * On mount, set window size and prevent window from being resized
    */
   useEffect(() => {
-    // read app config and set collections
-    readAppConfig()
-      .then((appConfig) => {
-        if (appConfig.collections) {
-          setCollections(appConfig.collections);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-
     // set size and prevent window from being resized
     appWindow
       .setSize(new LogicalSize(800, 600))
@@ -99,6 +94,26 @@ const Home: FC = () => {
   }, []);
 
   /**
+   * On reload collections change, read app config
+   */
+  useEffect(() => {
+    if (reloadCollections) {
+      readAppConfig()
+        .then((appConfig) => {
+          if (appConfig.collections) {
+            setCollections(appConfig.collections);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+        .finally(() => {
+          setReloadCollections(false);
+        });
+    }
+  }, [reloadCollections]);
+
+  /**
    * On collections change, write app config
    */
   useEffect(() => {
@@ -114,6 +129,19 @@ const Home: FC = () => {
         console.error(err);
       });
   }, [collections]);
+
+  /**
+   * On rename collection index change, focus on input
+   */
+  useEffect(() => {
+    if (renameCollectionIndex !== -1) {
+      const input = document.getElementById("rename-collection-input");
+      if (input) {
+        input.focus();
+      }
+    }
+  }, [renameCollectionIndex]);
+
   // #endregion
 
   // #region functions
@@ -192,9 +220,39 @@ const Home: FC = () => {
               }}
             >
               <div className={styles["option-text"]}>
-                <div className={styles["option-title"]}>
-                  {collectionPath.split("/").pop()}
-                </div>
+                {renameCollectionIndex === index ? (
+                  <input
+                    id="rename-collection-input"
+                    type="text"
+                    value={tempCollectionName}
+                    onChange={(e) => setTempCollectionName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Tab" || e.key === "Enter") {
+                        renameCollection(
+                          collectionPath,
+                          `${collectionPath
+                            .split("/")
+                            .slice(0, -1)
+                            .join("/")}/${tempCollectionName}`,
+                        )
+                          .then(() => {
+                            setRenameCollectionIndex(-1);
+                            setReloadCollections(true);
+                          })
+                          .catch((err) => {
+                            console.error(err);
+                          });
+                      } else if (e.key === "Escape") {
+                        setRenameCollectionIndex(-1);
+                      }
+                    }}
+                    autoCorrect="off"
+                  />
+                ) : (
+                  <div className={styles["option-title"]}>
+                    {collectionPath.split("/").pop()}
+                  </div>
+                )}
                 <div className={styles["option-description"]}>
                   {collectionPath}
                 </div>
@@ -237,10 +295,12 @@ const Home: FC = () => {
           />
         </div>
       </div>
-      <CreateCollectionDialog
-        visible={showCreateCollectionDialog}
-        close={() => setShowCreateCollectionDialog(false)}
-      />
+      {showCreateCollectionDialog && (
+        <CreateCollectionDialog
+          close={() => setShowCreateCollectionDialog(false)}
+          reloadCollections={() => setReloadCollections(true)}
+        />
+      )}
       {showCollectionOptions && (
         <div
           className={styles["collection-options"]}
@@ -267,12 +327,20 @@ const Home: FC = () => {
               Reveal in Finder
             </div>
           </div>
-          {/* <div className={styles["collection-option"]} onClick={() => {}}>
+          <div
+            className={styles["collection-option"]}
+            onClick={() => {
+              setRenameCollectionIndex(collectionOptionsIndex);
+              setTempCollectionName(
+                collections[collectionOptionsIndex].split("/").pop() || "",
+              );
+            }}
+          >
             <img src={rename} alt="Rename" className={styles["option-icon"]} />
             <div className={styles["collection-option-text"]}>
               Rename collection
             </div>
-          </div> */}
+          </div>
           <div
             className={styles["collection-option"]}
             onClick={() => {

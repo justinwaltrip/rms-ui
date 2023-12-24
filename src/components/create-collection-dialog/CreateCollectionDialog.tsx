@@ -1,24 +1,34 @@
 import { open } from "@tauri-apps/api/dialog";
 import { homeDir } from "@tauri-apps/api/path";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import styles from "./CreateCollectionDialog.module.css";
 import back from "../../assets/back.png";
 import { createCollection } from "../../utils/collection";
 
 interface CreateCollectionDialogProps {
-  visible: boolean;
   close: () => void;
+  reloadCollections: () => void;
 }
 
 const CreateCollectionDialog: FC<CreateCollectionDialogProps> = ({
-  visible,
   close,
+  reloadCollections,
 }) => {
   // #region states
   const [collectionName, setCollectionName] = useState("");
   const [collectionLocation, setCollectionLocation] = useState("");
   // #endregion
+
+  /**
+   * On mount, set focus to the collection name input
+   */
+  useEffect(() => {
+    const input = document.getElementById(
+      "dialog-option-input",
+    ) as HTMLInputElement;
+    input.focus();
+  }, []);
 
   /**
    * Select a folder to store the collection
@@ -38,7 +48,7 @@ const CreateCollectionDialog: FC<CreateCollectionDialogProps> = ({
     }
   }
 
-  return visible ? (
+  return (
     <div className={styles["dialog"]}>
       <img
         src={back}
@@ -59,10 +69,12 @@ const CreateCollectionDialog: FC<CreateCollectionDialogProps> = ({
           <div className={styles["dialog-option-spacer"]} />
           <input
             type="text"
+            id="dialog-option-input"
             className={styles["dialog-option-input"]}
             placeholder="Collection name"
             value={collectionName}
             onChange={(e) => setCollectionName(e.target.value)}
+            autoCorrect="off"
           />
         </div>
         <div className={styles["divider"]} />
@@ -89,13 +101,15 @@ const CreateCollectionDialog: FC<CreateCollectionDialogProps> = ({
             Browse
           </button>
         </div>
+        <div className={styles["spacer"]} />
         <div className={styles["dialog-option-footer"]}>
           <button
             className={`${styles["dialog-option-button"]} ${styles["create-button"]}`}
             onClick={() => {
-              createCollection(`${collectionName}{collectionLocation}`)
+              createCollection(`${collectionLocation}/${collectionName}`)
                 .then(() => {
                   close();
+                  reloadCollections();
                 })
                 .catch((err) => {
                   console.error(err);
@@ -107,7 +121,7 @@ const CreateCollectionDialog: FC<CreateCollectionDialogProps> = ({
         </div>
       </div>
     </div>
-  ) : null;
+  );
 };
 
 export default CreateCollectionDialog;

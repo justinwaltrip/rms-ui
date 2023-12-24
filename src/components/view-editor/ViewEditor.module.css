@@ -61,6 +61,10 @@
   position: relative;
 }
 
+.image-container:hover .image-overlay {
+  opacity: 1;
+}
+
 .image {
   position: absolute;
   top: 0;
@@ -75,10 +79,6 @@
   opacity: 0;
 }
 
-.image-overlay:hover {
-  opacity: 1;
-}
-
 .close-icon {
   position: absolute;
   top: 10px;
@@ -86,6 +86,7 @@
   height: 25px;
   width: 25px;
   opacity: 0.6;
+  filter: drop-shadow(0px 0px 2px black);
 }
 
 .close-icon:hover {
@@ -155,7 +156,7 @@ input:focus {
   height: 25px;
   width: 25px;
   opacity: 0.6;
-  position: relative;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

@@ -132,7 +132,6 @@ const Grid: FC = () => {
         openFiles={openFiles}
         setOpenFiles={setOpenFiles}
         activeFileIndex={-1}
-        setActiveFileIndex={() => {}}
       />
       <SideBar />
       <div className={styles["content"]}>

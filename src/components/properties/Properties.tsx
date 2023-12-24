@@ -17,12 +17,15 @@ interface PropertiesProps {
 const Properties: FC<PropertiesProps> = ({ recipe }) => {
   // #region states
   const [recipeLoaded, setRecipeLoaded] = useState<boolean>(false);
-  const [tags, setTags] = useState<string[]>([]);
-  const [date, setDate] = useState<string>("");
-  const [source, setSource] = useState<string>("");
-  const [prep, setPrep] = useState<string>("");
-  const [cook, setCook] = useState<string>("");
-  const [servings, setServings] = useState<string>("");
+
+  // recipe data
+  const [tags, setTags] = useState<string[] | undefined>(undefined);
+  const [date, setDate] = useState<string | undefined>(undefined);
+  const [source, setSource] = useState<string | undefined>(undefined);
+  const [prep, setPrep] = useState<string | undefined>(undefined);
+  const [cook, setCook] = useState<string | undefined>(undefined);
+  const [servings, setServings] = useState<string | undefined>(undefined);
+
   // #endregion
 
   // #region effects
@@ -48,16 +51,22 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
    */
   useEffect(() => {
     if (recipe && recipeLoaded) {
-      recipe.setTags(tags);
-      recipe.setDate(date);
-      recipe.setSource(source);
-      if (prep) {
+      if (tags !== undefined) {
+        recipe.setTags(tags);
+      }
+      if (date !== undefined) {
+        recipe.setDate(date);
+      }
+      if (source !== undefined) {
+        recipe.setSource(source);
+      }
+      if (prep !== undefined) {
         recipe.setPrep(prep);
       }
-      if (cook) {
+      if (cook !== undefined) {
         recipe.setCook(cook);
       }
-      if (servings) {
+      if (servings !== undefined) {
         recipe.setServings(servings);
       }
 
@@ -82,6 +91,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
           alt="remove"
           className={styles["remove-icon"]}
           onClick={() => {
+            if (tags === undefined) return;
             setTags(tags.filter((t) => t !== tag));
           }}
         />
@@ -107,16 +117,22 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
     <div className={styles["grid-container"]}>
       <PropertyLabel label="tags" src={tagsIcon} />
       <div className={styles["grid-item"]}>
-        {tags.map((tag: string, index: number) => (
-          <Tag tag={tag} key={index} />
-        ))}
+        {tags &&
+          tags.map((tag: string, index: number) => (
+            <Tag tag={tag} key={index} />
+          ))}
         <input
           type="text"
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              setTags([...tags, e.currentTarget.value]);
+              if (tags === undefined) {
+                setTags([e.currentTarget.value]);
+              } else {
+                setTags([...tags, e.currentTarget.value]);
+              }
               e.currentTarget.value = "";
             } else if (e.key === "Backspace" && e.currentTarget.value === "") {
+              if (tags === undefined || tags.length === 0) return;
               setTags(tags.slice(0, tags.length - 1));
             }
           }}
@@ -126,7 +142,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       <div className={styles["grid-item"]}>
         <input
           type="date"
-          value={date}
+          value={date || ""}
           onChange={(e) => setDate(e.target.value)}
         />
       </div>
@@ -134,7 +150,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       <div className={styles["grid-item"]}>
         <input
           type="text"
-          value={source}
+          value={source || ""}
           onChange={(e) => setSource(e.target.value)}
         />
       </div>
@@ -142,7 +158,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       <div className={styles["grid-item"]}>
         <input
           type="text"
-          value={prep ? prep.toString() : ""}
+          value={prep || ""}
           onChange={(e) => setPrep(e.target.value)}
         />
       </div>
@@ -150,7 +166,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       <div className={styles["grid-item"]}>
         <input
           type="text"
-          value={cook ? cook.toString() : ""}
+          value={cook || ""}
           onChange={(e) => setCook(e.target.value)}
         />
       </div>
@@ -158,7 +174,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       <div className={styles["grid-item"]}>
         <input
           type="text"
-          value={servings ? servings.toString() : ""}
+          value={servings || ""}
           onChange={(e) => setServings(e.target.value)}
         />
       </div>

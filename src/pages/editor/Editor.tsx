@@ -53,7 +53,6 @@ const Editor: FC = () => {
         openFiles={openFiles}
         setOpenFiles={setOpenFiles}
         activeFileIndex={activeFileIndex}
-        setActiveFileIndex={setActiveFileIndex}
       />
       <SideBar />
       {activeFileIndex === -1 ? (

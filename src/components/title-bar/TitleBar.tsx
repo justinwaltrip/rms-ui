@@ -9,14 +9,12 @@ interface TitleBarProps {
   openFiles: Array<string>;
   setOpenFiles: (openFiles: Array<string>) => void;
   activeFileIndex: number;
-  setActiveFileIndex: (activeFileIndex: number) => void;
 }
 
 const TitleBar: FC<TitleBarProps> = ({
   openFiles,
   setOpenFiles,
   activeFileIndex,
-  setActiveFileIndex,
 }) => {
   const navigate = useNavigate();
 
@@ -30,7 +28,7 @@ const TitleBar: FC<TitleBarProps> = ({
         closeTab(activeFileIndex, openFiles, setOpenFiles);
         // on command + n, create a new tab
       } else if (e.metaKey && e.key === "n") {
-        createFile(openFiles, setOpenFiles, setActiveFileIndex);
+        createFile(openFiles, setOpenFiles);
       }
     });
   }, []);
@@ -41,15 +39,13 @@ const TitleBar: FC<TitleBarProps> = ({
    * Create a new file
    * @param openFiles
    * @param setOpenFiles
-   * @param setActiveFileIndex
    */
   function createFile(
     openFiles: Array<string>,
     setOpenFiles: (openFiles: Array<string>) => void,
-    setActiveFileIndex: (activeFileIndex: number) => void,
   ) {
     setOpenFiles([...openFiles, ""]);
-    setActiveFileIndex(openFiles.length);
+    navigate("/editor", { state: { activeFileIndex: openFiles.length } });
   }
 
   /**
@@ -78,7 +74,8 @@ const TitleBar: FC<TitleBarProps> = ({
         className={styles["create-icon"]}
         src={create}
         alt="Create icon"
-        onClick={() => createFile(openFiles, setOpenFiles, setActiveFileIndex)}
+        onClick={() => createFile(openFiles, setOpenFiles)}
+        title="Create new file"
       />
       {openFiles.map((file, index) => (
         <div
@@ -97,7 +94,10 @@ const TitleBar: FC<TitleBarProps> = ({
             className={styles["close-icon"]}
             src={close}
             alt="Close icon"
-            onClick={() => closeTab(index, openFiles, setOpenFiles)}
+            onClick={(e) => {
+              e.stopPropagation();
+              closeTab(index, openFiles, setOpenFiles);
+            }}
           />
         </div>
       ))}

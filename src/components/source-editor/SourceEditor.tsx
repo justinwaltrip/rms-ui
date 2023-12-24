@@ -43,7 +43,7 @@ const SourceEditor: FC<SourceEditorProps> = ({
         .catch((err) => console.error(err));
     } else {
       // prompt user to enter title
-      document.getElementById("title-input")?.focus();
+      document.getElementById("filename-input")?.focus();
     }
   }, [filename, collectionPath]);
 
