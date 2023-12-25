@@ -1,8 +1,13 @@
 .grid-container {
   display: grid;
   grid-template-columns: 110px auto;
-  grid-gap: 10px;
-  padding: 10px;
+  column-gap: 10px;
+  row-gap: 1px; /* 1px border */
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 36px,
+    rgb(235, 235, 245, 0.6) 0 37px /* 48px = 36px height + 1px border */
+  );
 }
 
 .grid-item {
@@ -47,4 +52,35 @@
 
 .tag-input {
   width: auto;
+}
+
+.tags {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-right: 10px;
+}
+
+.add-property-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  margin-left: 5px;
+}
+
+.add-icon {
+  opacity: 0.6;
+  height: 25px;
+  width: 25px;
+}
+
+.add-property {
+  color: #ebebf5;
+  opacity: 0.6;
+}
+
+.add-property-button:hover {
+  cursor: pointer;
 }

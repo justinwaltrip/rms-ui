@@ -10,6 +10,7 @@ import folder from "../../assets/folder.png";
 import hdots from "../../assets/hdots.png";
 import rename from "../../assets/rename.png";
 import CreateCollectionDialog from "../../components/create-collection-dialog/CreateCollectionDialog";
+import Dropdown from "../../components/dropdown/Dropdown";
 import { AppContext } from "../../main";
 import { createCollection, renameCollection } from "../../utils/collection";
 import { readAppConfig, writeAppConfig } from "../../utils/fs";
@@ -302,57 +303,43 @@ const Home: FC = () => {
         />
       )}
       {showCollectionOptions && (
-        <div
-          className={styles["collection-options"]}
-          style={{
-            left: collectionOptionsPosition.x,
-            top: collectionOptionsPosition.y,
-          }}
-        >
-          <div
-            className={styles["collection-option"]}
-            onClick={() => {
-              tauri
-                .invoke("show_in_folder", {
-                  path: collections[collectionOptionsIndex],
-                })
-                .then(() => {})
-                .catch((err) => {
-                  console.error(err);
-                });
-            }}
-          >
-            <img src={folder} alt="Folder" className={styles["option-icon"]} />
-            <div className={styles["collection-option-text"]}>
-              Reveal in Finder
-            </div>
-          </div>
-          <div
-            className={styles["collection-option"]}
-            onClick={() => {
-              setRenameCollectionIndex(collectionOptionsIndex);
-              setTempCollectionName(
-                collections[collectionOptionsIndex].split("/").pop() || "",
-              );
-            }}
-          >
-            <img src={rename} alt="Rename" className={styles["option-icon"]} />
-            <div className={styles["collection-option-text"]}>
-              Rename collection
-            </div>
-          </div>
-          <div
-            className={styles["collection-option"]}
-            onClick={() => {
-              removeCollection(collectionOptionsIndex);
-            }}
-          >
-            <img src={close} alt="Remove" className={styles["option-icon"]} />
-            <div className={styles["collection-option-text"]}>
-              Remove from list
-            </div>
-          </div>
-        </div>
+        <Dropdown
+          x={collectionOptionsPosition.x}
+          y={collectionOptionsPosition.y}
+          options={[
+            {
+              onClick: () => {
+                tauri
+                  .invoke("show_in_folder", {
+                    path: collections[collectionOptionsIndex],
+                  })
+                  .then(() => {})
+                  .catch((err) => {
+                    console.error(err);
+                  });
+              },
+              icon: folder,
+              text: "Reveal in Finder",
+            },
+            {
+              onClick: () => {
+                setRenameCollectionIndex(collectionOptionsIndex);
+                setTempCollectionName(
+                  collections[collectionOptionsIndex].split("/").pop() || "",
+                );
+              },
+              icon: rename,
+              text: "Rename collection",
+            },
+            {
+              onClick: () => {
+                removeCollection(collectionOptionsIndex);
+              },
+              icon: close,
+              text: "Remove from list",
+            },
+          ]}
+        ></Dropdown>
       )}
     </div>
   );
