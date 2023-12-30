@@ -18,7 +18,7 @@ Local-first recipe management system inspired by Obsidian. Built with Tauri, Rea
 
    Once Rust has finished building, the webview opens, displaying your web app. You can make changes to your web app, and if your tooling enables it, the webview should update automatically, just like a browser. When you make changes to your Rust files, they are rebuilt automatically, and your app automatically restarts.
 
-## Recommended IDE Setup
+### Recommended IDE Setup
 
 - [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
 
@@ -50,3 +50,15 @@ Local-first recipe management system inspired by Obsidian. Built with Tauri, Rea
   - `@returns` for the return value
   - `@throws` for any errors that can be thrown
   - `@example` for an example of how to use the function
+
+## Testing
+
+End-to-end tests are written using the [WebDriver](https://www.w3.org/TR/webdriver/) interface. Tauri supports the WebDriver using the [`tauri-driver`](https://crates.io/crates/tauri-driver), which is not yet supported for macOS. We use the [WebdriverIO](https://webdriver.io/) (WDIO) test automation framework to write and run the tests. We also use the `@tauri-apps/api/mocks` package to mock the Tauri APIs.
+
+To run the test suite,
+
+```bash
+pnpm wdio run wdio.conf.json
+```
+
+TODO: Follow steps as mentioned [here](https://jonaskruckenberg.github.io/tauri-docs-wip/development/testing.html) to setup the test environment.
