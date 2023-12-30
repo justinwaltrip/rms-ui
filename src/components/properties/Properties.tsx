@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 
 import styles from "./Properties.module.css";
 import add from "../../assets/add.png";
@@ -30,6 +30,11 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
 
   const [showAddPropertyDropdown, setShowAddPropertyDropdown] =
     useState<boolean>(false);
+
+  const focusPropertyRef = useRef<HTMLInputElement>(null);
+  const [focusProperty, setFocusProperty] = useState<string | undefined>(
+    undefined,
+  );
 
   // #endregion
 
@@ -92,6 +97,19 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
     });
   }, []);
 
+  /**
+   * On focus property change, focus input
+   */
+  useEffect(() => {
+    if (focusPropertyRef) {
+      const input = focusPropertyRef;
+      if (input.current) {
+        input.current.focus();
+        setFocusProperty(undefined);
+      }
+    }
+  }, [focusProperty]);
+
   // #endregion
 
   // #region components
@@ -135,6 +153,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
         if (tags === undefined) {
           setTags([]);
         }
+        setFocusProperty("tags");
       },
       icon: tagsIcon,
       text: "tags",
@@ -144,6 +163,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
         setShowAddPropertyDropdown(false);
         // set date to today
         setDate(new Date().toISOString());
+        setFocusProperty("date");
       },
       icon: dateIcon,
       text: "date",
@@ -152,6 +172,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       onClick: () => {
         setShowAddPropertyDropdown(false);
         setSource("");
+        setFocusProperty("source");
       },
       icon: link,
       text: "source",
@@ -160,6 +181,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       onClick: () => {
         setShowAddPropertyDropdown(false);
         setPrep("");
+        setFocusProperty("prep");
       },
       icon: prepIcon,
       text: "prep",
@@ -168,6 +190,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       onClick: () => {
         setShowAddPropertyDropdown(false);
         setCook("");
+        setFocusProperty("cook");
       },
       icon: cookIcon,
       text: "cook",
@@ -176,6 +199,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       onClick: () => {
         setShowAddPropertyDropdown(false);
         setServings("");
+        setFocusProperty("servings");
       },
       icon: servingsIcon,
       text: "servings",
@@ -208,6 +232,11 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
                 </div>
               )}
               <input
+                ref={
+                  focusProperty && focusProperty === "tags"
+                    ? focusPropertyRef
+                    : undefined
+                }
                 type="text"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -235,6 +264,11 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
             <PropertyLabel label="date" src={dateIcon} />
             <div className={styles["grid-item"]}>
               <input
+                ref={
+                  focusProperty && focusProperty === "date"
+                    ? focusPropertyRef
+                    : undefined
+                }
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
@@ -247,9 +281,15 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
             <PropertyLabel label="source" src={link} />
             <div className={styles["grid-item"]}>
               <input
+                ref={
+                  focusProperty && focusProperty === "source"
+                    ? focusPropertyRef
+                    : undefined
+                }
                 type="text"
                 value={source || ""}
                 onChange={(e) => setSource(e.target.value)}
+                autoCorrect="off"
               />
             </div>
           </>
@@ -259,6 +299,11 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
             <PropertyLabel label="prep" src={prepIcon} />
             <div className={styles["grid-item"]}>
               <input
+                ref={
+                  focusProperty && focusProperty === "prep"
+                    ? focusPropertyRef
+                    : undefined
+                }
                 type="text"
                 value={prep || ""}
                 onChange={(e) => setPrep(e.target.value)}
@@ -271,6 +316,11 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
             <PropertyLabel label="cook" src={cookIcon} />
             <div className={styles["grid-item"]}>
               <input
+                ref={
+                  focusProperty && focusProperty === "cook"
+                    ? focusPropertyRef
+                    : undefined
+                }
                 type="text"
                 value={cook || ""}
                 onChange={(e) => setCook(e.target.value)}
@@ -283,6 +333,11 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
             <PropertyLabel label="servings" src={servingsIcon} />
             <div className={styles["grid-item"]}>
               <input
+                ref={
+                  focusProperty && focusProperty === "servings"
+                    ? focusPropertyRef
+                    : undefined
+                }
                 type="text"
                 value={servings || ""}
                 onChange={(e) => setServings(e.target.value)}
@@ -291,17 +346,21 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
           </>
         )}
       </div>
-      <div className={styles["add-property-button"]}>
-        <img src={add} alt="add" className={styles["add-icon"]} />
-        <p
-          className={styles["add-property"]}
-          onClick={(e) => {
-            e.stopPropagation();
+      <div
+        className={styles["add-property-button"]}
+        tabIndex={0}
+        onClick={(e) => {
+          e.stopPropagation();
+          setShowAddPropertyDropdown(!showAddPropertyDropdown);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === " ") {
             setShowAddPropertyDropdown(!showAddPropertyDropdown);
-          }}
-        >
-          add property
-        </p>
+          }
+        }}
+      >
+        <img src={add} alt="add" className={styles["add-icon"]} />
+        <p className={styles["add-property"]}>add property</p>
       </div>
       {showAddPropertyDropdown && (
         <Dropdown options={filteredAddPropertyOptions} />

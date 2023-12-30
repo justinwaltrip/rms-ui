@@ -16,13 +16,20 @@ const Dropdown: FC<DropdownProps> = ({ options, x, y }) => {
   return (
     <div
       className={styles["dropdown"]}
-      style={{
-        left: x,
-        top: y,
-      }}
+      style={x && y ? { left: x, top: y, position: "absolute" } : {}}
     >
       {options.map((option, index) => (
-        <div className={styles["option"]} key={index} onClick={option.onClick}>
+        <div
+          className={styles["option"]}
+          key={index}
+          tabIndex={index + 1}
+          onClick={option.onClick}
+          onKeyDown={(e) => {
+            if (e.key === " ") {
+              option.onClick();
+            }
+          }}
+        >
           <img
             src={option.icon}
             alt="Folder"
