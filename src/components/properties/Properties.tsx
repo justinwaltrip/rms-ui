@@ -1,7 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
 
 import styles from "./Properties.module.css";
-import add from "../../assets/add.png";
 import cookIcon from "../../assets/cook.png";
 import dateIcon from "../../assets/date.png";
 import link from "../../assets/link.png";
@@ -10,6 +9,7 @@ import remove from "../../assets/remove.png";
 import servingsIcon from "../../assets/servings.png";
 import tagsIcon from "../../assets/tags.png";
 import { Recipe } from "../../utils/recipe";
+import AddButton from "../add-button/AddButton";
 import Dropdown from "../dropdown/Dropdown";
 
 interface PropertiesProps {
@@ -346,22 +346,13 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
           </>
         )}
       </div>
-      <div
-        className={styles["add-property-button"]}
-        tabIndex={0}
+      <AddButton
         onClick={(e) => {
           e.stopPropagation();
           setShowAddPropertyDropdown(!showAddPropertyDropdown);
         }}
-        onKeyDown={(e) => {
-          if (e.key === " ") {
-            setShowAddPropertyDropdown(!showAddPropertyDropdown);
-          }
-        }}
-      >
-        <img src={add} alt="add" className={styles["add-icon"]} />
-        <p className={styles["add-property"]}>add property</p>
-      </div>
+        text={"add property"}
+      />
       {showAddPropertyDropdown && (
         <Dropdown options={filteredAddPropertyOptions} />
       )}

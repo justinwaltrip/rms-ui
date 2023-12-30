@@ -17,6 +17,7 @@ import upload from "../../assets/upload.png";
 import { AppContext } from "../../main";
 import { deleteImage, getImageUrl, writeImage } from "../../utils/fs";
 import { Ingredient, Recipe } from "../../utils/recipe";
+import AddButton from "../add-button/AddButton";
 import InfoBar from "../info-bar/InfoBar";
 import Properties from "../properties/Properties";
 
@@ -473,6 +474,23 @@ const ViewEditor: FC<ViewEditorProps> = ({
                   </div>
                 ),
               )}
+            <AddButton
+              text="add ingredient"
+              onClick={() => {
+                if (!ingredients) {
+                  setIngredients([new Ingredient("")]);
+                  setNewIngredientIndex(0);
+                } else {
+                  // add new ingredient at end
+                  const newIngredients = [...ingredients];
+                  newIngredients.push(new Ingredient(""));
+                  setIngredients(newIngredients);
+
+                  // focus on new ingredient amount
+                  setNewIngredientIndex(newIngredients.length - 1);
+                }
+              }}
+            />
             <h2>directions</h2>
             {directions &&
               directions.map((direction, index) => (
@@ -513,6 +531,23 @@ const ViewEditor: FC<ViewEditorProps> = ({
                   />
                 </div>
               ))}
+            <AddButton
+              text="add direction"
+              onClick={() => {
+                if (!directions) {
+                  setDirections([""]);
+                  setNewDirectionIndex(0);
+                } else {
+                  // add new direction at end
+                  const newDirections = [...directions];
+                  newDirections.push("");
+                  setDirections(newDirections);
+
+                  // focus on new direction
+                  setNewDirectionIndex(newDirections.length - 1);
+                }
+              }}
+            />
             <h2>notes</h2>
             {notes &&
               notes.map((note, index) => (
@@ -553,6 +588,23 @@ const ViewEditor: FC<ViewEditorProps> = ({
                   />
                 </div>
               ))}
+            <AddButton
+              text="add note"
+              onClick={() => {
+                if (!notes) {
+                  setNotes([""]);
+                  setNewNoteIndex(0);
+                } else {
+                  // add new note at end
+                  const newNotes = [...notes];
+                  newNotes.push("");
+                  setNotes(newNotes);
+
+                  // focus on new note
+                  setNewNoteIndex(newNotes.length - 1);
+                }
+              }}
+            />
           </div>
         </div>
       </div>
