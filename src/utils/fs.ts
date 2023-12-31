@@ -3,13 +3,13 @@ import {
   BinaryFileContents,
   createDir,
   exists,
-  readBinaryFile,
   readTextFile,
   removeFile,
   renameFile,
   writeBinaryFile,
   writeTextFile,
 } from "@tauri-apps/api/fs";
+import { convertFileSrc } from "@tauri-apps/api/tauri";
 
 /**
  * Write recipe contents to file
@@ -51,15 +51,10 @@ async function readRecipeContents(filename: string, collectionPath: string) {
  * @param collectionPath
  * @returns image url
  */
-async function getImageUrl(filename: string, collectionPath: string) {
+function getImageUrl(filename: string, collectionPath: string) {
   try {
-    // read image from file
     const path = `${collectionPath}/${filename}`;
-    const bytes = await readBinaryFile(path, {
-      dir: BaseDirectory.Home,
-    });
-    const blob = new Blob([bytes]);
-    return URL.createObjectURL(blob);
+    return convertFileSrc(path);
   } catch (err) {
     console.error(err);
     throw err;

@@ -62,9 +62,6 @@ const ViewEditor: FC<ViewEditorProps> = ({
   // set title from filename
   const [defaultTitle, setDefaultTitle] = useState<string>("");
 
-  // render data
-  const [imageUrl, setImgUrl] = useState<string>("");
-
   // new ingredient, direction, note
   const [newIngredientIndex, setNewIngredientIndex] = useState<number>(-1);
   const [newDirectionIndex, setNewDirectionIndex] = useState<number>(-1);
@@ -147,21 +144,6 @@ const ViewEditor: FC<ViewEditorProps> = ({
     directions,
     notes,
   ]);
-
-  /**
-   * Update image url
-   */
-  useEffect(() => {
-    if (imageSrc) {
-      getImageUrl(imageSrc, collectionPath)
-        .then((src) => {
-          setImgUrl(src);
-        })
-        .catch((err) => console.error(err));
-    } else {
-      setImgUrl("");
-    }
-  }, [imageSrc, collectionPath]);
 
   /**
    * If new ingredient, focus on ingredient name
@@ -270,9 +252,9 @@ const ViewEditor: FC<ViewEditorProps> = ({
               placeholder="title"
             />
             <div className={styles["image-container"]}>
-              {imageUrl ? (
+              {imageSrc ? (
                 <img
-                  src={imageUrl}
+                  src={imageSrc && getImageUrl(imageSrc, collectionPath)}
                   alt={recipe ? recipe.getImageAlt() : ""}
                   className={styles["image"]}
                 />
@@ -288,7 +270,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                   }}
                 />
               )}
-              {imageUrl && (
+              {imageSrc && (
                 <div className={styles["image-overlay"]}>
                   {imageSrc && (
                     <img
