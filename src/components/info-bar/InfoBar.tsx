@@ -61,6 +61,7 @@ const InfoBar: FC<InfoBarProps> = ({
           }
         }}
         autoCorrect="off"
+        placeholder="filename"
       />
     </div>
   );

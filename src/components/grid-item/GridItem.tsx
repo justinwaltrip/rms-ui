@@ -19,7 +19,7 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
   // #endregion
 
   // #region states
-  const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
+  const [image, setImage] = useState<string | undefined>(undefined);
   // #endregion
 
   // #region effects
@@ -29,7 +29,7 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
    */
   useEffect(() => {
     if (recipe) {
-      setImageSrc(recipe.getImageSrc());
+      setImage(recipe.image);
     }
   }, [recipe]);
 
@@ -41,11 +41,17 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
         navigate("/editor");
       }}
     >
-      <img
-        src={imageSrc && getImageUrl(imageSrc, collectionPath)}
-        alt="recipe"
-        className={styles["grid-item-image"]}
-      />
+      {image ? (
+        <img
+          src={getImageUrl(image, collectionPath)}
+          alt="recipe"
+          className={styles["grid-item-image"]}
+        />
+      ) : (
+        <div className={styles["grid-item-image-placeholder"]}>
+          {recipe.title}
+        </div>
+      )}
       <div className={styles["grid-item-data"]}>
         <div className={styles["grid-item-title"]}>{recipe.title}</div>
         <div className={styles["grid-item-tags"]}>

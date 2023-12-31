@@ -22,10 +22,11 @@ const Dropdown: FC<DropdownProps> = ({ options, x, y }) => {
         <div
           className={styles["option"]}
           key={index}
-          tabIndex={index + 1}
+          tabIndex={0}
           onClick={option.onClick}
           onKeyDown={(e) => {
             if (e.key === " ") {
+              e.preventDefault();
               option.onClick();
             }
           }}

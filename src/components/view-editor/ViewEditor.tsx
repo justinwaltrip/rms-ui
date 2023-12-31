@@ -52,7 +52,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
   // recipe data
   const [title, setTitle] = useState<string | undefined>(undefined);
   const [description, setDescription] = useState<string | undefined>(undefined);
-  const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
+  const [image, setImage] = useState<string | undefined>(undefined);
   const [ingredients, setIngredients] = useState<Ingredient[] | undefined>(
     undefined,
   );
@@ -94,7 +94,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
     if (recipe) {
       setTitle(recipe.title);
       setDescription(recipe.getDescription());
-      setImageSrc(recipe.getImageSrc());
+      setImage(recipe.image);
       setIngredients(recipe.getIngredients());
       setDirections(recipe.getDirections());
       setNotes(recipe.getNotes());
@@ -115,8 +115,8 @@ const ViewEditor: FC<ViewEditorProps> = ({
       if (description !== undefined) {
         recipe.setDescription(description);
       }
-      if (imageSrc !== undefined) {
-        recipe.setImageSrc(imageSrc);
+      if (image !== undefined) {
+        recipe.setImage(image);
       }
       if (ingredients !== undefined) {
         recipe.setIngredients(ingredients);
@@ -138,7 +138,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
     recipe,
     title,
     description,
-    imageSrc,
+    image,
     ingredients,
     recipeLoaded,
     directions,
@@ -218,7 +218,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
         await writeImage(path, bytes, collectionPath);
 
         // update recipe
-        setImageSrc(path);
+        setImage(path);
       }
     } catch (err) {
       console.error(err);
@@ -252,10 +252,10 @@ const ViewEditor: FC<ViewEditorProps> = ({
               placeholder="title"
             />
             <div className={styles["image-container"]}>
-              {imageSrc ? (
+              {image ? (
                 <img
-                  src={imageSrc && getImageUrl(imageSrc, collectionPath)}
-                  alt={recipe ? recipe.getImageAlt() : ""}
+                  src={image && getImageUrl(image, collectionPath)}
+                  alt={"recipe image"}
                   className={styles["image"]}
                 />
               ) : (
@@ -270,17 +270,17 @@ const ViewEditor: FC<ViewEditorProps> = ({
                   }}
                 />
               )}
-              {imageSrc && (
+              {image && (
                 <div className={styles["image-overlay"]}>
-                  {imageSrc && (
+                  {image && (
                     <img
                       src={close}
                       alt="Close icon"
                       className={styles["close-icon"]}
                       onClick={() => {
-                        deleteImage(imageSrc, collectionPath)
+                        deleteImage(image, collectionPath)
                           .then(() => {
-                            setImageSrc("");
+                            setImage("");
                           })
                           .catch((err) => console.error(err));
                       }}
@@ -306,16 +306,23 @@ const ViewEditor: FC<ViewEditorProps> = ({
               ingredients.map(
                 ({ name, is_checked, primary_amount, primary_unit }, index) => (
                   <div key={index} className={styles["ingredient"]}>
-                    <input
-                      type="checkbox"
-                      checked={is_checked}
-                      onChange={(e) => {
-                        const newIngredients = [...ingredients];
-                        newIngredients[index].is_checked = e.target.checked;
-                        setIngredients(newIngredients);
-                      }}
-                    />
+                    <div className="checkbox-wrapper-1">
+                      <input
+                        id="example-1"
+                        className="substituted"
+                        type="checkbox"
+                        aria-hidden="true"
+                        checked={is_checked}
+                        onChange={(e) => {
+                          const newIngredients = [...ingredients];
+                          newIngredients[index].is_checked = e.target.checked;
+                          setIngredients(newIngredients);
+                        }}
+                      />
+                      <label htmlFor="example-1" />
+                    </div>
                     <AutosizeInput
+                      htmlFor="example-1"
                       //@ts-expect-error no overload matches this call
                       ref={
                         newIngredientIndex === index ? newIngredientRef : null
@@ -354,17 +361,6 @@ const ViewEditor: FC<ViewEditorProps> = ({
                               )[0];
                             ingredientName.focus();
                           }
-                        } else if (e.key === " ") {
-                          e.preventDefault();
-
-                          // focus on ingredient unit
-                          const ingredientUnitDiv =
-                            document.getElementsByClassName(
-                              styles["ingredient-unit"],
-                            )[index] as HTMLInputElement;
-                          const ingredientUnit =
-                            ingredientUnitDiv.getElementsByTagName("input")[0];
-                          ingredientUnit.focus();
                         }
                       }}
                     />
@@ -396,17 +392,6 @@ const ViewEditor: FC<ViewEditorProps> = ({
                               "input",
                             )[0];
                           ingredientAmount.focus();
-                        } else if (e.key === " ") {
-                          e.preventDefault();
-
-                          // focus on ingredient name
-                          const ingredientNameDiv =
-                            document.getElementsByClassName(
-                              styles["ingredient-name"],
-                            )[index] as HTMLInputElement;
-                          const ingredientName =
-                            ingredientNameDiv.getElementsByTagName("input")[0];
-                          ingredientName.focus();
                         }
                       }}
                     />
@@ -452,6 +437,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                           setNewIngredientIndex(index + 1);
                         }
                       }}
+                      autoCorrect="off"
                     />
                   </div>
                 ),

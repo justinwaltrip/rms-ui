@@ -67,3 +67,15 @@
 .more-icon:hover {
   cursor: pointer;
 }
+
+.grid-item-image-placeholder {
+  position: absolute;
+  height: 150px;
+  width: 150px;
+  border-radius: 5px 5px 0px 0px;
+  background-color: #282828;
+  /* text in center */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

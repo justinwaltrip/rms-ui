@@ -25,11 +25,6 @@ class Ingredient {
   }
 }
 
-interface Image {
-  src: string;
-  alt: string | undefined;
-}
-
 class Recipe {
   public json: { [key: string]: unknown };
   public filename: string;
@@ -76,40 +71,18 @@ class Recipe {
     }
   }
 
-  getImageSrc() {
+  get image() {
     try {
-      const image: Image = this.json["image"] as Image;
-      if (image) {
-        return image.src;
-      } else {
-        return undefined;
-      }
+      return this.json["image"] as string;
     } catch (err) {
       console.error(err);
       throw err;
     }
   }
 
-  setImageSrc(src: string) {
+  setImage(image: string) {
     try {
-      const image: Image = this.json["image"] as Image;
-      if (!image) {
-        this.json["image"] = {
-          src: src,
-        };
-      } else {
-        image.src = src;
-      }
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  }
-
-  getImageAlt() {
-    try {
-      const image: Image = this.json["image"] as Image;
-      return image.alt;
+      this.json["image"] = image;
     } catch (err) {
       console.error(err);
       throw err;

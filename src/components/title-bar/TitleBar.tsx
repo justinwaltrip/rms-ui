@@ -89,7 +89,7 @@ const TitleBar: FC<TitleBarProps> = ({
             navigate("/editor", { state: { activeFileIndex: index } });
           }}
         >
-          <p className={styles["tab-label"]}>{file ? file : "New tab"}</p>
+          <p className={styles["tab-label"]}>{file ? file : "new tab"}</p>
           <img
             className={styles["close-icon"]}
             src={close}
