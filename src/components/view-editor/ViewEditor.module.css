@@ -167,3 +167,7 @@ input:focus {
 .upload-icon:hover {
   cursor: pointer;
 }
+
+.direction-input {
+  width: 100%;
+}

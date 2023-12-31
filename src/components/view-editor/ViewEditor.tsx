@@ -465,6 +465,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                 <div key={index} className={styles["direction"]}>
                   <p>{`${index + 1}.`}</p>
                   <input
+                    className={styles["direction-input"]}
                     ref={newDirectionIndex === index ? newDirectionRef : null}
                     type="text"
                     value={direction || ""}
