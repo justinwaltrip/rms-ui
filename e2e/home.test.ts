@@ -53,4 +53,13 @@
  *
  * Expected:
  * - The collection is removed from the sidebar
+ *
+ *
+ * As a user, I want to view the recipes of a collection.
+ *
+ * Steps:
+ * 1. Click on the collection in the sidebar
+ *
+ * Expected:
+ * - The window maximizes and the grid view of the recipes is displayed
  */
