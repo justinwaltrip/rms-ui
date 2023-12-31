@@ -2,7 +2,6 @@ import { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import styles from "./GridItem.module.css";
-import hdots from "../../assets/hdots.png";
 import { AppContext } from "../../main";
 import { getImageUrl } from "../../utils/fs";
 import { Recipe } from "../../utils/recipe";
@@ -57,7 +56,7 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
               </div>
             ))}
         </div>
-        <img src={hdots} alt="More icon" className={styles["more-icon"]} />
+        {/* <img src={hdots} alt="More icon" className={styles["more-icon"]} /> */}
       </div>
     </div>
   );
