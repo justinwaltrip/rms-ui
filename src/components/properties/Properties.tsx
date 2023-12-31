@@ -45,7 +45,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
    */
   useEffect(() => {
     if (recipe) {
-      setTags(recipe.getTags());
+      setTags(recipe.tags);
       setDate(recipe.getDate());
       setSource(recipe.getSource());
       setPrep(recipe.getPrep());

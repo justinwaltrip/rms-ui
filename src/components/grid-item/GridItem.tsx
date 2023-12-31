@@ -63,8 +63,8 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
       <div className={styles["grid-item-data"]}>
         <div className={styles["grid-item-title"]}>{recipe.title}</div>
         <div className={styles["grid-item-tags"]}>
-          {recipe.getTags() &&
-            recipe.getTags().map((tag, index) => (
+          {recipe.tags &&
+            recipe.tags.map((tag, index) => (
               <div key={index} className={styles["grid-item-tag"]}>
                 {tag}
               </div>

@@ -102,7 +102,11 @@ const Grid: FC = () => {
    * Sort and filter recipes
    */
   useEffect(() => {
-    const filteredRecipes = filterRecipes(recipes, filters);
+    const filteredRecipes = filterRecipes(
+      recipes,
+      filters,
+      booleanField === "all",
+    );
 
     const sortedRecipes = [...filteredRecipes];
     sortedRecipes.sort((a, b) => {
@@ -122,7 +126,7 @@ const Grid: FC = () => {
     }
 
     setDisplayRecipes(sortedRecipes);
-  }, [recipes, sortOrder, filters]);
+  }, [recipes, sortOrder, filters, booleanField]);
 
   // #endregion
 

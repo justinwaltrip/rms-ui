@@ -188,7 +188,7 @@ class Recipe {
     }
   }
 
-  getTags() {
+  get tags() {
     try {
       return this.json["tags"] as string[];
     } catch (err) {
