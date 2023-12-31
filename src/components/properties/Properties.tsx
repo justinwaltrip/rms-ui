@@ -117,7 +117,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
   const Tag = ({ tag }: { tag: string }) => {
     return (
       <div className={styles["tag"]}>
-        <p>{tag}</p>
+        <p className={styles["tag-text"]}>{tag}</p>
         <img
           src={remove}
           alt="remove"
