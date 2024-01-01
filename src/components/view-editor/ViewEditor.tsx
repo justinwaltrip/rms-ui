@@ -34,7 +34,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
 }) => {
   // #region variables
   const newIngredientRef = useRef<HTMLInputElement>(null);
-  const newDirectionRef = useRef<HTMLInputElement>(null);
+  const newDirectionRef = useRef<HTMLTextAreaElement>(null);
   const newNoteRef = useRef<HTMLInputElement>(null);
   // #endregion
 
@@ -185,6 +185,21 @@ const ViewEditor: FC<ViewEditorProps> = ({
     }
   }, [defaultTitle, recipeLoaded]);
 
+  /**
+   * On directions change, set height of directions
+   */
+  useEffect(() => {
+    resizeDirections();
+  }, [directions]);
+
+  /**
+   * On mount, add listener for resize
+   */
+  useEffect(() => {
+    window.addEventListener("resize", resizeDirections);
+    return () => window.removeEventListener("resize", resizeDirections);
+  }, []);
+
   // #endregion
 
   // #region functions
@@ -224,6 +239,21 @@ const ViewEditor: FC<ViewEditorProps> = ({
       console.error(err);
     }
   }
+
+  /**
+   * Resize directions
+   */
+  function resizeDirections() {
+    const directions = document.getElementsByClassName(
+      styles["direction-input"],
+    );
+    for (let i = 0; i < directions.length; i++) {
+      const direction = directions[i] as HTMLTextAreaElement;
+      direction.style.height = "";
+      direction.style.height = direction.scrollHeight + "px";
+    }
+  }
+
   // #endregion
 
   return (
@@ -304,8 +334,9 @@ const ViewEditor: FC<ViewEditorProps> = ({
             <h2>ingredients</h2>
             {ingredients &&
               ingredients.map(
-                ({ name, is_checked, primary_amount, primary_unit }, index) => (
+                ({ name, is_checked, primary_measure }, index) => (
                   <div key={index} className={styles["ingredient"]}>
+                    {/* checkbox */}
                     <div className="checkbox-wrapper-1">
                       <input
                         id="example-1"
@@ -321,18 +352,19 @@ const ViewEditor: FC<ViewEditorProps> = ({
                       />
                       <label htmlFor="example-1" />
                     </div>
+
+                    {/* ingredient measurement */}
                     <AutosizeInput
-                      htmlFor="example-1"
                       //@ts-expect-error no overload matches this call
                       ref={
                         newIngredientIndex === index ? newIngredientRef : null
                       }
-                      className={styles["ingredient-amount"]}
+                      className={styles["ingredient-measure"]}
                       type="text"
-                      value={primary_amount || ""}
+                      value={primary_measure || ""}
                       onChange={function (e: ChangeEvent<HTMLInputElement>) {
                         const newIngredients = [...ingredients];
-                        newIngredients[index].primary_amount = e.target.value;
+                        newIngredients[index].primary_measure = e.target.value;
                         setIngredients(newIngredients);
                       }}
                       onKeyDown={function (
@@ -364,37 +396,8 @@ const ViewEditor: FC<ViewEditorProps> = ({
                         }
                       }}
                     />
-                    <AutosizeInput
-                      className={styles["ingredient-unit"]}
-                      type="text"
-                      value={primary_unit || ""}
-                      onChange={function (e: ChangeEvent<HTMLInputElement>) {
-                        const newIngredients = [...ingredients];
-                        newIngredients[index].primary_unit = e.target.value;
-                        setIngredients(newIngredients);
-                      }}
-                      onKeyDown={function (
-                        e: React.KeyboardEvent<HTMLInputElement>,
-                      ) {
-                        if (
-                          e.key === "Backspace" &&
-                          (e.currentTarget as HTMLInputElement).value === ""
-                        ) {
-                          e.preventDefault();
 
-                          // focus on ingredient amount
-                          const ingredientAmountDiv =
-                            document.getElementsByClassName(
-                              styles["ingredient-amount"],
-                            )[index] as HTMLInputElement;
-                          const ingredientAmount =
-                            ingredientAmountDiv.getElementsByTagName(
-                              "input",
-                            )[0];
-                          ingredientAmount.focus();
-                        }
-                      }}
-                    />
+                    {/* ingredient name */}
                     <input
                       className={styles["ingredient-name"]}
                       type="text"
@@ -413,24 +416,22 @@ const ViewEditor: FC<ViewEditorProps> = ({
                         ) {
                           e.preventDefault();
 
-                          // how to focus on current ingredient unit
-                          const ingredientUnitDiv =
+                          // focus on ingredient amount
+                          const ingredientAmountDiv =
                             document.getElementsByClassName(
-                              styles["ingredient-unit"],
+                              styles["ingredient-measure"],
                             )[index] as HTMLInputElement;
-                          const ingredientUnit =
-                            ingredientUnitDiv.getElementsByTagName("input")[0];
-                          ingredientUnit.focus();
+                          const ingredientAmount =
+                            ingredientAmountDiv.getElementsByTagName(
+                              "input",
+                            )[0];
+                          ingredientAmount.focus();
                         } else if (e.key === "Enter") {
                           e.preventDefault();
 
                           // add new ingredient at index + 1
                           const newIngredients = [...ingredients];
-                          newIngredients.splice(
-                            index + 1,
-                            0,
-                            new Ingredient(""),
-                          );
+                          newIngredients.splice(index + 1, 0, new Ingredient());
                           setIngredients(newIngredients);
 
                           // focus on new ingredient amount
@@ -460,46 +461,95 @@ const ViewEditor: FC<ViewEditorProps> = ({
               }}
             />
             <h2>directions</h2>
-            {directions &&
-              directions.map((direction, index) => (
-                <div key={index} className={styles["direction"]}>
-                  <p>{`${index + 1}.`}</p>
-                  <input
-                    className={styles["direction-input"]}
-                    ref={newDirectionIndex === index ? newDirectionRef : null}
-                    type="text"
-                    value={direction || ""}
-                    onChange={(e) => {
-                      const newDirections = [...directions];
-                      newDirections[index] = e.target.value;
-                      setDirections(newDirections);
-                    }}
-                    onKeyDown={(e) => {
-                      if (
-                        e.key === "Backspace" &&
-                        (e.currentTarget as HTMLInputElement).value === ""
-                      ) {
-                        e.preventDefault();
+            {directions && (
+              <div className={styles["directions"]}>
+                {directions.map((direction, index) => (
+                  <div key={index} className={styles["direction"]}>
+                    {/* direction number */}
+                    <div>{`${index + 1}.`}</div>
 
-                        // remove direction at index
+                    {/* direction text */}
+                    <textarea
+                      rows={1}
+                      onInput={(e) => {
+                        e.currentTarget.style.height = "";
+                        e.currentTarget.style.height =
+                          e.currentTarget.scrollHeight + "px";
+                      }}
+                      className={styles["direction-input"]}
+                      ref={newDirectionIndex === index ? newDirectionRef : null}
+                      value={direction || ""}
+                      onChange={(e) => {
                         const newDirections = [...directions];
-                        newDirections.splice(index, 1);
+                        newDirections[index] = e.target.value;
                         setDirections(newDirections);
-                      } else if (e.key === "Enter") {
-                        e.preventDefault();
+                      }}
+                      onKeyDown={(e) => {
+                        if (
+                          e.key === "Backspace" &&
+                          (e.currentTarget as HTMLTextAreaElement).value === ""
+                        ) {
+                          e.preventDefault();
 
-                        // add new direction at index + 1
-                        const newDirections = [...directions];
-                        newDirections.splice(index + 1, 0, "");
-                        setDirections(newDirections);
+                          // remove direction at index
+                          const newDirections = [...directions];
+                          newDirections.splice(index, 1);
+                          setDirections(newDirections);
 
-                        // focus on new direction
-                        setNewDirectionIndex(index + 1);
-                      }
-                    }}
-                  />
-                </div>
-              ))}
+                          // focus on previous direction
+                          if (index > 0) {
+                            const directionDiv =
+                              document.getElementsByClassName(
+                                styles["direction"],
+                              )[index - 1] as HTMLTextAreaElement;
+                            const direction =
+                              directionDiv.getElementsByTagName("textarea")[0];
+                            direction.focus();
+                          }
+                        } else if (e.key === "Enter") {
+                          e.preventDefault();
+
+                          // add new direction at index + 1
+                          const newDirections = [...directions];
+                          newDirections.splice(index + 1, 0, "");
+                          setDirections(newDirections);
+
+                          // focus on new direction
+                          setNewDirectionIndex(index + 1);
+                        }
+                      }}
+                      onPaste={(e) => {
+                        // if pasting multiple lines, split into multiple directions
+                        const clipboardData = e.clipboardData.getData("Text");
+                        const clipboardLines = clipboardData.split("\n");
+                        if (clipboardLines.length > 1) {
+                          e.preventDefault();
+
+                          // append first line to current direction
+                          const newDirections = [...directions];
+                          newDirections[index] += clipboardLines[0];
+
+                          // add new directions for remaining lines
+                          for (let i = 1; i < clipboardLines.length; i++) {
+                            newDirections.splice(
+                              index + i,
+                              0,
+                              clipboardLines[i],
+                            );
+                          }
+                          setDirections(newDirections);
+
+                          // focus on last new direction
+                          setNewDirectionIndex(
+                            index + clipboardLines.length - 1,
+                          );
+                        }
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
             <AddButton
               text="add direction"
               onClick={() => {

@@ -1,27 +1,21 @@
 import { readRecipeContents, writeRecipeContents } from "./fs";
 
 class Ingredient {
+  public primary_measure: string;
   public name: string;
-  public primary_amount: string;
-  public primary_unit: string;
-  public alt_amount: string;
-  public alt_unit: string;
   public is_checked: boolean;
+  public alt_measure: string | undefined;
 
   constructor(
-    name: string,
-    primary_amount: string = "",
-    primary_unit: string = "",
-    alt_amount: string = "",
-    alt_unit: string = "",
-    is_checked = false,
+    primary_measure: string = "",
+    name: string = "",
+    is_checked: boolean = false,
+    alt_measure?: string,
   ) {
+    this.primary_measure = primary_measure;
     this.name = name;
-    this.primary_amount = primary_amount;
-    this.primary_unit = primary_unit;
-    this.alt_amount = alt_amount;
-    this.alt_unit = alt_unit;
     this.is_checked = is_checked;
+    this.alt_measure = alt_measure;
   }
 }
 
