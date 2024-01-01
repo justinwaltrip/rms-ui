@@ -46,13 +46,22 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
   useEffect(() => {
     if (recipe) {
       setTags(recipe.tags);
-      setDate(recipe.getDate());
-      setSource(recipe.getSource());
-      setPrep(recipe.getPrep());
-      setCook(recipe.getCook());
-      setServings(recipe.getServings());
+      setDate(recipe.date);
+      setSource(recipe.source);
+      setPrep(recipe.prep);
+      setCook(recipe.cook);
+      setServings(recipe.servings);
 
       setRecipeLoaded(true);
+    } else {
+      setTags(undefined);
+      setDate(undefined);
+      setSource(undefined);
+      setPrep(undefined);
+      setCook(undefined);
+      setServings(undefined);
+
+      setRecipeLoaded(false);
     }
   }, [recipe]);
 
@@ -61,24 +70,12 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
    */
   useEffect(() => {
     if (recipe && recipeLoaded) {
-      if (tags !== undefined) {
-        recipe.setTags(tags);
-      }
-      if (date !== undefined) {
-        recipe.setDate(date);
-      }
-      if (source !== undefined) {
-        recipe.setSource(source);
-      }
-      if (prep !== undefined) {
-        recipe.setPrep(prep);
-      }
-      if (cook !== undefined) {
-        recipe.setCook(cook);
-      }
-      if (servings !== undefined) {
-        recipe.setServings(servings);
-      }
+      recipe.setTags(tags);
+      recipe.setDate(date);
+      recipe.setSource(source);
+      recipe.setPrep(prep);
+      recipe.setCook(cook);
+      recipe.setServings(servings);
 
       // save recipe
       recipe
@@ -250,8 +247,12 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
                     e.key === "Backspace" &&
                     e.currentTarget.value === ""
                   ) {
-                    if (tags === undefined || tags.length === 0) return;
-                    setTags(tags.slice(0, tags.length - 1));
+                    if (tags.length === 0) {
+                      e.preventDefault();
+                      setTags(undefined);
+                    } else {
+                      setTags(tags.slice(0, tags.length - 1));
+                    }
                   }
                 }}
                 autoCorrect="off"
@@ -272,6 +273,11 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Backspace") {
+                    setDate(undefined);
+                  }
+                }}
               />
             </div>
           </>
@@ -290,6 +296,12 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
                 value={source || ""}
                 onChange={(e) => setSource(e.target.value)}
                 autoCorrect="off"
+                onKeyDown={(e) => {
+                  if (e.key === "Backspace" && e.currentTarget.value === "") {
+                    e.preventDefault();
+                    setSource(undefined);
+                  }
+                }}
               />
             </div>
           </>

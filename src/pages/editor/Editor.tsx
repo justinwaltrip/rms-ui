@@ -42,6 +42,9 @@ const Editor: FC = () => {
         activeFileIndex: number;
       };
       setActiveFileIndex(activeFileIndex);
+
+      // remove activeFileIndex from location.state
+      location.state = undefined;
     }
   }, [location.state]);
 

@@ -19,11 +19,20 @@ class Ingredient {
   }
 }
 
+/**
+ * Recipe class
+ */
 class Recipe {
   public json: { [key: string]: unknown };
   public filename: string;
   public collectionPath: string;
 
+  /**
+   * Recipe constructor
+   * @param json
+   * @param filename
+   * @param collectionPath
+   */
   constructor(
     json: { [key: string]: unknown },
     filename = "",
@@ -34,6 +43,12 @@ class Recipe {
     this.collectionPath = collectionPath;
   }
 
+  /**
+   * Load a recipe from a file
+   * @param filename
+   * @param collectionPath
+   * @returns promise of a recipe
+   */
   static async loadRecipe(
     filename: string,
     collectionPath: string,
@@ -55,6 +70,9 @@ class Recipe {
     }
   }
 
+  /**
+   * Write recipe contents to a file
+   */
   async writeRecipe(): Promise<void> {
     try {
       const contents = JSON.stringify(this.json, null, 4);
@@ -74,7 +92,7 @@ class Recipe {
     }
   }
 
-  setImage(image: string) {
+  setImage(image: string | undefined) {
     try {
       this.json["image"] = image;
     } catch (err) {
@@ -92,7 +110,7 @@ class Recipe {
     }
   }
 
-  setTitle(title: string) {
+  setTitle(title: string | undefined) {
     try {
       this.json["title"] = title;
     } catch (err) {
@@ -101,7 +119,7 @@ class Recipe {
     }
   }
 
-  getIngredients() {
+  get ingredients() {
     try {
       return this.json["ingredients"] as Ingredient[];
     } catch (err) {
@@ -110,7 +128,7 @@ class Recipe {
     }
   }
 
-  setIngredients(ingredients: Ingredient[]) {
+  setIngredients(ingredients: Ingredient[] | undefined) {
     try {
       this.json["ingredients"] = ingredients;
     } catch (err) {
@@ -119,7 +137,7 @@ class Recipe {
     }
   }
 
-  getDirections() {
+  get directions() {
     try {
       return this.json["directions"] as string[];
     } catch (err) {
@@ -128,7 +146,7 @@ class Recipe {
     }
   }
 
-  setDirections(directions: string[]) {
+  setDirections(directions: string[] | undefined) {
     try {
       this.json["directions"] = directions;
     } catch (err) {
@@ -137,7 +155,7 @@ class Recipe {
     }
   }
 
-  getNotes() {
+  get notes() {
     try {
       return this.json["notes"] as string[];
     } catch (err) {
@@ -146,7 +164,7 @@ class Recipe {
     }
   }
 
-  setNotes(notes: string[]) {
+  setNotes(notes: string[] | undefined) {
     try {
       this.json["notes"] = notes;
     } catch (err) {
@@ -164,7 +182,7 @@ class Recipe {
     }
   }
 
-  setTags(tags: string[]) {
+  setTags(tags: string[] | undefined) {
     try {
       this.json["tags"] = tags;
     } catch (err) {
@@ -173,7 +191,7 @@ class Recipe {
     }
   }
 
-  getPrep() {
+  get prep() {
     try {
       return this.json["prep"] as string;
     } catch (err) {
@@ -182,7 +200,7 @@ class Recipe {
     }
   }
 
-  setPrep(prep: string) {
+  setPrep(prep: string | undefined) {
     try {
       this.json["prep"] = prep;
     } catch (err) {
@@ -191,7 +209,7 @@ class Recipe {
     }
   }
 
-  getCook() {
+  get cook() {
     try {
       return this.json["cook"] as string;
     } catch (err) {
@@ -200,7 +218,7 @@ class Recipe {
     }
   }
 
-  setCook(cook: string) {
+  setCook(cook: string | undefined) {
     try {
       this.json["cook"] = cook;
     } catch (err) {
@@ -209,7 +227,7 @@ class Recipe {
     }
   }
 
-  getServings() {
+  get servings() {
     try {
       return this.json["servings"] as string;
     } catch (err) {
@@ -218,7 +236,7 @@ class Recipe {
     }
   }
 
-  setServings(servings: string) {
+  setServings(servings: string | undefined) {
     try {
       this.json["servings"] = servings;
     } catch (err) {
@@ -227,7 +245,7 @@ class Recipe {
     }
   }
 
-  getSource() {
+  get source() {
     try {
       return this.json["source"] as string;
     } catch (err) {
@@ -236,7 +254,7 @@ class Recipe {
     }
   }
 
-  setSource(source: string) {
+  setSource(source: string | undefined) {
     try {
       this.json["source"] = source;
     } catch (err) {
@@ -245,7 +263,7 @@ class Recipe {
     }
   }
 
-  getDate() {
+  get date() {
     try {
       return this.json["date"] as string;
     } catch (err) {
@@ -254,7 +272,7 @@ class Recipe {
     }
   }
 
-  setDate(date: string) {
+  setDate(date: string | undefined) {
     try {
       this.json["date"] = date;
     } catch (err) {
@@ -263,7 +281,7 @@ class Recipe {
     }
   }
 
-  getDescription() {
+  get description() {
     try {
       return this.json["description"] as string;
     } catch (err) {
@@ -272,7 +290,7 @@ class Recipe {
     }
   }
 
-  setDescription(description: string) {
+  setDescription(description: string | undefined) {
     try {
       this.json["description"] = description;
     } catch (err) {

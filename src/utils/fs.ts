@@ -166,7 +166,6 @@ async function readAppConfig() {
     };
     return appConfig;
   } catch (err) {
-    console.log("Error reading app config");
     console.error(err);
 
     // delete app.json

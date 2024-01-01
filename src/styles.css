@@ -21,7 +21,7 @@
 }
 
 /* prevent default input css */
-input[type="text"],
+input,
 textarea {
   border: none;
   background-color: transparent;

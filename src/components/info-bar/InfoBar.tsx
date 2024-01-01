@@ -34,7 +34,7 @@ const InfoBar: FC<InfoBarProps> = ({
       <input
         id="filename-input"
         type="text"
-        value={tempFilename}
+        value={tempFilename || ""}
         onChange={(e) => setTempFilename(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Tab" || e.key === "Enter") {

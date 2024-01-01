@@ -69,7 +69,11 @@ const SourceEditor: FC<SourceEditorProps> = ({
         onClick={() => setMode("view")}
       />
       <div className={styles["source-editor-content"]}>
-        <InfoBar filename={filename} setFilename={setFilename} />
+        <InfoBar
+          filename={filename}
+          setFilename={setFilename}
+          setDefaultTitle={() => {}}
+        />
         <div className={styles["json-editor"]}>
           {filename && (
             <textarea

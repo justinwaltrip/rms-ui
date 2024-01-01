@@ -37,8 +37,16 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
     <div
       className={styles["grid-item"]}
       onClick={() => {
-        setOpenFiles([...openFiles, recipe.filename]);
-        navigate("/editor");
+        if (openFiles.includes(recipe.filename)) {
+          navigate("/editor", {
+            state: { activeFileIndex: openFiles.indexOf(recipe.filename) },
+          });
+        } else {
+          setOpenFiles([...openFiles, recipe.filename]);
+          navigate("/editor", {
+            state: { activeFileIndex: openFiles.length },
+          });
+        }
       }}
     >
       {image ? (

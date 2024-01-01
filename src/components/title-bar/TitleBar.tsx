@@ -1,37 +1,39 @@
-import { FC, useEffect } from "react";
+import { FC, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import styles from "./TitleBar.module.css";
 import close from "../../assets/close.png";
 import create from "../../assets/create.png";
+import { AppContext } from "../../main";
 
 interface TitleBarProps {
-  openFiles: Array<string>;
-  setOpenFiles: (openFiles: Array<string>) => void;
   activeFileIndex: number;
 }
 
-const TitleBar: FC<TitleBarProps> = ({
-  openFiles,
-  setOpenFiles,
-  activeFileIndex,
-}) => {
+const TitleBar: FC<TitleBarProps> = ({ activeFileIndex }) => {
+  // #region contexts
   const navigate = useNavigate();
+  const { openFiles, setOpenFiles } = useContext(AppContext);
+  // #endregion
 
   /**
    * On mount, register keydown events
    */
   useEffect(() => {
-    document.addEventListener("keydown", (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       // on command + w, close the active tab
       if (e.metaKey && e.key === "w") {
-        closeTab(activeFileIndex, openFiles, setOpenFiles);
+        closeTab();
         // on command + n, create a new tab
       } else if (e.metaKey && e.key === "n") {
-        createFile(openFiles, setOpenFiles);
+        createFile();
       }
-    });
-  }, []);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeFileIndex, openFiles, setOpenFiles]);
 
   // #region functions
 
@@ -40,10 +42,7 @@ const TitleBar: FC<TitleBarProps> = ({
    * @param openFiles
    * @param setOpenFiles
    */
-  function createFile(
-    openFiles: Array<string>,
-    setOpenFiles: (openFiles: Array<string>) => void,
-  ) {
+  function createFile() {
     setOpenFiles([...openFiles, ""]);
     navigate("/editor", { state: { activeFileIndex: openFiles.length } });
   }
@@ -54,15 +53,11 @@ const TitleBar: FC<TitleBarProps> = ({
    * @param openFiles
    * @param setOpenFiles
    */
-  function closeTab(
-    index: number,
-    openFiles: Array<string>,
-    setOpenFiles: (openFiles: Array<string>) => void,
-  ) {
+  function closeTab() {
     if (openFiles.length === 1) {
       setOpenFiles([]);
     } else {
-      setOpenFiles(openFiles.filter((_, i) => i !== index));
+      setOpenFiles(openFiles.filter((_, i) => i !== activeFileIndex));
     }
   }
 
@@ -74,7 +69,7 @@ const TitleBar: FC<TitleBarProps> = ({
         className={styles["create-icon"]}
         src={create}
         alt="Create icon"
-        onClick={() => createFile(openFiles, setOpenFiles)}
+        onClick={() => createFile()}
         title="Create new file"
       />
       {openFiles.map((file, index) => (
@@ -96,7 +91,7 @@ const TitleBar: FC<TitleBarProps> = ({
             alt="Close icon"
             onClick={(e) => {
               e.stopPropagation();
-              closeTab(index, openFiles, setOpenFiles);
+              closeTab();
             }}
           />
         </div>

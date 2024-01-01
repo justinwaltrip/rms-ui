@@ -82,6 +82,11 @@ const ViewEditor: FC<ViewEditorProps> = ({
         })
         .catch((err) => console.error(err));
     } else {
+      if (recipe) {
+        // reset recipe
+        setRecipe(null);
+      }
+
       // prompt user to enter title
       document.getElementById("filename-input")?.focus();
     }
@@ -93,15 +98,24 @@ const ViewEditor: FC<ViewEditorProps> = ({
   useEffect(() => {
     if (recipe) {
       setTitle(recipe.title);
-      setDescription(recipe.getDescription());
+      setDescription(recipe.description);
       setImage(recipe.image);
-      setIngredients(recipe.getIngredients());
-      setDirections(recipe.getDirections());
-      setNotes(recipe.getNotes());
+      setIngredients(recipe.ingredients);
+      setDirections(recipe.directions);
+      setNotes(recipe.notes);
 
       setRecipeLoaded(true);
+    } else {
+      setTitle(undefined);
+      setDescription(undefined);
+      setImage(undefined);
+      setIngredients(undefined);
+      setDirections(undefined);
+      setNotes(undefined);
+
+      setRecipeLoaded(false);
     }
-  }, [recipe, collectionPath]);
+  }, [recipe]);
 
   /**
    * Update recipe data
@@ -109,24 +123,12 @@ const ViewEditor: FC<ViewEditorProps> = ({
   useEffect(() => {
     if (recipe && recipeLoaded) {
       // set recipe data
-      if (title !== undefined) {
-        recipe.setTitle(title);
-      }
-      if (description !== undefined) {
-        recipe.setDescription(description);
-      }
-      if (image !== undefined) {
-        recipe.setImage(image);
-      }
-      if (ingredients !== undefined) {
-        recipe.setIngredients(ingredients);
-      }
-      if (directions !== undefined) {
-        recipe.setDirections(directions);
-      }
-      if (notes !== undefined) {
-        recipe.setNotes(notes);
-      }
+      recipe.setTitle(title);
+      recipe.setDescription(description);
+      recipe.setImage(image);
+      recipe.setIngredients(ingredients);
+      recipe.setDirections(directions);
+      recipe.setNotes(notes);
 
       // save recipe
       recipe
