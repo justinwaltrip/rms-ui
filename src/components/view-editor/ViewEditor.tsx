@@ -162,7 +162,11 @@ const ViewEditor: FC<ViewEditorProps> = ({
    */
   useEffect(() => {
     if (newDirectionIndex !== -1 && newDirectionRef.current) {
-      newDirectionRef.current.focus();
+      // focus at end of text
+      const direction = newDirectionRef.current;
+      direction.focus();
+      const length = direction.value.length;
+      direction.setSelectionRange(length, length);
       setNewDirectionIndex(-1);
     }
   }, [newDirectionIndex]);

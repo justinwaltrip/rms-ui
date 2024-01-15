@@ -4,7 +4,11 @@ import styles from "./Dropdown.module.css";
 
 interface DropdownProps {
   options: Array<{
-    onClick: () => void;
+    onClick: (
+      e:
+        | React.MouseEvent<HTMLDivElement, MouseEvent>
+        | React.KeyboardEvent<HTMLDivElement>,
+    ) => void;
     icon: string;
     text: string;
   }>;
@@ -27,7 +31,7 @@ const Dropdown: FC<DropdownProps> = ({ options, x, y }) => {
           onKeyDown={(e) => {
             if (e.key === " ") {
               e.preventDefault();
-              option.onClick();
+              option.onClick(e);
             }
           }}
         >

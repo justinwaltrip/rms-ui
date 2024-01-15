@@ -29,15 +29,19 @@
 .grid-item-title {
   font-weight: bold;
   font-size: 12px;
-  position: relative;
+  position: absolute;
   left: 5px;
   top: 3px;
+  right: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .grid-item-tags {
-  position: relative;
+  position: absolute;
   left: 5px;
-  bottom: -5px;
+  bottom: 5px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -59,7 +63,7 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  right: 15px;
+  right: 10px;
   height: 15px;
   width: 15px;
 }
@@ -78,4 +82,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.more-dropdown-container {
+  z-index: 1;
+  position: absolute;
+  top: 50%;
+  left: calc(100% - 10px);
 }

@@ -33,13 +33,14 @@ const InfoBar: FC<InfoBarProps> = ({
     <div className={styles["info-bar"]}>
       <input
         id="filename-input"
+        className={styles["filename-input"]}
         type="text"
         value={tempFilename || ""}
         onChange={(e) => setTempFilename(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Tab" || e.key === "Enter") {
             // if original filename is non-empty, rename file
-            if (filename) {
+            if (filename && filename !== tempFilename) {
               renameRecipe(filename, tempFilename, collectionPath)
                 .then(() => {
                   setFilename(tempFilename);
@@ -47,7 +48,7 @@ const InfoBar: FC<InfoBarProps> = ({
                 .catch((err) => {
                   console.error(err);
                 });
-            } else {
+            } else if (!filename && tempFilename) {
               // create recipe file
               writeRecipeContents(tempFilename, "{}", collectionPath)
                 .then(() => {

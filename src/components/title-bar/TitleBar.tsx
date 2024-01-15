@@ -20,13 +20,21 @@ const TitleBar: FC<TitleBarProps> = ({ activeFileIndex }) => {
    * On mount, register keydown events
    */
   useEffect(() => {
+    /**
+     * command + w: close the active tab
+     * command + n: create a new tab
+     * command + 1-9: switch to the tab
+     */
     const handleKeyDown = (e: KeyboardEvent) => {
-      // on command + w, close the active tab
       if (e.metaKey && e.key === "w") {
         closeTab();
-        // on command + n, create a new tab
       } else if (e.metaKey && e.key === "n") {
         createFile();
+      } else if (e.metaKey && !isNaN(parseInt(e.key))) {
+        const index = parseInt(e.key) - 1;
+        if (index < openFiles.length) {
+          navigate("/editor", { state: { activeFileIndex: index } });
+        }
       }
     };
     document.addEventListener("keydown", handleKeyDown);

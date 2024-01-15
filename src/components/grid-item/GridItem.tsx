@@ -2,9 +2,12 @@ import { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import styles from "./GridItem.module.css";
+import close from "../../assets/close.png";
+import hdots from "../../assets/hdots.png";
 import { AppContext } from "../../main";
-import { getImageUrl } from "../../utils/fs";
+import { deleteRecipe, getImageUrl } from "../../utils/fs";
 import { Recipe } from "../../utils/recipe";
+import Dropdown from "../dropdown/Dropdown";
 
 interface GridItemProps {
   recipe: Recipe;
@@ -20,6 +23,7 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
 
   // #region states
   const [image, setImage] = useState<string | undefined>(undefined);
+  const [showMoreDropdown, setShowMoreDropdown] = useState<boolean>(false);
   // #endregion
 
   // #region effects
@@ -61,7 +65,9 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
         </div>
       )}
       <div className={styles["grid-item-data"]}>
-        <div className={styles["grid-item-title"]}>{recipe.title}</div>
+        <div className={styles["grid-item-title"]} title={recipe.title}>
+          {recipe.title}
+        </div>
         <div className={styles["grid-item-tags"]}>
           {recipe.tags &&
             recipe.tags.map((tag, index) => (
@@ -70,7 +76,48 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
               </div>
             ))}
         </div>
-        {/* <img src={hdots} alt="More icon" className={styles["more-icon"]} /> */}
+        <img
+          src={hdots}
+          alt="More icon"
+          className={styles["more-icon"]}
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowMoreDropdown(!showMoreDropdown);
+          }}
+        />
+        {showMoreDropdown && (
+          <div className={styles["more-dropdown-container"]}>
+            <Dropdown
+              options={[
+                {
+                  onClick: (e) => {
+                    e.stopPropagation();
+                    setShowMoreDropdown(false);
+                    deleteRecipe(recipe.filename, collectionPath)
+                      .then(() => {
+                        if (openFiles.includes(recipe.filename)) {
+                          const newOpenFiles = [...openFiles];
+                          newOpenFiles.splice(
+                            openFiles.indexOf(recipe.filename),
+                            1,
+                          );
+                          setOpenFiles(newOpenFiles);
+                        }
+
+                        // reload recipes
+                        window.location.reload();
+                      })
+                      .catch((err) => {
+                        console.error(err);
+                      });
+                  },
+                  icon: close,
+                  text: "Delete recipe",
+                },
+              ]}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

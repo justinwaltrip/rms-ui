@@ -199,6 +199,18 @@ async function renameRecipe(
   }
 }
 
+async function deleteRecipe(filename: string, collectionPath: string) {
+  try {
+    // delete file
+    await removeFile(`${collectionPath}/${filename}.json`, {
+      dir: BaseDirectory.Home,
+    });
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 export {
   getImageUrl,
   writeAppConfig,
@@ -208,4 +220,5 @@ export {
   deleteImage,
   writeImage,
   renameRecipe,
+  deleteRecipe,
 };

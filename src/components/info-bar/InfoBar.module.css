@@ -3,10 +3,14 @@
   left: 0;
   top: 0;
   margin: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
-#filename-input {
+.filename-input {
   text-align: center;
   color: #ebebf5;
   opacity: 0.6;
+  width: 100%;
 }
