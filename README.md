@@ -2,6 +2,11 @@
 
 Local-first recipe management system inspired by Obsidian. Built with Tauri, React, and Typescript in Vite.
 
+## Getting Started
+
+The development environment is managed using devenv. 
+If you don't have devenv installed, follow the instructions [here](https://devenv.sh/getting-started/#installation).
+
 ## Development
 
 1. Start Your Dev server
