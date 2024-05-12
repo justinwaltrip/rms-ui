@@ -4,6 +4,7 @@
     systems.url = "github:nix-systems/default";
     devenv.url = "github:cachix/devenv";
     devenv.inputs.nixpkgs.follows = "nixpkgs";
+    nixgl.url = "github:nix-community/nixGL";
   };
 
   nixConfig = {
@@ -11,7 +12,7 @@
     extra-substituters = "https://devenv.cachix.org";
   };
 
-  outputs = { self, nixpkgs, devenv, systems, ... } @ inputs:
+  outputs = { self, nixpkgs, devenv, systems, nixgl, ... } @ inputs:
     let
       forEachSystem = nixpkgs.lib.genAttrs (import systems);
     in
@@ -25,6 +26,12 @@
           let
             pkgs = nixpkgs.legacyPackages.${system};
             frameworks = pkgs.darwin.apple_sdk.frameworks;
+            libraries = with pkgs; [
+              webkitgtk gtk3 cairo gdk-pixbuf glib dbus openssl_3 librsvg libproxy
+            ];
+            extraPackages = with pkgs; [
+              curl wget pkg-config dbus openssl_3 glib gtk3 libsoup webkitgtk librsvg libproxy
+            ];
           in
           {
             default = devenv.lib.mkShell {
@@ -42,7 +49,6 @@
                   packages = with pkgs; [
                     gcc
                   ] ++ lib.optionals pkgs.stdenv.isDarwin [
-                    # https://discourse.nixos.org/t/compile-bevy-with-nix-developer-environment-on-macos/31512/3
                     darwin.libobjc
                     darwin.libiconv
                     frameworks.Security
@@ -60,8 +66,12 @@
                     frameworks.QuartzCore
                     frameworks.Metal
                     frameworks.WebKit
-                  ];
+                  ] ++ lib.optionals pkgs.stdenv.isLinux extraPackages;
                   env.CFLAGS = lib.mkForce (if pkgs.stdenv.isDarwin then "-I${pkgs.darwin.libobjc}/include/" else "");
+                  enterShell = ''
+                    export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath libraries}:$LD_LIBRARY_PATH
+                    export XDG_DATA_DIRS=${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}:$XDG_DATA_DIRS
+                  '';
                 })
               ];
             };
