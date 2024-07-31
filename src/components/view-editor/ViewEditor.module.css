@@ -71,6 +71,7 @@
   left: 0;
   height: 250px;
   width: 250px;
+  object-fit: cover;
 }
 
 .image-overlay {
@@ -149,6 +150,7 @@ input:focus {
 .description-input {
   margin-top: 20px;
   margin-bottom: 10px;
+  width: 80%;
 }
 
 .upload-icon {

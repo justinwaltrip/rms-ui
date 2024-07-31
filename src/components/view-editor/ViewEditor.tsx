@@ -221,7 +221,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
         filters: [
           {
             name: "Image",
-            extensions: ["png", "jpeg"],
+            extensions: ["png", "jpeg", "jpg"],
           },
         ],
       });
@@ -325,9 +325,8 @@ const ViewEditor: FC<ViewEditorProps> = ({
                 </div>
               )}
             </div>
-            <input
+            <textarea
               className={styles["description-input"]}
-              type="text"
               value={description || ""}
               onChange={(e) => {
                 setDescription(e.target.value);

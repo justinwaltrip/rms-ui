@@ -27,10 +27,14 @@
             pkgs = nixpkgs.legacyPackages.${system};
             frameworks = pkgs.darwin.apple_sdk.frameworks;
             libraries = with pkgs; [
-              webkitgtk gtk3 cairo gdk-pixbuf glib dbus openssl_3 librsvg libproxy
+              gtk3 cairo gdk-pixbuf glib dbus openssl_3 librsvg libproxy
+            ] ++ lib.optionals pkgs.stdenv.isLinux [
+              webkitgtk 
             ];
             extraPackages = with pkgs; [
-              curl wget pkg-config dbus openssl_3 glib gtk3 libsoup webkitgtk librsvg libproxy
+              curl wget pkg-config dbus openssl_3 glib gtk3 libsoup librsvg libproxy
+            ] ++ lib.optionals pkgs.stdenv.isLinux [
+              webkitgtk 
             ];
           in
           {
