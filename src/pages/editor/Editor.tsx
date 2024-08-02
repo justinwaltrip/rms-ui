@@ -52,11 +52,7 @@ const Editor: FC = () => {
 
   return (
     <div>
-      <TitleBar
-        openFiles={openFiles}
-        setOpenFiles={setOpenFiles}
-        activeFileIndex={activeFileIndex}
-      />
+      <TitleBar activeFileIndex={activeFileIndex} />
       <SideBar />
       {activeFileIndex === -1 ? (
         <NoFile />

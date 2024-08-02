@@ -9,3 +9,5 @@
  * - The recipe data is updated in the editor
  * - The recipe data is updated in the corresponding JSON file
  */
+
+export {};

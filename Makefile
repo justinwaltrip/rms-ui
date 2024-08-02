@@ -10,3 +10,6 @@ pretty:
 check:
 	make lint
 	make pretty
+
+build:
+	pnpm tauri build

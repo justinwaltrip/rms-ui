@@ -51,3 +51,5 @@
  * Expected:
  * - A new tab is opened with the recipe content in the view editor
  */
+
+export {};

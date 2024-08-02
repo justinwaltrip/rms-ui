@@ -4,7 +4,7 @@ Local-first recipe management system inspired by Obsidian. Built with Tauri, Rea
 
 ## Getting Started
 
-The development environment is managed using devenv. 
+The development environment is managed using devenv.
 If you don't have devenv installed, follow the instructions [here](https://devenv.sh/getting-started/#installation).
 
 ## Development
@@ -63,3 +63,11 @@ pnpm wdio run wdio.conf.json
 ```
 
 TODO: Follow steps as mentioned [here](https://jonaskruckenberg.github.io/tauri-docs-wip/development/testing.html) to setup the test environment.
+
+## Building
+
+To build the Tauri app,
+
+```bash
+make build
+```

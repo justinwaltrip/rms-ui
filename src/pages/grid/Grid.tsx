@@ -21,7 +21,7 @@ const SORT_FIELDS = ["title"];
 const Grid: FC = () => {
   // #region contexts
   const appContext = useContext(AppContext);
-  const { collectionPath, openFiles, setOpenFiles } = appContext;
+  const { collectionPath } = appContext;
   const location = useLocation();
   // #endregion
 
@@ -132,11 +132,7 @@ const Grid: FC = () => {
 
   return (
     <div>
-      <TitleBar
-        openFiles={openFiles}
-        setOpenFiles={setOpenFiles}
-        activeFileIndex={-1}
-      />
+      <TitleBar activeFileIndex={-1} />
       <SideBar />
       <div className={styles["content"]}>
         <div className={styles["container"]}>

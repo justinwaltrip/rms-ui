@@ -63,3 +63,5 @@
  * Expected:
  * - The window maximizes and the grid view of the recipes is displayed
  */
+
+export {};
