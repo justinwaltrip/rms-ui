@@ -2,22 +2,26 @@
 
 Local-first recipe management system inspired by Obsidian. Built with Tauri, React, and Typescript in Vite.
 
+## Disclaimer
+
+This software is provided "as-is," without any guarantees or warranties. It is not expected to be stable or to avoid data loss. Use at your own risk.
+
 ## Getting Started
 
-The development environment is managed using devenv.
+The development environment is managed using devenv.  
 If you don't have devenv installed, follow the instructions [here](https://devenv.sh/getting-started/#installation).
 
 ## Development
 
-To start the Tauri development window,
+To start the Tauri development window:
 
 ```bash
 make dev
 ```
 
-The first time you run this command, the Rust package manager takes several minutes to download and build all the required packages. Since they are cached, subsequent builds are much faster, as only your code needs rebuilding.
+The first time you run this command, the Rust package manager will take several minutes to download and build all the required packages. Subsequent builds will be much faster due to caching.
 
-Once Rust has finished building, the webview opens, displaying your web app. You can make changes to your web app, and if your tooling enables it, the webview should update automatically, just like a browser. When you make changes to your Rust files, they are rebuilt automatically, and your app automatically restarts.
+Once Rust has finished building, the webview will open, displaying your web app. Changes to the web app should update automatically, similar to a browser. When you update your Rust files, they are rebuilt automatically, and your app will restart.
 
 ## Recommended IDE Setup
 
@@ -27,15 +31,15 @@ Once Rust has finished building, the webview opens, displaying your web app. You
 
 ### React Functional Components
 
-- Create a new folder for each component. The folder name should be the name of the component in lowercase, separated by hyphens (ex. `add-filter-dialog`).
+- **Component Folder**: Create a new folder for each component. Name the folder using the component's name in lowercase, separated by hyphens (e.g., `add-filter-dialog`).
 
-  - Inside of the folder, create a file for the component. The file name should be the name of the component in PascalCase, followed by `.tsx`. For example, `AddFilterDialog.tsx`. The only exported item from the file should be the component itself.
+  - **Component File**: Inside the folder, create a file for the component. Name the file using PascalCase, followed by `.tsx` (e.g., `AddFilterDialog.tsx`). Export only the component from this file.
 
-  - If the component has any custom styles, create a file for the styles. The file name should be the name of the component in PascalCase, followed by `.module.scss`. For example, `AddFilterDialog.module.scss`.
+  - **Styles File**: If the component has custom styles, create a styles file named in PascalCase, followed by `.module.scss` (e.g., `AddFilterDialog.module.scss`).
 
-- If the component has any props, create a type for the props. The name of the type should be the name of the component in PascalCase, followed by `Props`. For example, `AddFilterDialogProps`.
+- **Props Types**: If the component has any props, create a type for the props. Name the type using PascalCase, followed by `Props` (e.g., `AddFilterDialogProps`).
 
-- Use `// #region` and `// #endregion` to group 2 or more related sections of code together. This makes it easier to collapse and expand sections of code in VS Code. Inside of the functional component, the order of the regions should be:
+- **Code Grouping**: Use `// #region` and `// #endregion` to group related sections of code. This helps in collapsing and expanding sections in VS Code. The order should be:
 
   1. variables - simple `const` declarations
   2. contexts - `useContext` declarations
@@ -44,29 +48,29 @@ Once Rust has finished building, the webview opens, displaying your web app. You
   5. functions - `function` declarations
   6. components - `const` declarations of components
 
-- Use inline functions whenever possible to reduce complexity and improve readability.
+- **Inline Functions**: Use inline functions whenever possible to reduce complexity and improve readability.
 
-- Create JSDoc comments for all functions. The JSDoc comment should be placed directly above the function declaration. The JSDoc comment should include the following:
+- **JSDoc Comments**: Create JSDoc comments for all functions, including:
   - `@param` for each parameter
   - `@returns` for the return value
   - `@throws` for any errors that can be thrown
-  - `@example` for an example of how to use the function
+  - `@example` for an example of usage
 
 ## Testing
 
-End-to-end tests are written using the [WebDriver](https://www.w3.org/TR/webdriver/) interface. Tauri supports the WebDriver using the [`tauri-driver`](https://crates.io/crates/tauri-driver), which is not yet supported for macOS. We use the [WebdriverIO](https://webdriver.io/) (WDIO) test automation framework to write and run the tests. We also use the `@tauri-apps/api/mocks` package to mock the Tauri APIs.
+End-to-end tests are written using the [WebDriver](https://www.w3.org/TR/webdriver/) interface. Tauri supports WebDriver using [`tauri-driver`](https://crates.io/crates/tauri-driver), which is not supported for macOS. We use [WebdriverIO](https://webdriver.io/) (WDIO) test automation framework and the `@tauri-apps/api/mocks` package to write and run tests.
 
-To run the test suite,
+To run the test suite:
 
 ```bash
 pnpm wdio run wdio.conf.json
 ```
 
-TODO: Follow steps as mentioned [here](https://jonaskruckenberg.github.io/tauri-docs-wip/development/testing.html) to setup the test environment.
+TODO: Follow steps as mentioned [here](https://jonaskruckenberg.github.io/tauri-docs-wip/development/testing.html) to set up the test environment.
 
 ## Building
 
-To build the Tauri app,
+To build the Tauri app:
 
 ```bash
 make build
