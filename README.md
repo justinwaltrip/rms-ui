@@ -75,3 +75,7 @@ To build the Tauri app:
 ```bash
 make build
 ```
+
+## Color Palette
+
+- **Icons**: `#EBEBF5`
