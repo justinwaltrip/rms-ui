@@ -1,9 +1,12 @@
+.properties {
+  width: 80%;
+}
+
 .grid-container {
   display: grid;
   grid-template-columns: 110px auto;
   column-gap: 10px;
   row-gap: 1px;
-  /* 1px border */
   background: repeating-linear-gradient(
     to bottom,
     transparent 0 36px,
@@ -70,4 +73,16 @@
 
 .tag-text {
   white-space: nowrap;
+}
+
+.source {
+  height: 100%;
+  width: 100%;
+  white-space: nowrap;
+  overflow-x: scroll;
+  padding-top: 15px;
+}
+
+.source::-webkit-scrollbar {
+  display: none;
 }

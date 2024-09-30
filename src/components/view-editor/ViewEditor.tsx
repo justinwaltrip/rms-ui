@@ -35,7 +35,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
   // #region variables
   const newIngredientRef = useRef<HTMLInputElement>(null);
   const newDirectionRef = useRef<HTMLTextAreaElement>(null);
-  const newNoteRef = useRef<HTMLInputElement>(null);
+  const newNoteRef = useRef<HTMLTextAreaElement>(null);
   // #endregion
 
   // #region contexts
@@ -278,9 +278,8 @@ const ViewEditor: FC<ViewEditorProps> = ({
         />
         <div className={styles["view-editor"]}>
           <div className={styles["column"]}>
-            <input
+            <textarea
               className={styles["title-input"]}
-              type="text"
               value={title || ""}
               onChange={(e) => {
                 setTitle(e.target.value);
@@ -577,9 +576,14 @@ const ViewEditor: FC<ViewEditorProps> = ({
               notes.map((note, index) => (
                 <div key={index} className={styles["note"]}>
                   <p>{`-`}</p>
-                  <input
+                  <textarea
+                    rows={1}
+                    onInput={(e) => {
+                      e.currentTarget.style.height = "";
+                      e.currentTarget.style.height =
+                        e.currentTarget.scrollHeight + "px";
+                    }}
                     ref={newNoteIndex === index ? newNoteRef : null}
-                    type="text"
                     value={note || ""}
                     onChange={(e) => {
                       const newNotes = [...notes];
@@ -589,7 +593,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                     onKeyDown={(e) => {
                       if (
                         e.key === "Backspace" &&
-                        (e.currentTarget as HTMLInputElement).value === ""
+                        (e.currentTarget as HTMLTextAreaElement).value === ""
                       ) {
                         e.preventDefault();
 
@@ -609,6 +613,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                         setNewNoteIndex(index + 1);
                       }
                     }}
+                    className={styles["note-input"]}
                   />
                 </div>
               ))}

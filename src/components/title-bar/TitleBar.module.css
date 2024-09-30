@@ -53,6 +53,10 @@
   position: absolute;
   left: 15px;
   font-size: 14px;
+  right: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .close-icon {

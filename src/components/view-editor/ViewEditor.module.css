@@ -132,6 +132,10 @@
   gap: 10px;
 }
 
+.note-input {
+  width: 100%;
+}
+
 input {
   text-align: left;
   color: white;

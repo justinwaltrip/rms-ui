@@ -31,7 +31,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
   const [showAddPropertyDropdown, setShowAddPropertyDropdown] =
     useState<boolean>(false);
 
-  const focusPropertyRef = useRef<HTMLInputElement>(null);
+  const focusPropertyRef = useRef<HTMLElement>(null);
   const [focusProperty, setFocusProperty] = useState<string | undefined>(
     undefined,
   );
@@ -231,7 +231,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
               <input
                 ref={
                   focusProperty && focusProperty === "tags"
-                    ? focusPropertyRef
+                    ? (focusPropertyRef as React.RefObject<HTMLInputElement>)
                     : undefined
                 }
                 type="text"
@@ -267,7 +267,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
               <input
                 ref={
                   focusProperty && focusProperty === "date"
-                    ? focusPropertyRef
+                    ? (focusPropertyRef as React.RefObject<HTMLInputElement>)
                     : undefined
                 }
                 type="date"
@@ -286,13 +286,12 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
           <>
             <PropertyLabel label="source" src={link} />
             <div className={styles["grid-item"]}>
-              <input
+              <textarea
                 ref={
                   focusProperty && focusProperty === "source"
-                    ? focusPropertyRef
+                    ? (focusPropertyRef as React.RefObject<HTMLTextAreaElement>)
                     : undefined
                 }
-                type="text"
                 value={source || ""}
                 onChange={(e) => setSource(e.target.value)}
                 autoCorrect="off"
@@ -302,6 +301,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
                     setSource(undefined);
                   }
                 }}
+                className={styles["source"]}
               />
             </div>
           </>
@@ -313,7 +313,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
               <input
                 ref={
                   focusProperty && focusProperty === "prep"
-                    ? focusPropertyRef
+                    ? (focusPropertyRef as React.RefObject<HTMLInputElement>)
                     : undefined
                 }
                 type="text"
@@ -330,7 +330,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
               <input
                 ref={
                   focusProperty && focusProperty === "cook"
-                    ? focusPropertyRef
+                    ? (focusPropertyRef as React.RefObject<HTMLInputElement>)
                     : undefined
                 }
                 type="text"
@@ -347,7 +347,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
               <input
                 ref={
                   focusProperty && focusProperty === "servings"
-                    ? focusPropertyRef
+                    ? (focusPropertyRef as React.RefObject<HTMLInputElement>)
                     : undefined
                 }
                 type="text"
