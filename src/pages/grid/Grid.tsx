@@ -1,5 +1,5 @@
-import { BaseDirectory, readDir } from "@tauri-apps/api/fs";
-import { appWindow } from "@tauri-apps/api/window";
+import { BaseDirectory, readDir } from "@tauri-apps/plugin-fs";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { FC, useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -15,6 +15,7 @@ import { AppContext } from "../../main";
 import { Filter } from "../../utils/filter";
 import { filterRecipes } from "../../utils/filter";
 import { Recipe } from "../../utils/recipe";
+const appWindow = getCurrentWebviewWindow()
 
 const SORT_FIELDS = ["title"];
 

@@ -1,6 +1,9 @@
-import { tauri } from "@tauri-apps/api";
-import { open } from "@tauri-apps/api/dialog";
-import { LogicalSize, appWindow } from "@tauri-apps/api/window";
+import { core } from "@tauri-apps/api";
+import { open } from "@tauri-apps/plugin-dialog";
+import { 
+    // LogicalSize, 
+    getCurrentWebviewWindow 
+} from "@tauri-apps/api/webviewWindow";
 import { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -14,6 +17,7 @@ import Dropdown from "../../components/dropdown/Dropdown";
 import { AppContext } from "../../main";
 import { createCollection, renameCollection } from "../../utils/collection";
 import { readAppConfig, writeAppConfig } from "../../utils/fs";
+const appWindow = getCurrentWebviewWindow()
 
 const Home: FC = () => {
   // #region variables
@@ -57,28 +61,28 @@ const Home: FC = () => {
    */
   useEffect(() => {
     // set size and prevent window from being resized
-    appWindow
-      .setSize(new LogicalSize(800, 600))
-      .then(() => {
-        appWindow
-          .listen("tauri://resize", () => {
-            appWindow
-              .setSize(new LogicalSize(800, 600))
-              .then(() => {})
-              .catch((err) => {
-                console.error(err);
-              });
-          })
-          .then((unlistenFn) => {
-            unlistenFunctions.push(unlistenFn);
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    // appWindow
+    //   .setSize(new LogicalSize(800, 600))
+    //   .then(() => {
+    //     appWindow
+    //       .listen("tauri://resize", () => {
+    //         appWindow
+    //           .setSize(new LogicalSize(800, 600))
+    //           .then(() => {})
+    //           .catch((err) => {
+    //             console.error(err);
+    //           });
+    //       })
+    //       .then((unlistenFn) => {
+    //         unlistenFunctions.push(unlistenFn);
+    //       })
+    //       .catch((err) => {
+    //         console.error(err);
+    //       });
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   });
 
     // register click events to close collection options
     document.addEventListener("click", () => {

@@ -1,10 +1,10 @@
 import {
   BaseDirectory,
-  createDir,
+  mkdir as createDir,
   exists,
   readTextFile,
-  renameFile,
-} from "@tauri-apps/api/fs";
+  rename as renameFile,
+} from "@tauri-apps/plugin-fs";
 
 import { readAppConfig, writeAppConfig } from "./fs";
 
@@ -24,7 +24,7 @@ async function createCollection(collectionPath: string) {
 
     // check if app.json exists
     const appConfigExists = await exists("app.json", {
-      dir: BaseDirectory.AppConfig,
+      baseDir: BaseDirectory.AppConfig,
     });
 
     let appConfig: { [name: string]: unknown };
@@ -32,7 +32,7 @@ async function createCollection(collectionPath: string) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       appConfig = JSON.parse(
         await readTextFile("app.json", {
-          dir: BaseDirectory.AppConfig,
+          baseDir: BaseDirectory.AppConfig,
         }),
       );
     } else {

@@ -1,15 +1,15 @@
+import { convertFileSrc } from "@tauri-apps/api/core";
 import {
   BaseDirectory,
   BinaryFileContents,
-  createDir,
+  mkdir as createDir,
   exists,
   readTextFile,
-  removeFile,
-  renameFile,
-  writeBinaryFile,
+  remove as removeFile,
+  rename as renameFile,
+  writeFile as writeBinaryFile,
   writeTextFile,
-} from "@tauri-apps/api/fs";
-import { convertFileSrc } from "@tauri-apps/api/tauri";
+} from "@tauri-apps/plugin-fs";
 
 /**
  * Write recipe contents to file
@@ -120,19 +120,19 @@ async function writeAppConfig(appConfig: { [name: string]: unknown }) {
   try {
     // check if AppConfig directory exists
     const appConfigDirExists = await exists("", {
-      dir: BaseDirectory.AppConfig,
+      baseDir: BaseDirectory.AppConfig,
     });
 
     if (!appConfigDirExists) {
       // create AppConfig directory
       await createDir("", {
-        dir: BaseDirectory.AppConfig,
+        baseDir: BaseDirectory.AppConfig,
       });
     }
 
     // write app config
     await writeTextFile("app.json", JSON.stringify(appConfig, null, 2), {
-      dir: BaseDirectory.AppConfig,
+      baseDir: BaseDirectory.AppConfig,
     });
   } catch (err) {
     console.error(err);
@@ -148,7 +148,7 @@ async function readAppConfig() {
   try {
     // check if app.json exists
     const appConfigExists = await exists("app.json", {
-      dir: BaseDirectory.AppConfig,
+      baseDir: BaseDirectory.AppConfig,
     });
 
     if (!appConfigExists) {
@@ -159,7 +159,7 @@ async function readAppConfig() {
 
     // read app config
     const content = await readTextFile("app.json", {
-      dir: BaseDirectory.AppConfig,
+      baseDir: BaseDirectory.AppConfig,
     });
     const appConfig: { collections: Array<string> } = JSON.parse(content) as {
       collections: Array<string>;
@@ -170,7 +170,7 @@ async function readAppConfig() {
 
     // delete app.json
     await removeFile("app.json", {
-      dir: BaseDirectory.AppConfig,
+      baseDir: BaseDirectory.AppConfig,
     });
 
     return {

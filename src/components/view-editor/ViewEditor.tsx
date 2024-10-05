@@ -1,5 +1,8 @@
-import { open } from "@tauri-apps/api/dialog";
-import { BaseDirectory, readBinaryFile } from "@tauri-apps/api/fs";
+import { open } from "@tauri-apps/plugin-dialog";
+import {
+  BaseDirectory,
+  readFile as readBinaryFile,
+} from "@tauri-apps/plugin-fs";
 import React, {
   ChangeEvent,
   FC,
