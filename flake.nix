@@ -68,6 +68,7 @@
                   languages.rust.enable = true;
                   packages = with pkgs; [
                     gcc
+                    rustup
                   ] ++ lib.optionals pkgs.stdenv.isDarwin [
                     darwin.libobjc
                     darwin.libiconv

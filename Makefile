@@ -13,3 +13,6 @@ check:
 
 build:
 	pnpm tauri build
+
+dev-mobile:
+	pnpm tauri ios dev --open

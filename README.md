@@ -13,6 +13,12 @@ This software is provided "as-is," without any guarantees or warranties. It is n
 The development environment is managed using devenv.  
 If you don't have devenv installed, follow the instructions [here](https://devenv.sh/getting-started/#installation).
 
+### Mobile Development Requirements
+
+- https://v2.tauri.app/start/prerequisites/#macos
+    - Be sure Xcode application is located in `/Applications/Xcode.app`
+- https://v2.tauri.app/start/prerequisites/#ios
+
 ## Development
 
 To start the Tauri development window:
