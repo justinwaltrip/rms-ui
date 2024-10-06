@@ -150,6 +150,27 @@
 			);
 			sourceTree = "<group>";
 		};
+		"TEMP_44AEA005-08CB-4A94-AC40-DD06F4D9A8F6" /* x86_64 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = x86_64;
+			sourceTree = "<group>";
+		};
+		"TEMP_45AF9894-D786-453F-8202-7B91F845D018" /* arm64-sim */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "arm64-sim";
+			sourceTree = "<group>";
+		};
+		"TEMP_DB44556E-FBC9-4228-82FD-F0A544EA5A04" /* arm64 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = arm64;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */

@@ -65,7 +65,6 @@
                       install.enable = true;
                     };
                   };
-                  languages.rust.enable = true;
                   packages = with pkgs; [
                     gcc
                     rustup

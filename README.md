@@ -19,6 +19,12 @@ If you don't have devenv installed, follow the instructions [here](https://deven
     - Be sure Xcode application is located in `/Applications/Xcode.app`
 - https://v2.tauri.app/start/prerequisites/#ios
 
+XCode requires all dependencies to be installed in a default location.
+
+```bash
+sudo ln -s $(which pnpm) /usr/local/bin/pnpm
+```
+
 ## Development
 
 To start the Tauri development window:
