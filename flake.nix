@@ -92,6 +92,8 @@
                       -F${frameworks.QuartzCore}/Library/Frameworks -framework QuartzCore \
                       -F${frameworks.Security}/Library/Frameworks -framework Security \
                       $NIX_LDFLAGS"
+                    export PATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:$PATH
+                    export LIBRARY_PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib:$LIBRARY_PATH
                   '';
                 })
               ];
