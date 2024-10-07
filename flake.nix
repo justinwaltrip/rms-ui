@@ -26,38 +26,12 @@
           let
             pkgs = nixpkgs.legacyPackages.${system};
             frameworks = pkgs.darwin.apple_sdk.frameworks;
-            libraries = with pkgs; [
-              gtk3
-              cairo
-              gdk-pixbuf
-              glib
-              dbus
-              openssl_3
-              librsvg
-              libproxy
-            ] ++ lib.optionals pkgs.stdenv.isLinux [
-              webkitgtk
-            ];
-            extraPackages = with pkgs; [
-              curl
-              wget
-              pkg-config
-              dbus
-              openssl_3
-              glib
-              gtk3
-              libsoup
-              librsvg
-              libproxy
-            ] ++ lib.optionals pkgs.stdenv.isLinux [
-              webkitgtk
-            ];
           in
           {
             default = devenv.lib.mkShell {
               inherit inputs pkgs;
               modules = [
-                ({ pkgs, config, lib, ... }: {
+                ({ pkgs, config, lib, ... }: with pkgs; {
                   languages.javascript = {
                     enable = true;
                     pnpm = {
@@ -65,45 +39,59 @@
                       install.enable = true;
                     };
                   };
-                  packages = with pkgs; [
-                    gcc
+                  packages = [
+                    at-spi2-atk
+                    atkmm
+                    cairo
+                    gdk-pixbuf
+                    glib
+                    gobject-introspection
+                    gobject-introspection.dev
+                    gtk3
+                    harfbuzz
+                    librsvg
+                    libsoup_3
+                    pango
                     rustup
                   ] ++ lib.optionals pkgs.stdenv.isDarwin [
-                    darwin.libobjc
-                    darwin.libiconv
-                    frameworks.Security
-                    frameworks.CoreServices
-                    frameworks.CoreFoundation
+                    frameworks.SystemConfiguration
                     frameworks.AppKit
                     frameworks.Foundation
+                    frameworks.WebKit
                     frameworks.ApplicationServices
                     frameworks.CoreGraphics
                     frameworks.CoreVideo
+                    frameworks.CoreFoundation
                     frameworks.Carbon
-                    frameworks.IOKit
-                    frameworks.CoreAudio
-                    frameworks.AudioUnit
                     frameworks.QuartzCore
-                    frameworks.Metal
-                    frameworks.WebKit
-                  ] ++ lib.optionals pkgs.stdenv.isLinux extraPackages;
-                  env.CFLAGS = lib.mkForce (if pkgs.stdenv.isDarwin then "-I${pkgs.darwin.libobjc}/include/" else "");
+                    frameworks.Security
+                  ] ++ lib.optionals pkgs.stdenv.isLinux [
+                    webkitgtk_4_1
+                    webkitgtk_4_1.dev
+                  ];
                   enterShell = ''
-                    export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath libraries}:$LD_LIBRARY_PATH
-                    export XDG_DATA_DIRS=${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}:$XDG_DATA_DIRS
-                                      export NIX_LDFLAGS="\
-                    -F${frameworks.SystemConfiguration}/Library/Frameworks -framework SystemConfiguration \
-                    -F${frameworks.AppKit}/Library/Frameworks -framework AppKit \
-                    -F${frameworks.Foundation}/Library/Frameworks -framework Foundation \
-                    -F${frameworks.WebKit}/Library/Frameworks -framework WebKit \
-                    -F${frameworks.ApplicationServices}/Library/Frameworks -framework ApplicationServices \
-                    -F${frameworks.CoreGraphics}/Library/Frameworks -framework CoreGraphics \
-                    -F${frameworks.CoreVideo}/Library/Frameworks -framework CoreVideo \
-                    -F${frameworks.CoreFoundation}/Library/Frameworks -framework CoreFoundation \
-                    -F${frameworks.Carbon}/Library/Frameworks -framework Carbon \
-                    -F${frameworks.QuartzCore}/Library/Frameworks -framework QuartzCore \
-                    -F${frameworks.Security}/Library/Frameworks -framework Security \
-                    $NIX_LDFLAGS"
+                    export PKG_CONFIG_PATH="\
+                      ${glib.dev}/lib/pkgconfig:\
+                      ${libsoup_3.dev}/lib/pkgconfig:\
+                      ${at-spi2-atk.dev}/lib/pkgconfig:\
+                      ${gtk3.dev}/lib/pkgconfig:\
+                      ${gdk-pixbuf.dev}/lib/pkgconfig:\
+                      ${cairo.dev}/lib/pkgconfig:\
+                      ${pango.dev}/lib/pkgconfig:\
+                      ${harfbuzz.dev}/lib/pkgconfig"
+                    export NIX_LDFLAGS="\
+                      -F${frameworks.SystemConfiguration}/Library/Frameworks -framework SystemConfiguration \
+                      -F${frameworks.AppKit}/Library/Frameworks -framework AppKit \
+                      -F${frameworks.Foundation}/Library/Frameworks -framework Foundation \
+                      -F${frameworks.WebKit}/Library/Frameworks -framework WebKit \
+                      -F${frameworks.ApplicationServices}/Library/Frameworks -framework ApplicationServices \
+                      -F${frameworks.CoreGraphics}/Library/Frameworks -framework CoreGraphics \
+                      -F${frameworks.CoreVideo}/Library/Frameworks -framework CoreVideo \
+                      -F${frameworks.CoreFoundation}/Library/Frameworks -framework CoreFoundation \
+                      -F${frameworks.Carbon}/Library/Frameworks -framework Carbon \
+                      -F${frameworks.QuartzCore}/Library/Frameworks -framework QuartzCore \
+                      -F${frameworks.Security}/Library/Frameworks -framework Security \
+                      $NIX_LDFLAGS"
                   '';
                 })
               ];
