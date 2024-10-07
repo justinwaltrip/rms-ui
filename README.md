@@ -95,3 +95,8 @@ sudo ln -s $(which pnpm) /usr/local/bin/pnpm
 ```bash
 sudo xcode-select --switch /Applications/Xcode.app
 ```
+
+```bash
+cargo build --target aarch64-apple-ios-sim
+```
+from `src-tauri` directory

@@ -1,5 +1,5 @@
-import { open } from "@tauri-apps/plugin-dialog";
 import { homeDir } from "@tauri-apps/api/path";
+import { open } from "@tauri-apps/plugin-dialog";
 import { FC, useEffect, useState } from "react";
 
 import styles from "./CreateCollectionDialog.module.css";

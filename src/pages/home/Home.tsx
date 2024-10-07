@@ -1,9 +1,9 @@
 import { core } from "@tauri-apps/api";
-import { open } from "@tauri-apps/plugin-dialog";
-import { 
-    // LogicalSize, 
-    getCurrentWebviewWindow 
+import {
+  // LogicalSize,
+  getCurrentWebviewWindow,
 } from "@tauri-apps/api/webviewWindow";
+import { open } from "@tauri-apps/plugin-dialog";
 import { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -17,7 +17,7 @@ import Dropdown from "../../components/dropdown/Dropdown";
 import { AppContext } from "../../main";
 import { createCollection, renameCollection } from "../../utils/collection";
 import { readAppConfig, writeAppConfig } from "../../utils/fs";
-const appWindow = getCurrentWebviewWindow()
+const appWindow = getCurrentWebviewWindow();
 
 const Home: FC = () => {
   // #region variables
