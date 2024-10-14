@@ -16,4 +16,4 @@ build:
 
 dev-mobile:
 	rm -rf ./src-tauri/target
-	pnpm tauri ios dev 'iPad Pro 13-inch (M4)'
+	pnpm tauri ios dev 'iPad Pro 13-inch (M4)' --open

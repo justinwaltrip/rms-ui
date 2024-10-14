@@ -52,7 +52,6 @@
                     librsvg
                     libsoup_3
                     pango
-                    rustup
                   ] ++ lib.optionals pkgs.stdenv.isDarwin [
                     frameworks.SystemConfiguration
                     frameworks.AppKit
@@ -65,6 +64,7 @@
                     frameworks.Carbon
                     frameworks.QuartzCore
                     frameworks.Security
+                    darwin.Libsystem
                   ] ++ lib.optionals pkgs.stdenv.isLinux [
                     webkitgtk_4_1
                     webkitgtk_4_1.dev
@@ -92,8 +92,8 @@
                       -F${frameworks.QuartzCore}/Library/Frameworks -framework QuartzCore \
                       -F${frameworks.Security}/Library/Frameworks -framework Security \
                       $NIX_LDFLAGS"
-                    export PATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:$PATH
-                    export LIBRARY_PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib:$LIBRARY_PATH
+                    export PATH="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:$PATH"
+                    export LIBRARY_PATH="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib:$LIBRARY_PATH"
                   '';
                 })
               ];

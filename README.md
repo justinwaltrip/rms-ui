@@ -81,22 +81,3 @@ make build
 ## Color Palette
 
 - **Icons**: `#EBEBF5`
-
-## Mobile Development (Work in Progress)
-
-- https://v2.tauri.app/start/prerequisites/#macos
-    - Be sure Xcode application is located in `/Applications/Xcode.app`
-- https://v2.tauri.app/start/prerequisites/#ios
-
-```bash
-sudo ln -s $(which pnpm) /usr/local/bin/pnpm
-```
-
-```bash
-sudo xcode-select --switch /Applications/Xcode.app
-```
-
-```bash
-cargo build --target aarch64-apple-ios-sim
-```
-from `src-tauri` directory
