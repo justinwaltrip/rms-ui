@@ -25,7 +25,7 @@
         (system:
           let
             pkgs = nixpkgs.legacyPackages.${system};
-            frameworks = pkgs.darwin.apple_sdk.frameworks;
+            frameworks = pkgs.darwin.apple_sdk_11_0.frameworks;
           in
           {
             default = devenv.lib.mkShell {
@@ -64,7 +64,6 @@
                     frameworks.Carbon
                     frameworks.QuartzCore
                     frameworks.Security
-                    darwin.Libsystem
                   ] ++ lib.optionals pkgs.stdenv.isLinux [
                     webkitgtk_4_1
                     webkitgtk_4_1.dev
@@ -92,8 +91,9 @@
                       -F${frameworks.QuartzCore}/Library/Frameworks -framework QuartzCore \
                       -F${frameworks.Security}/Library/Frameworks -framework Security \
                       $NIX_LDFLAGS"
-                    export PATH="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:$PATH"
-                    export LIBRARY_PATH="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib:$LIBRARY_PATH"
+                    # export PATH="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:$PATH"
+                    # export LIBRARY_PATH="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib:$LIBRARY_PATH"
+                    # export CFLAGS="-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include"
                   '';
                 })
               ];

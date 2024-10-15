@@ -81,3 +81,11 @@ make build
 ## Color Palette
 
 - **Icons**: `#EBEBF5`
+
+## Troubleshooting
+
+- On MacOS, make sure you are using the command line tools outside of Xcode. If you have Xcode installed, you many need to run
+
+    ```bash
+    sudo xcode-select -s /Library/Developer/CommandLineTools
+    ```
