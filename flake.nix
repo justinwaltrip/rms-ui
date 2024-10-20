@@ -109,7 +109,7 @@
                     pnpm tauri build
                   '';
                   scripts.dev-mobile.exec = ''
-                    pnpm tauri ios dev 'iPad Pro 13-inch (M4)'
+                    pnpm tauri ios dev --open
                   '';
                 })
               ];
