@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     systems.url = "github:nix-systems/default";
     devenv.url = "github:cachix/devenv";
     devenv.inputs.nixpkgs.follows = "nixpkgs";
@@ -25,7 +25,7 @@
         (system:
           let
             pkgs = nixpkgs.legacyPackages.${system};
-            frameworks = pkgs.darwin.apple_sdk_11_0.frameworks;
+            frameworks = pkgs.darwin.apple_sdk.frameworks;
           in
           {
             default = devenv.lib.mkShell {
@@ -91,9 +91,25 @@
                       -F${frameworks.QuartzCore}/Library/Frameworks -framework QuartzCore \
                       -F${frameworks.Security}/Library/Frameworks -framework Security \
                       $NIX_LDFLAGS"
-                    # export PATH="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:$PATH"
-                    # export LIBRARY_PATH="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib:$LIBRARY_PATH"
-                    # export CFLAGS="-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include"
+                  '';
+                  scripts.dev.exec = ''
+                    pnpm tauri dev
+                  '';
+                  scripts.lint.exec = ''
+                    pnpm exec eslint src --fix
+                  '';
+                  scripts.pretty.exec = ''
+                    pnpm exec prettier . --write
+                  '';
+                  scripts.check.exec = ''
+                    lint
+                    pretty
+                  '';
+                  scripts.build.exec = ''
+                    pnpm tauri build
+                  '';
+                  scripts.dev-mobile.exec = ''
+                    pnpm tauri ios dev 'iPad Pro 13-inch (M4)'
                   '';
                 })
               ];
