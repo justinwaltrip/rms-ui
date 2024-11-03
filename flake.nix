@@ -70,14 +70,15 @@
                   ];
                   enterShell = ''
                     export PKG_CONFIG_PATH="\
-                      ${glib.dev}/lib/pkgconfig:\
-                      ${libsoup_3.dev}/lib/pkgconfig:\
-                      ${at-spi2-atk.dev}/lib/pkgconfig:\
-                      ${gtk3.dev}/lib/pkgconfig:\
-                      ${gdk-pixbuf.dev}/lib/pkgconfig:\
-                      ${cairo.dev}/lib/pkgconfig:\
-                      ${pango.dev}/lib/pkgconfig:\
-                      ${harfbuzz.dev}/lib/pkgconfig"
+                      ${glib.dev}/lib/pkgconfig: \
+                      ${libsoup_3.dev}/lib/pkgconfig: \
+                      ${at-spi2-atk.dev}/lib/pkgconfig: \
+                      ${gtk3.dev}/lib/pkgconfig: \
+                      ${gdk-pixbuf.dev}/lib/pkgconfig: \
+                      ${cairo.dev}/lib/pkgconfig: \
+                      ${pango.dev}/lib/pkgconfig: \
+                      ${harfbuzz.dev}/lib/pkgconfig: \
+                    $PKG_CONFIG_PATH"
                     export NIX_LDFLAGS="\
                       -F${frameworks.SystemConfiguration}/Library/Frameworks -framework SystemConfiguration \
                       -F${frameworks.AppKit}/Library/Frameworks -framework AppKit \
@@ -90,7 +91,10 @@
                       -F${frameworks.Carbon}/Library/Frameworks -framework Carbon \
                       -F${frameworks.QuartzCore}/Library/Frameworks -framework QuartzCore \
                       -F${frameworks.Security}/Library/Frameworks -framework Security \
-                      $NIX_LDFLAGS"
+                    $NIX_LDFLAGS"
+                    
+                    # ensure cc, clang are using Apple version
+                    export PATH="/usr/bin:$PATH"
                   '';
                   scripts.dev.exec = ''
                     pnpm tauri dev
@@ -109,7 +113,7 @@
                     pnpm tauri build
                   '';
                   scripts.dev-mobile.exec = ''
-                    pnpm tauri ios dev --open
+                    pnpm tauri ios dev
                   '';
                 })
               ];
