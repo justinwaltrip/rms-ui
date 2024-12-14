@@ -96,9 +96,6 @@
                     # ensure cc, clang are using Apple version
                     export PATH="/usr/bin:$PATH"
                   '';
-                  scripts.dev.exec = ''
-                    pnpm tauri dev
-                  '';
                   scripts.lint.exec = ''
                     pnpm exec eslint src --fix
                   '';
@@ -112,8 +109,14 @@
                   scripts.build.exec = ''
                     pnpm tauri build
                   '';
-                  scripts.dev-mobile.exec = ''
-                    pnpm tauri ios dev
+                  scripts.dev-desktop.exec = ''
+                    pnpm tauri dev
+                  '';
+                  scripts.dev-ios-simulator.exec = ''
+                    pnpm tauri ios dev 'iPad Pro 13-inch (M4)'
+                  '';
+                  scripts.dev-ios-physical.exec = ''
+                    pnpm tauri ios dev --open --host
                   '';
                 })
               ];

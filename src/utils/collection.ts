@@ -24,7 +24,7 @@ async function createCollection(collectionPath: string) {
 
     // check if app.json exists
     const appConfigExists = await exists("app.json", {
-      baseDir: BaseDirectory.AppConfig,
+      baseDir: BaseDirectory.AppCache,
     });
 
     let appConfig: { [name: string]: unknown };
@@ -32,7 +32,7 @@ async function createCollection(collectionPath: string) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       appConfig = JSON.parse(
         await readTextFile("app.json", {
-          baseDir: BaseDirectory.AppConfig,
+          baseDir: BaseDirectory.AppCache,
         }),
       );
     } else {

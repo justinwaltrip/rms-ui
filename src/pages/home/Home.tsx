@@ -1,8 +1,4 @@
-import { core } from "@tauri-apps/api";
-import {
-  // LogicalSize,
-  getCurrentWebviewWindow,
-} from "@tauri-apps/api/webviewWindow";
+import { getCurrentWindow, LogicalSize } from '@tauri-apps/api/window';
 import { open } from "@tauri-apps/plugin-dialog";
 import { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +13,11 @@ import Dropdown from "../../components/dropdown/Dropdown";
 import { AppContext } from "../../main";
 import { createCollection, renameCollection } from "../../utils/collection";
 import { readAppConfig, writeAppConfig } from "../../utils/fs";
-const appWindow = getCurrentWebviewWindow();
+import { platform } from '@tauri-apps/plugin-os';
+
+const appWindow = getCurrentWindow()
+const currentPlatform = platform();
+
 
 const Home: FC = () => {
   // #region variables
@@ -52,6 +52,9 @@ const Home: FC = () => {
   const [renameCollectionIndex, setRenameCollectionIndex] = useState(-1);
   const [tempCollectionName, setTempCollectionName] = useState("");
 
+  // open collection
+  const [openCollectionPath, setOpenCollectionPath] = useState("");
+
   // #endregion
 
   // #region effects
@@ -61,28 +64,30 @@ const Home: FC = () => {
    */
   useEffect(() => {
     // set size and prevent window from being resized
-    // appWindow
-    //   .setSize(new LogicalSize(800, 600))
-    //   .then(() => {
-    //     appWindow
-    //       .listen("tauri://resize", () => {
-    //         appWindow
-    //           .setSize(new LogicalSize(800, 600))
-    //           .then(() => {})
-    //           .catch((err) => {
-    //             console.error(err);
-    //           });
-    //       })
-    //       .then((unlistenFn) => {
-    //         unlistenFunctions.push(unlistenFn);
-    //       })
-    //       .catch((err) => {
-    //         console.error(err);
-    //       });
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //   });
+    if (currentPlatform != "ios") {
+        appWindow
+        .setSize(new LogicalSize(800, 600))
+        .then(() => {
+            appWindow
+            .listen("tauri://resize", () => {
+                appWindow
+                .setSize(new LogicalSize(800, 600))
+                .then(() => {})
+                .catch((err) => {
+                    console.error(err);
+                });
+            })
+            .then((unlistenFn) => {
+                unlistenFunctions.push(unlistenFn);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+    };
 
     // register click events to close collection options
     document.addEventListener("click", () => {
@@ -135,7 +140,7 @@ const Home: FC = () => {
       });
   }, [collections]);
 
-  /**
+   /**
    * On rename collection index change, focus on input
    */
   useEffect(() => {
@@ -290,6 +295,28 @@ const Home: FC = () => {
             onClick={() => setShowCreateCollectionDialog(true)}
           />
           <div className={styles["divider"]} />
+          {currentPlatform == "ios" ? (
+            <div className={styles["option"]}>
+              <div className={styles["option-text"]}>
+                <div className={styles["option-title"]}>Open folder as a collection</div>
+                <div className={styles["option-description"]}>Write the path of an existing folder of recipe files</div>
+              </div>
+              <div className={styles["option-spacer"]} />
+              <input
+                type="text" 
+                className={styles["option-input"]}
+                placeholder="Enter path"
+                value={openCollectionPath}
+                onChange={(e) => setOpenCollectionPath(e.target.value)}
+                />
+                <button className={styles["option-button"]} onClick={() => {
+                    setCollections([...collections, openCollectionPath]);
+                    setOpenCollectionPath("");
+                }}>
+                  Open
+                </button>
+            </div>
+          ) : (
           <Option
             text="Open folder as a collection"
             description="Choose an existing folder of recipe files"
@@ -298,6 +325,7 @@ const Home: FC = () => {
               openCollection();
             }}
           />
+          )}
         </div>
       </div>
       {showCreateCollectionDialog && (
@@ -318,7 +346,7 @@ const Home: FC = () => {
                     path: collections[collectionOptionsIndex],
                   })
                   .then(() => {})
-                  .catch((err) => {
+                  .catch((err: any) => {
                     console.error(err);
                   });
               },

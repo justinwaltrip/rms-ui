@@ -1,44 +1,48 @@
 {
-  "build": {
-    "beforeDevCommand": "pnpm dev",
-    "beforeBuildCommand": "pnpm build",
-    "frontendDist": "../dist",
-    "devUrl": "http://localhost:1420"
-  },
-  "bundle": {
-    "active": true,
-    "icon": [
-      "icons/32x32.png",
-      "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
-    ],
-    "targets": "all"
-  },
-  "productName": "rms",
-  "mainBinaryName": "rms",
-  "version": "0.0.0",
-  "identifier": "com.rms.dev",
-  "app": {
-    "withGlobalTauri": false,
-    "windows": [
-      {
-        "fullscreen": false,
-        "resizable": true,
-        "titleBarStyle": "Overlay",
-        "hiddenTitle": true,
-        "width": 800,
-        "height": 600,
-        "center": true
-      }
-    ],
-    "security": {
-      "assetProtocol": {
-        "scope": ["$HOME/**/.rms", "$HOME/**/.rms/**", "$HOME/**"],
-        "enable": true
-      },
-      "csp": "; connect-src ipc: http://ipc.localhost"
+    "build": {
+        "beforeDevCommand": "pnpm dev",
+        "beforeBuildCommand": "pnpm build",
+        "frontendDist": "../dist",
+        "devUrl": "http://localhost:1420"
+    },
+    "bundle": {
+        "active": true,
+        "icon": [
+            "icons/32x32.png",
+            "icons/128x128.png",
+            "icons/128x128@2x.png",
+            "icons/icon.icns",
+            "icons/icon.ico"
+        ],
+        "targets": "all"
+    },
+    "productName": "rms",
+    "mainBinaryName": "rms",
+    "version": "0.0.0",
+    "identifier": "com.rms.dev",
+    "app": {
+        "withGlobalTauri": false,
+        "windows": [
+            {
+                "fullscreen": false,
+                "resizable": true,
+                "titleBarStyle": "Overlay",
+                "hiddenTitle": true,
+                "width": 800,
+                "height": 600,
+                "center": true
+            }
+        ],
+        "security": {
+            "assetProtocol": {
+                "scope": [
+                    "$HOME/**/.rms",
+                    "$HOME/**/.rms/**",
+                    "$HOME/**"
+                ],
+                "enable": true
+            },
+            "csp": "; connect-src ipc: http://ipc.localhost"
+        }
     }
-  }
 }
