@@ -346,7 +346,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                     {/* checkbox */}
                     <div className="checkbox-wrapper-1">
                       <input
-                        id="example-1"
+                        id={`ingredient-checkbox-${index}`}
                         className="substituted"
                         type="checkbox"
                         aria-hidden="true"
@@ -357,7 +357,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                           setIngredients(newIngredients);
                         }}
                       />
-                      <label htmlFor="example-1" />
+                      <label htmlFor={`ingredient-checkbox-${index}`} />
                     </div>
 
                     {/* ingredient measurement */}
