@@ -4,13 +4,11 @@ import {
     BinaryFileContents,
     mkdir as createDir,
     exists,
-    readTextFile,
     remove as removeFile,
     rename as renameFile,
-    writeFile as writeBinaryFile,
-    // writeTextFile,
+    readFile,
+    writeFile,
 } from "@tauri-apps/plugin-fs";
-import { writeFile, BaseDirectory } from '@tauri-apps/plugin-fs';
 
 /**
  * Write text to file.
@@ -46,6 +44,20 @@ async function writeTextFile(
 }
 
 /**
+ * Read text from file.
+ */
+async function readTextFile(filename: string, options: Object) {
+    try {
+        const encodedContents = await readFile(filename, options);
+        return new TextDecoder().decode(encodedContents);
+    }
+    catch (err) {
+        console.error(err);
+        throw err;
+    }
+}
+
+/**
  * Write recipe contents to file
  */
 async function writeRecipeContents(
@@ -71,7 +83,7 @@ async function readRecipeContents(filename: string, collectionPath: string) {
     try {
         const path = `${collectionPath}/${filename}.json`;
         return await readTextFile(path, {
-            dir: BaseDirectory.Home,
+            baseDir: BaseDirectory.Home,
         });
     } catch (err) {
         console.error(err);
@@ -103,7 +115,7 @@ async function deleteImage(filename: string, collectionPath: string) {
         // delete image
         const path = `${collectionPath}/${filename}`;
         await removeFile(path, {
-            dir: BaseDirectory.Home,
+            baseDir: BaseDirectory.Home,
         });
     } catch (err) {
         console.error(err);
@@ -125,20 +137,20 @@ async function writeImage(
         for (let i = 0; i < parentDirectories.length - 1; i++) {
             const dir = parentDirectories.slice(0, i + 1).join("/");
             const dirExists = await exists(`${collectionPath}/${dir}`, {
-                dir: BaseDirectory.Home,
+                baseDir: BaseDirectory.Home,
             });
 
             if (!dirExists) {
                 await createDir(`${collectionPath}/${dir}`, {
-                    dir: BaseDirectory.Home,
+                    baseDir: BaseDirectory.Home,
                 });
             }
         }
 
         // write image to file
         const path = `${collectionPath}/${filename}`;
-        await writeBinaryFile(path, image, {
-            dir: BaseDirectory.Home,
+        await writeFile(path, image, {
+            baseDir: BaseDirectory.Home,
         });
     } catch (err) {
         console.error(err);
@@ -168,7 +180,7 @@ async function writeAppConfig(appConfig: { [name: string]: unknown }) {
 
         // write app config
         await writeTextFile("app.json", JSON.stringify(appConfig, null, 2), {
-          baseDir: BaseDirectory.AppCache,
+            baseDir: BaseDirectory.AppCache,
         });
     } catch (err) {
         console.error(err);
@@ -226,7 +238,8 @@ async function renameRecipe(
             `${collectionPath}/${oldPath}.json`,
             `${collectionPath}/${newPath}.json`,
             {
-                dir: BaseDirectory.Home,
+                oldPathBaseDir: BaseDirectory.Home,
+                newPathBaseDir: BaseDirectory.Home,
             },
         );
     } catch (err) {
@@ -239,7 +252,7 @@ async function deleteRecipe(filename: string, collectionPath: string) {
     try {
         // delete file
         await removeFile(`${collectionPath}/${filename}.json`, {
-            dir: BaseDirectory.Home,
+            baseDir: BaseDirectory.Home,
         });
     } catch (err) {
         console.error(err);
