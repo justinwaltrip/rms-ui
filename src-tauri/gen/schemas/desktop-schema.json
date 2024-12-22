@@ -4863,6 +4863,21 @@
           "const": "fs:write-files"
         },
         {
+          "description": "Default permissions for the plugin",
+          "type": "string",
+          "const": "icloud:default"
+        },
+        {
+          "description": "Enables the ping command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:allow-ping"
+        },
+        {
+          "description": "Denies the ping command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:deny-ping"
+        },
+        {
           "description": "This permission set configures which\noperating system information are available\nto gather from the frontend.\n\n#### Granted Permissions\n\nAll information except the host name are available.\n\n",
           "type": "string",
           "const": "os:default"

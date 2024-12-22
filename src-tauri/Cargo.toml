@@ -21,6 +21,7 @@ tauri-plugin-fs = "2.0.0-rc"
 tauri-plugin-shell = "2.0.0-rc"
 tauri-plugin-dialog = "2.0.3"
 tauri-plugin-os = "2.0.0-rc"
+tauri-plugin-icloud = { path = "../../tauri-plugin-icloud" }
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
