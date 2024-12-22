@@ -35,6 +35,9 @@ importers:
       react-router-dom:
         specifier: ^6.27.0
         version: 6.27.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      tauri-plugin-icloud-api:
+        specifier: file:../tauri-plugin-icloud
+        version: file:../tauri-plugin-icloud
       typescript-plugin-css-modules:
         specifier: ^5.1.0
         version: 5.1.0(typescript@4.9.5)
@@ -1726,6 +1729,9 @@ packages:
   tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
     engines: {node: '>=6'}
+
+  tauri-plugin-icloud-api@file:../tauri-plugin-icloud:
+    resolution: {directory: ../tauri-plugin-icloud, type: directory}
 
   text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
@@ -3565,6 +3571,10 @@ snapshots:
       tslib: 2.7.0
 
   tapable@2.2.1: {}
+
+  tauri-plugin-icloud-api@file:../tauri-plugin-icloud:
+    dependencies:
+      '@tauri-apps/api': 2.0.2
 
   text-table@0.2.0: {}
 

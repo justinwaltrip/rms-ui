@@ -19,6 +19,7 @@
     "react-dom": "^18.3.1",
     "react-input-autosize": "^3.0.0",
     "react-router-dom": "^6.27.0",
+    "tauri-plugin-icloud-api": "file:../tauri-plugin-icloud",
     "typescript-plugin-css-modules": "^5.1.0"
   },
   "devDependencies": {

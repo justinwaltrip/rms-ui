@@ -18,6 +18,14 @@ import { readAppConfig, writeAppConfig } from "../../utils/fs";
 const appWindow = getCurrentWindow();
 const currentPlatform = platform();
 
+import { ping } from 'tauri-plugin-icloud-api';
+
+ping("Pong!").then((response) => {
+    console.log(response);
+}).catch((error) => {
+    console.error(error);
+});
+
 const Home: FC = () => {
   // #region variables
   const navigate = useNavigate();
