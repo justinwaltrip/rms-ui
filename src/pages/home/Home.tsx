@@ -1,5 +1,6 @@
-import { getCurrentWindow, LogicalSize } from '@tauri-apps/api/window';
+import { LogicalSize, getCurrentWindow } from "@tauri-apps/api/window";
 import { open } from "@tauri-apps/plugin-dialog";
+import { platform } from "@tauri-apps/plugin-os";
 import { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -13,11 +14,9 @@ import Dropdown from "../../components/dropdown/Dropdown";
 import { AppContext } from "../../main";
 import { createCollection, renameCollection } from "../../utils/collection";
 import { readAppConfig, writeAppConfig } from "../../utils/fs";
-import { platform } from '@tauri-apps/plugin-os';
 
-const appWindow = getCurrentWindow()
+const appWindow = getCurrentWindow();
 const currentPlatform = platform();
-
 
 const Home: FC = () => {
   // #region variables
@@ -65,29 +64,29 @@ const Home: FC = () => {
   useEffect(() => {
     // set size and prevent window from being resized
     if (currentPlatform != "ios") {
-        appWindow
+      appWindow
         .setSize(new LogicalSize(800, 600))
         .then(() => {
-            appWindow
+          appWindow
             .listen("tauri://resize", () => {
-                appWindow
+              appWindow
                 .setSize(new LogicalSize(800, 600))
                 .then(() => {})
                 .catch((err) => {
-                    console.error(err);
+                  console.error(err);
                 });
             })
             .then((unlistenFn) => {
-                unlistenFunctions.push(unlistenFn);
+              unlistenFunctions.push(unlistenFn);
             })
             .catch((err) => {
-                console.error(err);
+              console.error(err);
             });
         })
         .catch((err) => {
-            console.error(err);
+          console.error(err);
         });
-    };
+    }
 
     // register click events to close collection options
     document.addEventListener("click", () => {
@@ -140,7 +139,7 @@ const Home: FC = () => {
       });
   }, [collections]);
 
-   /**
+  /**
    * On rename collection index change, focus on input
    */
   useEffect(() => {
@@ -298,33 +297,40 @@ const Home: FC = () => {
           {currentPlatform == "ios" ? (
             <div className={styles["option"]}>
               <div className={styles["option-text"]}>
-                <div className={styles["option-title"]}>Open folder as a collection</div>
-                <div className={styles["option-description"]}>Write the path of an existing folder of recipe files</div>
+                <div className={styles["option-title"]}>
+                  Open folder as a collection
+                </div>
+                <div className={styles["option-description"]}>
+                  Write the path of an existing folder of recipe files
+                </div>
               </div>
               <div className={styles["option-spacer"]} />
               <input
-                type="text" 
+                type="text"
                 className={styles["option-input"]}
                 placeholder="Enter path"
                 value={openCollectionPath}
                 onChange={(e) => setOpenCollectionPath(e.target.value)}
-                />
-                <button className={styles["option-button"]} onClick={() => {
-                    setCollections([...collections, openCollectionPath]);
-                    setOpenCollectionPath("");
-                }}>
-                  Open
-                </button>
+              />
+              <button
+                className={styles["option-button"]}
+                onClick={() => {
+                  setCollections([...collections, openCollectionPath]);
+                  setOpenCollectionPath("");
+                }}
+              >
+                Open
+              </button>
             </div>
           ) : (
-          <Option
-            text="Open folder as a collection"
-            description="Choose an existing folder of recipe files"
-            buttonLabel="Open"
-            onClick={() => {
-              openCollection();
-            }}
-          />
+            <Option
+              text="Open folder as a collection"
+              description="Choose an existing folder of recipe files"
+              buttonLabel="Open"
+              onClick={() => {
+                openCollection();
+              }}
+            />
           )}
         </div>
       </div>
