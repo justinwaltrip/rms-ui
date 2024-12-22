@@ -7,6 +7,6 @@
     ],
     "permissions": [
         "fs:write-all",
-        "icloud:allow-ping"
+        "icloud:allow-open-folder"
     ]
 }

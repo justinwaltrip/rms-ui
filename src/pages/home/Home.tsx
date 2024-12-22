@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api/core";
 import { LogicalSize, getCurrentWindow } from "@tauri-apps/api/window";
 import { open } from "@tauri-apps/plugin-dialog";
 import { platform } from "@tauri-apps/plugin-os";
@@ -17,14 +18,6 @@ import { readAppConfig, writeAppConfig } from "../../utils/fs";
 
 const appWindow = getCurrentWindow();
 const currentPlatform = platform();
-
-import { ping } from 'tauri-plugin-icloud-api';
-
-ping("Pong!").then((response) => {
-    console.log(response);
-}).catch((error) => {
-    console.error(error);
-});
 
 const Home: FC = () => {
   // #region variables
@@ -58,9 +51,6 @@ const Home: FC = () => {
   // rename collection
   const [renameCollectionIndex, setRenameCollectionIndex] = useState(-1);
   const [tempCollectionName, setTempCollectionName] = useState("");
-
-  // open collection
-  const [openCollectionPath, setOpenCollectionPath] = useState("");
 
   // #endregion
 
@@ -178,24 +168,37 @@ const Home: FC = () => {
    * Select folder
    */
   function openCollection() {
-    open({
-      multiple: false,
-      directory: true,
-    })
-      .then((collectionPath) => {
-        if (collectionPath && !Array.isArray(collectionPath)) {
-          createCollection(collectionPath)
-            .then(() => {
-              setCollections([...collections, collectionPath]);
-            })
-            .catch((err) => {
-              console.error(err);
-            });
-        }
+    if (currentPlatform === "ios") {
+      // open folder
+      invoke("plugin:icloud|open_folder", { payload: {} })
+        .then((response) => {
+          console.log("Got response from open_folder");
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log("Got error from open_folder");
+          console.error(error);
+        });
+    } else {
+      open({
+        multiple: false,
+        directory: true,
       })
-      .catch((err) => {
-        console.error(err);
-      });
+        .then((collectionPath) => {
+          if (collectionPath && !Array.isArray(collectionPath)) {
+            createCollection(collectionPath)
+              .then(() => {
+                setCollections([...collections, collectionPath]);
+              })
+              .catch((err) => {
+                console.error(err);
+              });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   }
   // #endregion
 
@@ -302,44 +305,14 @@ const Home: FC = () => {
             onClick={() => setShowCreateCollectionDialog(true)}
           />
           <div className={styles["divider"]} />
-          {currentPlatform == "ios" ? (
-            <div className={styles["option"]}>
-              <div className={styles["option-text"]}>
-                <div className={styles["option-title"]}>
-                  Open folder as a collection
-                </div>
-                <div className={styles["option-description"]}>
-                  Write the path of an existing folder of recipe files
-                </div>
-              </div>
-              <div className={styles["option-spacer"]} />
-              <input
-                type="text"
-                className={styles["option-input"]}
-                placeholder="Enter path"
-                value={openCollectionPath}
-                onChange={(e) => setOpenCollectionPath(e.target.value)}
-              />
-              <button
-                className={styles["option-button"]}
-                onClick={() => {
-                  setCollections([...collections, openCollectionPath]);
-                  setOpenCollectionPath("");
-                }}
-              >
-                Open
-              </button>
-            </div>
-          ) : (
-            <Option
-              text="Open folder as a collection"
-              description="Choose an existing folder of recipe files"
-              buttonLabel="Open"
-              onClick={() => {
-                openCollection();
-              }}
-            />
-          )}
+          <Option
+            text="Open folder as a collection"
+            description="Choose an existing folder of recipe files"
+            buttonLabel="Open"
+            onClick={() => {
+              openCollection();
+            }}
+          />
         </div>
       </div>
       {showCreateCollectionDialog && (
