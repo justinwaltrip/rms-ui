@@ -1,5 +1,7 @@
+import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { BaseDirectory, readDir } from "@tauri-apps/plugin-fs";
+import { platform } from "@tauri-apps/plugin-os";
 import { FC, useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -15,7 +17,9 @@ import { AppContext } from "../../main";
 import { Filter } from "../../utils/filter";
 import { filterRecipes } from "../../utils/filter";
 import { Recipe } from "../../utils/recipe";
+
 const appWindow = getCurrentWebviewWindow();
+const currentPlatform = platform();
 
 const SORT_FIELDS = ["title"];
 
@@ -61,7 +65,7 @@ const Grid: FC = () => {
       const { maximizeWindow } = location.state as {
         maximizeWindow: boolean;
       };
-      if (maximizeWindow && !isMaximized) {
+      if (maximizeWindow && !isMaximized && currentPlatform != "ios") {
         isMaximized = true;
         appWindow.maximize().catch((err) => console.error(err));
       }
@@ -71,29 +75,57 @@ const Grid: FC = () => {
   /**
    * Load recipes from collectionPath
    */
+  const loadRecipesFromDirectory = async (collectionPath: string) => {
+    if (currentPlatform === "ios") {
+      interface ReadDirResponse {
+        entries: Array<string>;
+      }
+
+      invoke<ReadDirResponse>("plugin:icloud|read_dir", {
+        payload: {
+          path: collectionPath,
+        },
+      })
+        .then((response) => {
+          console.log("Got response from read_dir");
+          console.log(response);
+        })
+        .catch((error: Error) => {
+          console.log("Got error from read_dir");
+          console.error(error);
+        });
+    } else {
+      try {
+        const files = await readDir(collectionPath, {
+          dir: BaseDirectory.Home,
+          recursive: true,
+        });
+
+        const promises: Array<Promise<Recipe>> = [];
+        for (const file of files) {
+          if (file.name?.endsWith(".json")) {
+            const filename = file.name.substring(
+              0,
+              file.name.length - ".json".length,
+            );
+            promises.push(Recipe.loadRecipe(filename, collectionPath));
+          }
+        }
+
+        const recipes = await Promise.all(promises);
+        return recipes;
+      } catch (err) {
+        console.error(err);
+        return [];
+      }
+    }
+  };
+
   useEffect(() => {
     if (collectionPath) {
-      // get all files at collectionPath
-      readDir(collectionPath, {
-        dir: BaseDirectory.Home,
-        recursive: true,
-      })
-        .then((files) => {
-          const promises: Array<Promise<Recipe>> = [];
-          for (const file of files) {
-            if (file.name?.endsWith(".json")) {
-              const filename = file.name.substring(
-                0,
-                file.name.length - ".json".length,
-              );
-              promises.push(Recipe.loadRecipe(filename, collectionPath));
-            }
-          }
-          Promise.all(promises)
-            .then((recipes) => {
-              setRecipes(recipes);
-            })
-            .catch((err) => console.error(err));
+      loadRecipesFromDirectory(collectionPath)
+        .then((recipes) => {
+          setRecipes(recipes);
         })
         .catch((err) => console.error(err));
     }

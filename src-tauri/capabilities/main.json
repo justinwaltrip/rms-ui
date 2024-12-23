@@ -7,6 +7,7 @@
     ],
     "permissions": [
         "fs:write-all",
-        "icloud:allow-open-folder"
+        "icloud:allow-open-folder",
+        "icloud:allow-read-dir"
     ]
 }

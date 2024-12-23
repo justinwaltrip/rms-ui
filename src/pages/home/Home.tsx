@@ -169,13 +169,26 @@ const Home: FC = () => {
    */
   function openCollection() {
     if (currentPlatform === "ios") {
-      // open folder
-      invoke("plugin:icloud|open_folder", { payload: {} })
+      interface OpenFolderResponse {
+        path: string;
+      }
+
+      invoke<OpenFolderResponse>("plugin:icloud|open_folder", { payload: {} })
         .then((response) => {
+          const collectionPath = response.path;
+          if (collectionPath) {
+            createCollection(collectionPath)
+              .then(() => {
+                setCollections([...collections, collectionPath]);
+              })
+              .catch((err: Error) => {
+                console.error(err);
+              });
+          }
           console.log("Got response from open_folder");
           console.log(response);
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           console.log("Got error from open_folder");
           console.error(error);
         });

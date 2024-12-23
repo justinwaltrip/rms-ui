@@ -4878,6 +4878,11 @@
           "const": "icloud:allow-ping"
         },
         {
+          "description": "Enables the read_dir command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:allow-read-dir"
+        },
+        {
           "description": "Denies the open_folder command without any pre-configured scope.",
           "type": "string",
           "const": "icloud:deny-open-folder"
@@ -4886,6 +4891,11 @@
           "description": "Denies the ping command without any pre-configured scope.",
           "type": "string",
           "const": "icloud:deny-ping"
+        },
+        {
+          "description": "Denies the read_dir command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:deny-read-dir"
         },
         {
           "description": "This permission set configures which\noperating system information are available\nto gather from the frontend.\n\n#### Granted Permissions\n\nAll information except the host name are available.\n\n",
