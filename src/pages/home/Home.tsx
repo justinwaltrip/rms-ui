@@ -91,6 +91,10 @@ const Home: FC = () => {
       setShowCollectionOptions(false);
     });
 
+    // TODO remove
+    // reset app config
+    // writeAppConfig({ collections: [] });
+
     return () => {
       if (unlistenFunctions) {
         for (const unlistenFn of unlistenFunctions) {
