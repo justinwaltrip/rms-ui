@@ -78,7 +78,7 @@ const Grid: FC = () => {
   const loadRecipesFromDirectory = async (collectionPath: string) => {
     if (currentPlatform === "ios") {
       interface ReadDirResponse {
-        entries: Array<string>;
+        entries: Array<{ name: string }>;
       }
 
       invoke<ReadDirResponse>("plugin:icloud|read_dir", {
@@ -88,7 +88,27 @@ const Grid: FC = () => {
       })
         .then((response) => {
           console.log("Got response from read_dir");
-          console.log(response);
+          console.log(response.entries);
+          // const promises: Array<Promise<Recipe>> = [];
+          // for (const entry of response.entries) {
+          //   if (entry.name.endsWith(".json")) {
+          //     const filename = entry.name.substring(
+          //       0,
+          //       entry.name.length - ".json".length,
+          //     );
+          //     promises.push(
+          //       Recipe.loadRecipe(filename, collectionPath, currentPlatform),
+          //     );
+          //   }
+          // }
+
+          // Promise.all(promises)
+          //   .then((recipes) => {
+          //     setRecipes(recipes);
+          //   })
+          //   .catch((error: Error) => {
+          //     console.error(error);
+          //   });
         })
         .catch((error: Error) => {
           console.log("Got error from read_dir");
@@ -131,35 +151,36 @@ const Grid: FC = () => {
     }
   }, [collectionPath]);
 
-  /**
-   * Sort and filter recipes
-   */
-  useEffect(() => {
-    const filteredRecipes = filterRecipes(
-      recipes,
-      filters,
-      booleanField === "all",
-    );
+  // TODO uncomment
+  // /**
+  //  * Sort and filter recipes
+  //  */
+  // useEffect(() => {
+  //   const filteredRecipes = filterRecipes(
+  //     recipes,
+  //     filters,
+  //     booleanField === "all",
+  //   );
 
-    const sortedRecipes = [...filteredRecipes];
-    sortedRecipes.sort((a, b) => {
-      const titleA = a.title;
-      const titleB = b.title;
-      if (titleA < titleB) {
-        return -1;
-      }
-      if (titleA > titleB) {
-        return 1;
-      }
-      return 0;
-    });
+  //   const sortedRecipes = [...filteredRecipes];
+  //   sortedRecipes.sort((a, b) => {
+  //     const titleA = a.title;
+  //     const titleB = b.title;
+  //     if (titleA < titleB) {
+  //       return -1;
+  //     }
+  //     if (titleA > titleB) {
+  //       return 1;
+  //     }
+  //     return 0;
+  //   });
 
-    if (sortOrder === "desc") {
-      sortedRecipes.reverse();
-    }
+  //   if (sortOrder === "desc") {
+  //     sortedRecipes.reverse();
+  //   }
 
-    setDisplayRecipes(sortedRecipes);
-  }, [recipes, sortOrder, filters, booleanField]);
+  //   setDisplayRecipes(sortedRecipes);
+  // }, [recipes, sortOrder, filters, booleanField]);
 
   // #endregion
 

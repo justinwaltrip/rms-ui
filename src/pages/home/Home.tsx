@@ -93,7 +93,7 @@ const Home: FC = () => {
 
     // TODO remove
     // reset app config
-    // writeAppConfig({ collections: [] });
+    writeAppConfig({ collections: [] });
 
     return () => {
       if (unlistenFunctions) {

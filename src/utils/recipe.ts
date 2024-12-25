@@ -52,9 +52,14 @@ class Recipe {
   static async loadRecipe(
     filename: string,
     collectionPath: string,
+    currentPlatform: string,
   ): Promise<Recipe> {
     try {
-      const contents = await readRecipeContents(filename, collectionPath);
+      const contents = await readRecipeContents(
+        filename,
+        collectionPath,
+        currentPlatform,
+      );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const json: { [key: string]: unknown } = JSON.parse(contents);
 
