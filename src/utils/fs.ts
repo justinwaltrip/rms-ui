@@ -138,6 +138,30 @@ function getImageUrl(filename: string, collectionPath: string) {
 }
 
 /**
+ * Get image base64
+ */
+async function getImageBase64(imagePath: string): Promise<string> {
+  interface ReadImageFileResponse {
+    content: string;
+  }
+
+  try {
+    const response = await invoke<ReadImageFileResponse>(
+      "plugin:icloud|read_image_file",
+      {
+        payload: {
+          path: imagePath,
+        },
+      },
+    );
+    return response.content;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+/**
  * Delete image
  */
 async function deleteImage(filename: string, collectionPath: string) {
@@ -299,4 +323,5 @@ export {
   writeImage,
   renameRecipe,
   deleteRecipe,
+  getImageBase64,
 };

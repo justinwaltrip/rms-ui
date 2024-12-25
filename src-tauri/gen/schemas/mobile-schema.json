@@ -4883,6 +4883,11 @@
           "const": "icloud:allow-read-dir"
         },
         {
+          "description": "Enables the read_image_file command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:allow-read-image-file"
+        },
+        {
           "description": "Enables the read_text_file command without any pre-configured scope.",
           "type": "string",
           "const": "icloud:allow-read-text-file"
@@ -4901,6 +4906,11 @@
           "description": "Denies the read_dir command without any pre-configured scope.",
           "type": "string",
           "const": "icloud:deny-read-dir"
+        },
+        {
+          "description": "Denies the read_image_file command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:deny-read-image-file"
         },
         {
           "description": "Denies the read_text_file command without any pre-configured scope.",
