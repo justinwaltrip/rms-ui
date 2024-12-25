@@ -85,21 +85,29 @@ async function readRecipeContents(
 ) {
   if (currentPlatform === "ios") {
     interface ReadTextFileResponse {
-      contents: string;
+      content: string;
     }
 
-    invoke<ReadTextFileResponse>("plugin:icloud|read_text_file", {
-      payload: {
-        path: `${collectionPath}/${filename}.json`,
-      },
-    })
-      .then((response) => {
-        return response.contents;
-      })
-      .catch((error: Error) => {
-        console.error(error);
-        throw error;
-      });
+    try {
+      return await invoke<ReadTextFileResponse>(
+        "plugin:icloud|read_text_file",
+        {
+          payload: {
+            path: `${collectionPath}/${filename}.json`,
+          },
+        },
+      )
+        .then((response) => {
+          return response.content;
+        })
+        .catch((error: Error) => {
+          console.error(error);
+          throw error;
+        });
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   } else {
     try {
       const path = `${collectionPath}/${filename}.json`;

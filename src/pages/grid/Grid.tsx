@@ -23,6 +23,23 @@ const currentPlatform = platform();
 
 const SORT_FIELDS = ["title"];
 
+interface ReadDirResponse {
+  entries: Array<{ name: string }>;
+}
+
+function fakeReadDir(): Promise<ReadDirResponse> {
+  return new Promise((resolve, reject) => {
+    resolve({
+      entries: [
+        { name: "Boursin Chicken.json" },
+        { name: "Levain Bakery Chocolate Chip Crush Cookies.json" },
+        { name: ".git" },
+        { name: ".rms" },
+      ],
+    });
+  });
+}
+
 const Grid: FC = () => {
   // #region contexts
   const appContext = useContext(AppContext);
@@ -77,43 +94,27 @@ const Grid: FC = () => {
    */
   const loadRecipesFromDirectory = async (collectionPath: string) => {
     if (currentPlatform === "ios") {
-      interface ReadDirResponse {
-        entries: Array<{ name: string }>;
+      // invoke<ReadDirResponse>("plugin:icloud|read_dir", {
+      //   payload: {
+      //     path: collectionPath,
+      //   },
+      // })
+      const files = await fakeReadDir();
+      const promises: Array<Promise<Recipe>> = [];
+      for (const entry of files.entries) {
+        if (entry.name.endsWith(".json")) {
+          const filename = entry.name.substring(
+            0,
+            entry.name.length - ".json".length,
+          );
+          promises.push(
+            Recipe.loadRecipe(filename, collectionPath, currentPlatform),
+          );
+        }
       }
 
-      invoke<ReadDirResponse>("plugin:icloud|read_dir", {
-        payload: {
-          path: collectionPath,
-        },
-      })
-        .then((response) => {
-          console.log("Got response from read_dir");
-          console.log(response.entries);
-          // const promises: Array<Promise<Recipe>> = [];
-          // for (const entry of response.entries) {
-          //   if (entry.name.endsWith(".json")) {
-          //     const filename = entry.name.substring(
-          //       0,
-          //       entry.name.length - ".json".length,
-          //     );
-          //     promises.push(
-          //       Recipe.loadRecipe(filename, collectionPath, currentPlatform),
-          //     );
-          //   }
-          // }
-
-          // Promise.all(promises)
-          //   .then((recipes) => {
-          //     setRecipes(recipes);
-          //   })
-          //   .catch((error: Error) => {
-          //     console.error(error);
-          //   });
-        })
-        .catch((error: Error) => {
-          console.log("Got error from read_dir");
-          console.error(error);
-        });
+      const recipes = await Promise.all(promises);
+      return recipes;
     } else {
       try {
         const files = await readDir(collectionPath, {
@@ -128,7 +129,9 @@ const Grid: FC = () => {
               0,
               file.name.length - ".json".length,
             );
-            promises.push(Recipe.loadRecipe(filename, collectionPath));
+            promises.push(
+              Recipe.loadRecipe(filename, collectionPath, currentPlatform),
+            );
           }
         }
 
@@ -151,36 +154,35 @@ const Grid: FC = () => {
     }
   }, [collectionPath]);
 
-  // TODO uncomment
-  // /**
-  //  * Sort and filter recipes
-  //  */
-  // useEffect(() => {
-  //   const filteredRecipes = filterRecipes(
-  //     recipes,
-  //     filters,
-  //     booleanField === "all",
-  //   );
+  /**
+   * Sort and filter recipes
+   */
+  useEffect(() => {
+    const filteredRecipes = filterRecipes(
+      recipes,
+      filters,
+      booleanField === "all",
+    );
 
-  //   const sortedRecipes = [...filteredRecipes];
-  //   sortedRecipes.sort((a, b) => {
-  //     const titleA = a.title;
-  //     const titleB = b.title;
-  //     if (titleA < titleB) {
-  //       return -1;
-  //     }
-  //     if (titleA > titleB) {
-  //       return 1;
-  //     }
-  //     return 0;
-  //   });
+    const sortedRecipes = [...filteredRecipes];
+    sortedRecipes.sort((a, b) => {
+      const titleA = a.title;
+      const titleB = b.title;
+      if (titleA < titleB) {
+        return -1;
+      }
+      if (titleA > titleB) {
+        return 1;
+      }
+      return 0;
+    });
 
-  //   if (sortOrder === "desc") {
-  //     sortedRecipes.reverse();
-  //   }
+    if (sortOrder === "desc") {
+      sortedRecipes.reverse();
+    }
 
-  //   setDisplayRecipes(sortedRecipes);
-  // }, [recipes, sortOrder, filters, booleanField]);
+    setDisplayRecipes(sortedRecipes);
+  }, [recipes, sortOrder, filters, booleanField]);
 
   // #endregion
 
