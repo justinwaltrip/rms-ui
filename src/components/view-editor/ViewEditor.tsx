@@ -313,7 +313,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
             <div className={styles["image-container"]}>
               {image ? (
                 <img
-                  src={`data:image/png;base64,${imageBase64}`}
+                  src={imageBase64 && `data:image/png;base64,${imageBase64}`}
                   alt={"recipe image"}
                   className={styles["image"]}
                 />
