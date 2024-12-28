@@ -35,7 +35,10 @@
                 {
                   pre-commit.hooks = {
                     nixpkgs-fmt.enable = true;
-                    eslint.enable = true;
+                    eslint = {
+                      enable = true;
+                      files = "\\.(js|ts|tsx)$";
+                    };
                   };
                 }
                 ({ pkgs, config, lib, ... }: with pkgs; {
