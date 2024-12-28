@@ -1,5 +1,3 @@
-import path from "path";
-
 import { convertFileSrc, invoke } from "@tauri-apps/api/core";
 import {
   BaseDirectory,
@@ -11,6 +9,11 @@ import {
   rename as renameFile,
   writeFile,
 } from "@tauri-apps/plugin-fs";
+
+interface WriteTextFileResponse {
+  success: boolean;
+  path: string;
+}
 
 /**
  * Write text to file.
@@ -75,7 +78,7 @@ async function writeRecipeContents(
           content: contents,
         },
       });
-      await invoke("plugin:icloud|write_text_file", {
+      await invoke<WriteTextFileResponse>("plugin:icloud|write_text_file", {
         payload: {
           path: `${collectionPath}/${filename}.json`,
           content: contents,
