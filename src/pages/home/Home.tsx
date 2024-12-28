@@ -1,5 +1,7 @@
-import { getCurrentWindow, LogicalSize } from '@tauri-apps/api/window';
+import { invoke } from "@tauri-apps/api/core";
+import { LogicalSize, getCurrentWindow } from "@tauri-apps/api/window";
 import { open } from "@tauri-apps/plugin-dialog";
+import { platform } from "@tauri-apps/plugin-os";
 import { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -13,11 +15,9 @@ import Dropdown from "../../components/dropdown/Dropdown";
 import { AppContext } from "../../main";
 import { createCollection, renameCollection } from "../../utils/collection";
 import { readAppConfig, writeAppConfig } from "../../utils/fs";
-import { platform } from '@tauri-apps/plugin-os';
 
-const appWindow = getCurrentWindow()
+const appWindow = getCurrentWindow();
 const currentPlatform = platform();
-
 
 const Home: FC = () => {
   // #region variables
@@ -52,9 +52,6 @@ const Home: FC = () => {
   const [renameCollectionIndex, setRenameCollectionIndex] = useState(-1);
   const [tempCollectionName, setTempCollectionName] = useState("");
 
-  // open collection
-  const [openCollectionPath, setOpenCollectionPath] = useState("");
-
   // #endregion
 
   // #region effects
@@ -65,29 +62,29 @@ const Home: FC = () => {
   useEffect(() => {
     // set size and prevent window from being resized
     if (currentPlatform != "ios") {
-        appWindow
+      appWindow
         .setSize(new LogicalSize(800, 600))
         .then(() => {
-            appWindow
+          appWindow
             .listen("tauri://resize", () => {
-                appWindow
+              appWindow
                 .setSize(new LogicalSize(800, 600))
                 .then(() => {})
                 .catch((err) => {
-                    console.error(err);
+                  console.error(err);
                 });
             })
             .then((unlistenFn) => {
-                unlistenFunctions.push(unlistenFn);
+              unlistenFunctions.push(unlistenFn);
             })
             .catch((err) => {
-                console.error(err);
+              console.error(err);
             });
         })
         .catch((err) => {
-            console.error(err);
+          console.error(err);
         });
-    };
+    }
 
     // register click events to close collection options
     document.addEventListener("click", () => {
@@ -140,7 +137,7 @@ const Home: FC = () => {
       });
   }, [collections]);
 
-   /**
+  /**
    * On rename collection index change, focus on input
    */
   useEffect(() => {
@@ -171,24 +168,69 @@ const Home: FC = () => {
    * Select folder
    */
   function openCollection() {
-    open({
-      multiple: false,
-      directory: true,
-    })
-      .then((collectionPath) => {
-        if (collectionPath && !Array.isArray(collectionPath)) {
-          createCollection(collectionPath)
-            .then(() => {
-              setCollections([...collections, collectionPath]);
-            })
-            .catch((err) => {
-              console.error(err);
-            });
-        }
-      })
-      .catch((err) => {
-        console.error(err);
+    if (currentPlatform === "ios") {
+      interface OpenFolderResponse {
+        path: string;
+      }
+
+      console.log("Invoking plugin:icloud|open_folder with args", {
+        payload: {},
       });
+      invoke<OpenFolderResponse>("plugin:icloud|open_folder", { payload: {} })
+        .then((response) => {
+          const collectionPath = response.path;
+          if (collectionPath) {
+            createCollection(collectionPath)
+              .then(() => {
+                setCollections([...collections, collectionPath]);
+              })
+              .catch((err: Error) => {
+                console.error(err);
+              });
+          }
+          console.log("Got response from open_folder");
+          console.log(response);
+        })
+        .catch((error: Error) => {
+          console.log("Got error from open_folder");
+          console.error(error);
+        });
+    } else {
+      open({
+        multiple: false,
+        directory: true,
+      })
+        .then((collectionPath) => {
+          if (collectionPath && !Array.isArray(collectionPath)) {
+            createCollection(collectionPath)
+              .then(() => {
+                setCollections([...collections, collectionPath]);
+              })
+              .catch((err) => {
+                console.error(err);
+              });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }
+
+  /**
+   * Get collection path display name
+   *
+   * - If on iOS, show only the path after com~apple~CloudDocs
+   * - If on other platforms, show the full path
+   *
+   * @param collectionPath full path to collection
+   */
+  function getCollectionPathDisplayName(collectionPath: string) {
+    if (currentPlatform === "ios") {
+      return collectionPath.split("com~apple~CloudDocs/").pop();
+    } else {
+      return collectionPath;
+    }
   }
   // #endregion
 
@@ -264,7 +306,7 @@ const Home: FC = () => {
                   </div>
                 )}
                 <div className={styles["option-description"]}>
-                  {collectionPath}
+                  {getCollectionPathDisplayName(collectionPath)}
                 </div>
               </div>
               <div className={styles["option-spacer"]} />
@@ -295,28 +337,6 @@ const Home: FC = () => {
             onClick={() => setShowCreateCollectionDialog(true)}
           />
           <div className={styles["divider"]} />
-          {currentPlatform == "ios" ? (
-            <div className={styles["option"]}>
-              <div className={styles["option-text"]}>
-                <div className={styles["option-title"]}>Open folder as a collection</div>
-                <div className={styles["option-description"]}>Write the path of an existing folder of recipe files</div>
-              </div>
-              <div className={styles["option-spacer"]} />
-              <input
-                type="text" 
-                className={styles["option-input"]}
-                placeholder="Enter path"
-                value={openCollectionPath}
-                onChange={(e) => setOpenCollectionPath(e.target.value)}
-                />
-                <button className={styles["option-button"]} onClick={() => {
-                    setCollections([...collections, openCollectionPath]);
-                    setOpenCollectionPath("");
-                }}>
-                  Open
-                </button>
-            </div>
-          ) : (
           <Option
             text="Open folder as a collection"
             description="Choose an existing folder of recipe files"
@@ -325,7 +345,6 @@ const Home: FC = () => {
               openCollection();
             }}
           />
-          )}
         </div>
       </div>
       {showCreateCollectionDialog && (

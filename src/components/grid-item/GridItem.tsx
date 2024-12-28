@@ -6,6 +6,7 @@ import close from "../../assets/close.png";
 import hdots from "../../assets/hdots.png";
 import { AppContext } from "../../main";
 import { deleteRecipe, getImageUrl } from "../../utils/fs";
+import { getImageBase64 } from "../../utils/fs";
 import { Recipe } from "../../utils/recipe";
 import Dropdown from "../dropdown/Dropdown";
 
@@ -24,6 +25,7 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
   // #region states
   const [image, setImage] = useState<string | undefined>(undefined);
   const [showMoreDropdown, setShowMoreDropdown] = useState<boolean>(false);
+  const [imageBase64, setImageBase64] = useState<string | undefined>(undefined);
   // #endregion
 
   // #region effects
@@ -36,6 +38,21 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
       setImage(recipe.image);
     }
   }, [recipe]);
+
+  /**
+   * Load image base64
+   */
+  useEffect(() => {
+    if (image) {
+      getImageBase64(`${collectionPath}/${image}`)
+        .then((base64) => {
+          setImageBase64(base64);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [image, collectionPath]);
 
   return (
     <div
@@ -55,7 +72,7 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
     >
       {image ? (
         <img
-          src={getImageUrl(image, collectionPath)}
+          src={imageBase64 && `data:image/png;base64,${imageBase64}`}
           alt="recipe"
           className={styles["grid-item-image"]}
         />

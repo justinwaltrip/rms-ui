@@ -52,9 +52,15 @@ class Recipe {
   static async loadRecipe(
     filename: string,
     collectionPath: string,
+    currentPlatform: string,
   ): Promise<Recipe> {
     try {
-      const contents = await readRecipeContents(filename, collectionPath);
+      const contents = await readRecipeContents(
+        filename,
+        collectionPath,
+        currentPlatform,
+      );
+
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const json: { [key: string]: unknown } = JSON.parse(contents);
 
@@ -73,10 +79,15 @@ class Recipe {
   /**
    * Write recipe contents to a file
    */
-  async writeRecipe(): Promise<void> {
+  async writeRecipe(currentPlatform: string): Promise<void> {
     try {
       const contents = JSON.stringify(this.json, null, 4);
-      await writeRecipeContents(this.filename, contents, this.collectionPath);
+      await writeRecipeContents(
+        this.filename,
+        contents,
+        this.collectionPath,
+        currentPlatform,
+      );
     } catch (err) {
       console.error(err);
       throw err;

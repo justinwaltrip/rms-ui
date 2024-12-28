@@ -1,22 +1,27 @@
-import { convertFileSrc } from "@tauri-apps/api/core";
+import { convertFileSrc, invoke } from "@tauri-apps/api/core";
 import {
-    BaseDirectory,
-    BinaryFileContents,
-    mkdir as createDir,
-    exists,
-    remove as removeFile,
-    rename as renameFile,
-    readFile,
-    writeFile,
+  BaseDirectory,
+  BinaryFileContents,
+  mkdir as createDir,
+  exists,
+  readFile,
+  remove as removeFile,
+  rename as renameFile,
+  writeFile,
 } from "@tauri-apps/plugin-fs";
+
+interface WriteTextFileResponse {
+  success: boolean;
+  path: string;
+}
 
 /**
  * Write text to file.
- * 
+ *
  * Uses writeFile since writeTextFile fails on ios as of 2024-12-14.
- * 
+ *
  * Example:
- * 
+ *
  * ```
  * import { writeFile, BaseDirectory } from '@tauri-apps/plugin-fs';
  * const contents = new Uint8Array(); // fill a byte array
@@ -24,71 +29,123 @@ import {
  *  baseDir: BaseDirectory.AppConfig,
  * });
  * ```
- * 
- * @param filename 
- * @param contents 
- * @param options 
+ *
+ * @param filename
+ * @param contents
+ * @param options
  */
 async function writeTextFile(
-    filename: string,
-    contents: string,
-    options: Object,
+  filename: string,
+  contents: string,
+  options: Object,
 ) {
-    try {
-        const encodedContents = new TextEncoder().encode(contents);
-        await writeFile(filename, encodedContents, options);
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
+  try {
+    const encodedContents = new TextEncoder().encode(contents);
+    await writeFile(filename, encodedContents, options);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 /**
  * Read text from file.
  */
 async function readTextFile(filename: string, options: Object) {
-    try {
-        const encodedContents = await readFile(filename, options);
-        return new TextDecoder().decode(encodedContents);
-    }
-    catch (err) {
-        console.error(err);
-        throw err;
-    }
+  try {
+    const encodedContents = await readFile(filename, options);
+    return new TextDecoder().decode(encodedContents);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 /**
  * Write recipe contents to file
  */
 async function writeRecipeContents(
-    filename: string,
-    contents: string,
-    collectionPath: string,
+  filename: string,
+  contents: string,
+  collectionPath: string,
+  currentPlatform: string,
 ) {
+  if (currentPlatform === "ios") {
     try {
-        const path = `${collectionPath}/${filename}.json`;
-        await writeTextFile(path, contents, {
-            dir: BaseDirectory.Home,
-        });
+      console.log("Invoking plugin:icloud|write_text_file with args", {
+        payload: {
+          path: `${collectionPath}/${filename}.json`,
+          content: contents,
+        },
+      });
+      await invoke<WriteTextFileResponse>("plugin:icloud|write_text_file", {
+        payload: {
+          path: `${collectionPath}/${filename}.json`,
+          content: contents,
+        },
+      });
     } catch (err) {
-        console.error(err);
-        throw err;
+      console.error(err);
+      throw err;
     }
+  } else {
+    try {
+      const path = `${collectionPath}/${filename}.json`;
+      await writeTextFile(path, contents, {
+        dir: BaseDirectory.Home,
+      });
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
 }
 
 /**
  * Read recipe contents from file
  */
-async function readRecipeContents(filename: string, collectionPath: string) {
+async function readRecipeContents(
+  filename: string,
+  collectionPath: string,
+  currentPlatform: string,
+) {
+  if (currentPlatform === "ios") {
+    interface ReadTextFileResponse {
+      content: string;
+    }
+
     try {
-        const path = `${collectionPath}/${filename}.json`;
-        return await readTextFile(path, {
-            baseDir: BaseDirectory.Home,
+      console.log("Invoking plugin:icloud|read_text_file with args", {
+        path: `${collectionPath}/${filename}.json`,
+      });
+      return await invoke<ReadTextFileResponse>(
+        "plugin:icloud|read_text_file",
+        {
+          path: `${collectionPath}/${filename}.json`,
+        },
+      )
+        .then((response) => {
+          return response.content;
+        })
+        .catch((error: Error) => {
+          console.error(error);
+          throw error;
         });
     } catch (err) {
-        console.error(err);
-        throw err;
+      console.error(err);
+      throw err;
     }
+  } else {
+    try {
+      const path = `${collectionPath}/${filename}.json`;
+      return await readTextFile(path, {
+        baseDir: BaseDirectory.Home,
+      });
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
 }
 
 /**
@@ -98,94 +155,118 @@ async function readRecipeContents(filename: string, collectionPath: string) {
  * @returns image url
  */
 function getImageUrl(filename: string, collectionPath: string) {
-    try {
-        const path = `${collectionPath}/${filename}`;
-        return convertFileSrc(path);
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
+  try {
+    const path = `${collectionPath}/${filename}`;
+    return convertFileSrc(path);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+/**
+ * Get image base64
+ */
+async function getImageBase64(imagePath: string): Promise<string> {
+  interface ReadImageFileResponse {
+    content: string;
+  }
+
+  try {
+    console.log("Invoking plugin:icloud|read_image_file with args", {
+      path: imagePath,
+    });
+    const response = await invoke<ReadImageFileResponse>(
+      "plugin:icloud|read_image_file",
+      {
+        path: imagePath,
+      },
+    );
+    return response.content;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 /**
  * Delete image
  */
 async function deleteImage(filename: string, collectionPath: string) {
-    try {
-        // delete image
-        const path = `${collectionPath}/${filename}`;
-        await removeFile(path, {
-            baseDir: BaseDirectory.Home,
-        });
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
+  try {
+    // delete image
+    const path = `${collectionPath}/${filename}`;
+    await removeFile(path, {
+      baseDir: BaseDirectory.Home,
+    });
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 /**
  * Write image
  */
 async function writeImage(
-    filename: string,
-    image: BinaryFileContents,
-    collectionPath: string,
+  filename: string,
+  image: BinaryFileContents,
+  collectionPath: string,
 ) {
-    try {
-        // create parent directories if they don't exist
-        const parentDirectories = filename.split("/");
-        for (let i = 0; i < parentDirectories.length - 1; i++) {
-            const dir = parentDirectories.slice(0, i + 1).join("/");
-            const dirExists = await exists(`${collectionPath}/${dir}`, {
-                baseDir: BaseDirectory.Home,
-            });
+  try {
+    // create parent directories if they don't exist
+    const parentDirectories = filename.split("/");
+    for (let i = 0; i < parentDirectories.length - 1; i++) {
+      const dir = parentDirectories.slice(0, i + 1).join("/");
+      const dirExists = await exists(`${collectionPath}/${dir}`, {
+        baseDir: BaseDirectory.Home,
+      });
 
-            if (!dirExists) {
-                await createDir(`${collectionPath}/${dir}`, {
-                    baseDir: BaseDirectory.Home,
-                });
-            }
-        }
-
-        // write image to file
-        const path = `${collectionPath}/${filename}`;
-        await writeFile(path, image, {
-            baseDir: BaseDirectory.Home,
+      if (!dirExists) {
+        await createDir(`${collectionPath}/${dir}`, {
+          baseDir: BaseDirectory.Home,
         });
-    } catch (err) {
-        console.error(err);
-        throw err;
+      }
     }
-}
 
+    // write image to file
+    const path = `${collectionPath}/${filename}`;
+    await writeFile(path, image, {
+      baseDir: BaseDirectory.Home,
+    });
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
 
 /**
  * Write app config
  * @param appConfig
  */
 async function writeAppConfig(appConfig: { [name: string]: unknown }) {
-    try {
-        // check if AppConfig directory exists
-        const appConfigDirExists = await exists("", {
-            baseDir: BaseDirectory.AppCache,
-        });
+  try {
+    // check if AppConfig directory exists
+    const appConfigDirExists = await exists("", {
+      baseDir: BaseDirectory.AppCache,
+    });
 
-        if (!appConfigDirExists) {
-            // create AppConfig directory
-            await createDir("", {
-                baseDir: BaseDirectory.AppCache,
-                recursive: true,
-            });
-        }
-
-        // write app config
-        await writeTextFile("app.json", JSON.stringify(appConfig, null, 2), {
-            baseDir: BaseDirectory.AppCache,
-        });
-    } catch (err) {
-        console.error(err);
-        throw err;
+    if (!appConfigDirExists) {
+      // create AppConfig directory
+      await createDir("", {
+        baseDir: BaseDirectory.AppCache,
+        recursive: true,
+      });
     }
+
+    // write app config
+    await writeTextFile("app.json", JSON.stringify(appConfig, null, 2), {
+      baseDir: BaseDirectory.AppCache,
+    });
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 /**
@@ -193,81 +274,82 @@ async function writeAppConfig(appConfig: { [name: string]: unknown }) {
  * @returns app config
  */
 async function readAppConfig() {
-    try {
-        // check if app.json exists
-        const appConfigExists = await exists("app.json", {
-            baseDir: BaseDirectory.AppCache,
-        });
+  try {
+    // check if app.json exists
+    const appConfigExists = await exists("app.json", {
+      baseDir: BaseDirectory.AppCache,
+    });
 
-        if (!appConfigExists) {
-            return {
-                collections: [],
-            };
-        }
-
-        // read app config
-        const content = await readTextFile("app.json", {
-            baseDir: BaseDirectory.AppCache,
-        });
-        const appConfig: { collections: Array<string> } = JSON.parse(content) as {
-            collections: Array<string>;
-        };
-        return appConfig;
-    } catch (err) {
-        console.error(err);
-
-        // delete app.json
-        await removeFile("app.json", {
-            baseDir: BaseDirectory.AppCache,
-        });
-
-        return {
-            collections: [],
-        };
+    if (!appConfigExists) {
+      return {
+        collections: [],
+      };
     }
+
+    // read app config
+    const content = await readTextFile("app.json", {
+      baseDir: BaseDirectory.AppCache,
+    });
+    const appConfig: { collections: Array<string> } = JSON.parse(content) as {
+      collections: Array<string>;
+    };
+    return appConfig;
+  } catch (err) {
+    console.error(err);
+
+    // delete app.json
+    await removeFile("app.json", {
+      baseDir: BaseDirectory.AppCache,
+    });
+
+    return {
+      collections: [],
+    };
+  }
 }
 
 async function renameRecipe(
-    oldPath: string,
-    newPath: string,
-    collectionPath: string,
+  oldPath: string,
+  newPath: string,
+  collectionPath: string,
 ) {
-    try {
-        // rename file
-        await renameFile(
-            `${collectionPath}/${oldPath}.json`,
-            `${collectionPath}/${newPath}.json`,
-            {
-                oldPathBaseDir: BaseDirectory.Home,
-                newPathBaseDir: BaseDirectory.Home,
-            },
-        );
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
+  try {
+    // rename file
+    await renameFile(
+      `${collectionPath}/${oldPath}.json`,
+      `${collectionPath}/${newPath}.json`,
+      {
+        oldPathBaseDir: BaseDirectory.Home,
+        newPathBaseDir: BaseDirectory.Home,
+      },
+    );
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 async function deleteRecipe(filename: string, collectionPath: string) {
-    try {
-        // delete file
-        await removeFile(`${collectionPath}/${filename}.json`, {
-            baseDir: BaseDirectory.Home,
-        });
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
+  try {
+    // delete file
+    await removeFile(`${collectionPath}/${filename}.json`, {
+      baseDir: BaseDirectory.Home,
+    });
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 export {
-    getImageUrl,
-    writeAppConfig,
-    readAppConfig,
-    writeRecipeContents,
-    readRecipeContents,
-    deleteImage,
-    writeImage,
-    renameRecipe,
-    deleteRecipe,
+  getImageUrl,
+  writeAppConfig,
+  readAppConfig,
+  writeRecipeContents,
+  readRecipeContents,
+  deleteImage,
+  writeImage,
+  renameRecipe,
+  deleteRecipe,
+  getImageBase64,
 };
