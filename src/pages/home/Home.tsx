@@ -220,6 +220,22 @@ const Home: FC = () => {
         });
     }
   }
+
+  /**
+   * Get collection path display name
+   *
+   * - If on iOS, show only the path after com~apple~CloudDocs
+   * - If on other platforms, show the full path
+   *
+   * @param collectionPath full path to collection
+   */
+  function getCollectionPathDisplayName(collectionPath: string) {
+    if (currentPlatform === "ios") {
+      return collectionPath.split("com~apple~CloudDocs/").pop();
+    } else {
+      return collectionPath;
+    }
+  }
   // #endregion
 
   // #region components
@@ -294,7 +310,7 @@ const Home: FC = () => {
                   </div>
                 )}
                 <div className={styles["option-description"]}>
-                  {collectionPath}
+                  {getCollectionPathDisplayName(collectionPath)}
                 </div>
               </div>
               <div className={styles["option-spacer"]} />
