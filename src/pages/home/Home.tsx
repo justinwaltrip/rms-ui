@@ -177,6 +177,9 @@ const Home: FC = () => {
         path: string;
       }
 
+      console.log("Invoking plugin:icloud|open_folder with args", {
+        payload: {},
+      });
       invoke<OpenFolderResponse>("plugin:icloud|open_folder", { payload: {} })
         .then((response) => {
           const collectionPath = response.path;

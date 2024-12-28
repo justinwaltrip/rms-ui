@@ -27,19 +27,6 @@ interface ReadDirResponse {
   entries: Array<{ name: string }>;
 }
 
-function fakeReadDir(): Promise<ReadDirResponse> {
-  return new Promise((resolve, reject) => {
-    resolve({
-      entries: [
-        { name: "Boursin Chicken.json" },
-        { name: "Levain Bakery Chocolate Chip Crush Cookies.json" },
-        { name: ".git" },
-        { name: ".rms" },
-      ],
-    });
-  });
-}
-
 const Grid: FC = () => {
   // #region contexts
   const appContext = useContext(AppContext);
@@ -94,27 +81,31 @@ const Grid: FC = () => {
    */
   const loadRecipesFromDirectory = async (collectionPath: string) => {
     if (currentPlatform === "ios") {
-      // invoke<ReadDirResponse>("plugin:icloud|read_dir", {
-      //   payload: {
-      //     path: collectionPath,
-      //   },
-      // })
-      const files = await fakeReadDir();
-      const promises: Array<Promise<Recipe>> = [];
-      for (const entry of files.entries) {
-        if (entry.name.endsWith(".json")) {
-          const filename = entry.name.substring(
-            0,
-            entry.name.length - ".json".length,
-          );
-          promises.push(
-            Recipe.loadRecipe(filename, collectionPath, currentPlatform),
-          );
+      try {
+        console.log("Invoking plugin:icloud|read_dir with args", {
+          path: collectionPath,
+        });
+        const files = await invoke<ReadDirResponse>("plugin:icloud|read_dir", {
+          path: collectionPath,
+        });
+        const promises: Array<Promise<Recipe>> = [];
+        for (const entry of files.entries) {
+          if (entry.name.endsWith(".json")) {
+            const filename = entry.name.substring(
+              0,
+              entry.name.length - ".json".length,
+            );
+            promises.push(
+              Recipe.loadRecipe(filename, collectionPath, currentPlatform),
+            );
+          }
         }
-      }
 
-      const recipes = await Promise.all(promises);
-      return recipes;
+        const recipes = await Promise.all(promises);
+        return recipes;
+      } catch (err) {
+        console.error(err);
+      }
     } else {
       try {
         const files = await readDir(collectionPath, {

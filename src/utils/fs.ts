@@ -89,12 +89,13 @@ async function readRecipeContents(
     }
 
     try {
+      console.log("Invoking plugin:icloud|read_text_file with args", {
+        path: `${collectionPath}/${filename}.json`,
+      });
       return await invoke<ReadTextFileResponse>(
         "plugin:icloud|read_text_file",
         {
-          payload: {
-            path: `${collectionPath}/${filename}.json`,
-          },
+          path: `${collectionPath}/${filename}.json`,
         },
       )
         .then((response) => {
@@ -146,6 +147,11 @@ async function getImageBase64(imagePath: string): Promise<string> {
   }
 
   try {
+    console.log("Invoking plugin:icloud|read_image_file with args", {
+      payload: {
+        path: imagePath,
+      },
+    });
     const response = await invoke<ReadImageFileResponse>(
       "plugin:icloud|read_image_file",
       {
