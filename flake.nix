@@ -5,6 +5,7 @@
     devenv.url = "github:cachix/devenv";
     devenv.inputs.nixpkgs.follows = "nixpkgs";
     nixgl.url = "github:nix-community/nixGL";
+    pre-commit-hooks.url = "github:cachix/git-hooks.nix";
   };
 
   nixConfig = {
@@ -21,6 +22,15 @@
         devenv-up = self.devShells.${system}.default.config.procfileScript;
       });
 
+      checks = forEachSystem (system: {
+        pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
+          src = ./.;
+          hooks = {
+            nixpkgs-fmt.enable = true;
+          };
+        };
+      });
+
       devShells = forEachSystem
         (system:
           let
@@ -31,6 +41,12 @@
             default = devenv.lib.mkShell {
               inherit inputs pkgs;
               modules = [
+                {
+                  # Add pre-commit hooks configuration
+                  pre-commit.hooks = {
+                    nixpkgs-fmt.enable = true;
+                  };
+                }
                 ({ pkgs, config, lib, ... }: with pkgs; {
                   languages.javascript = {
                     enable = true;
@@ -92,47 +108,20 @@
                       -F${frameworks.QuartzCore}/Library/Frameworks -framework QuartzCore \
                       -F${frameworks.Security}/Library/Frameworks -framework Security \
                     $NIX_LDFLAGS"
-                    
                     # ensure cc, clang are using Apple version
                     export PATH="/usr/bin:$PATH"
                   '';
                   scripts = {
-                    lint = {
-                      exec = ''
-                        pnpm exec eslint src --fix
-                      '';
-                    };
-                    pretty = {
-                      exec = ''
-                        pnpm exec prettier . --write
-                      '';
-                    };
-                    check = {
-                      exec = ''
-                        lint
-                        pretty
-                      '';
-                    };
-                    build = {
-                      exec = ''
-                        pnpm tauri build
-                      '';
-                    };
-                    dev-desktop = {
-                      exec = ''
-                        pnpm tauri dev
-                      '';
-                    };
-                    dev-ios-simulator = {
-                      exec = ''
-                        pnpm tauri ios dev 'iPad Pro 13-inch (M4)'
-                      '';
-                    };
-                    dev-ios-physical = {
-                      exec = ''
-                        pnpm tauri ios dev --open --host
-                      '';
-                    };
+                    lint.exec = "pnpm exec eslint src --fix";
+                    pretty.exec = "pnpm exec prettier . --write";
+                    check.exec = ''
+                      lint
+                      pretty
+                    '';
+                    build.exec = "pnpm tauri build";
+                    dev-desktop.exec = "pnpm tauri dev";
+                    dev-ios-simulator.exec = ''pnpm tauri ios dev 'iPad Pro 13-inch (M4)' '';
+                    dev-ios-physical.exec = "pnpm tauri ios dev --open --host";
                   };
                 })
               ];

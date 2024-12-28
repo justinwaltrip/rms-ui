@@ -28,3 +28,4 @@ dist-ssr
 
 # direnv
 .direnv
+/.pre-commit-config.yaml
