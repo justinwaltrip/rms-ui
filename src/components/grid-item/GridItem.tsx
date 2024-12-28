@@ -5,7 +5,7 @@ import styles from "./GridItem.module.css";
 import close from "../../assets/close.png";
 import hdots from "../../assets/hdots.png";
 import { AppContext } from "../../main";
-import { deleteRecipe, getImageUrl } from "../../utils/fs";
+import { deleteRecipe } from "../../utils/fs";
 import { getImageBase64 } from "../../utils/fs";
 import { Recipe } from "../../utils/recipe";
 import Dropdown from "../dropdown/Dropdown";

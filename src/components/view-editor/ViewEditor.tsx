@@ -20,7 +20,7 @@ import source from "../../assets/source.png";
 import upload from "../../assets/upload.png";
 import { AppContext } from "../../main";
 import { getImageBase64 } from "../../utils/fs";
-import { deleteImage, getImageUrl, writeImage } from "../../utils/fs";
+import { deleteImage, writeImage } from "../../utils/fs";
 import { Ingredient, Recipe } from "../../utils/recipe";
 import AddButton from "../add-button/AddButton";
 import InfoBar from "../info-bar/InfoBar";

@@ -8,71 +8,99 @@ import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
 
+// Resolve the current file directory
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Create compatibility object
 const compat = new FlatCompat({
     baseDirectory: __dirname,
     recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
+    allConfig: js.configs.all,
 });
 
-export default [...compat.extends(
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended-type-checked",
-    "plugin:prettier/recommended",
-), {
-    plugins: {
-        "@typescript-eslint": typescriptEslint,
-        prettier,
-        import: fixupPluginRules(_import),
-    },
-
-    languageOptions: {
-        parser: tsParser,
-        ecmaVersion: 5,
-        sourceType: "script",
-
-        parserOptions: {
-            project: "./tsconfig.json",
-            tsconfigRootDir: "/Users/justin/code/rms-ui",
+// Export ESLint configuration
+export default [
+    ...compat.extends(
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended"
+    ),
+    {
+        plugins: {
+            "@typescript-eslint": typescriptEslint,
+            prettier,
+            import: fixupPluginRules(_import),
         },
-    },
-
-    settings: {
-        "import/resolver": {
-            typescript: {
-                project: "./tsconfig.json",
+        languageOptions: {
+            parser: tsParser,
+            ecmaVersion: 2024, // Matches "ESNext" target
+            sourceType: "module",
+            parserOptions: {
+                tsconfigRootDir: __dirname,
+                project: "./tsconfig.json", // Ensure this is correct for your project
+                ecmaFeatures: {
+                    jsx: true, // Enable JSX parsing
+                },
+                jsxPragma: null, // For React JSX Transform
+                jsxFragmentPragma: null, // For React JSX Transform
+                EXPERIMENTAL_useSourceOfProjectReferenceRedirect: true, // For project references
             },
         },
-    },
-
-    rules: {
-        "sort-imports": ["error", {
-            ignoreCase: false,
-            ignoreDeclarationSort: true,
-            ignoreMemberSort: false,
-            memberSyntaxSortOrder: ["none", "all", "multiple", "single"],
-            allowSeparatedGroups: true,
-        }],
-
-        "import/no-unresolved": "error",
-
-        "import/order": ["error", {
-            groups: [
-                "builtin",
-                "external",
-                "internal",
-                ["sibling", "parent"],
-                "index",
-                "unknown",
+        settings: {
+            "import/resolver": {
+                typescript: {
+                    project: "./tsconfig.json",
+                    alwaysTryTypes: true,
+                },
+                node: {
+                    moduleDirectory: ["node_modules", "src/"],
+                },
+            },
+            "import/parsers": {
+                "@typescript-eslint/parser": [".ts", ".tsx"],
+            },
+        },
+        rules: {
+            // General import sorting rules
+            "sort-imports": [
+                "error",
+                {
+                    ignoreCase: false,
+                    ignoreDeclarationSort: true,
+                    ignoreMemberSort: false,
+                    memberSyntaxSortOrder: ["none", "all", "multiple", "single"],
+                    allowSeparatedGroups: true,
+                },
+            ],
+            // Ensure all imports are resolved properly
+            "import/no-unresolved": "error",
+            "import/order": [
+                "error",
+                {
+                    groups: [
+                        "builtin",
+                        "external",
+                        "internal",
+                        ["sibling", "parent"],
+                        "index",
+                        "unknown",
+                    ],
+                    "newlines-between": "always",
+                    alphabetize: {
+                        order: "asc",
+                        caseInsensitive: true,
+                    },
+                },
             ],
 
-            "newlines-between": "always",
+            // Fine-tune rules related to TypeScript
+            "@typescript-eslint/explicit-module-boundary-types": "off", // Relax rules for explicit return types
+            "@typescript-eslint/no-non-null-assertion": "off", // Allow non-null assertions
+            "@typescript-eslint/no-explicit-any": "warn", // Warn on `any` usage to stay aware
 
-            alphabetize: {
-                order: "asc",
-                caseInsensitive: true,
-            },
-        }],
+            // Optional: Disable `await-thenable` since it requires type-checking via `parserOptions.project`
+            "@typescript-eslint/await-thenable": "off",
+        },
     },
-}];
+];

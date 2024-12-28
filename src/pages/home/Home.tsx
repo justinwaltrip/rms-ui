@@ -365,7 +365,7 @@ const Home: FC = () => {
                     path: collections[collectionOptionsIndex],
                   })
                   .then(() => {})
-                  .catch((err: any) => {
+                  .catch((err: Error) => {
                     console.error(err);
                   });
               },

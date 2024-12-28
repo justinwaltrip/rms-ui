@@ -61,7 +61,6 @@ class Recipe {
         currentPlatform,
       );
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const json: { [key: string]: unknown } = JSON.parse(contents);
 
       if (json !== null && typeof json === "object") {

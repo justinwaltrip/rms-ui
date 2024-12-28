@@ -38,6 +38,7 @@
                     eslint = {
                       enable = true;
                       files = "\\.(js|ts|tsx)$";
+                      entry = "pnpm exec eslint --fix";
                     };
                   };
                 }

@@ -29,7 +29,6 @@ async function createCollection(collectionPath: string) {
 
     let appConfig: { [name: string]: unknown };
     if (appConfigExists) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       appConfig = JSON.parse(
         await readTextFile("app.json", {
           baseDir: BaseDirectory.AppCache,

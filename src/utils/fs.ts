@@ -37,7 +37,7 @@ interface WriteTextFileResponse {
 async function writeTextFile(
   filename: string,
   contents: string,
-  options: Object,
+  options: object,
 ) {
   try {
     const encodedContents = new TextEncoder().encode(contents);
@@ -51,7 +51,7 @@ async function writeTextFile(
 /**
  * Read text from file.
  */
-async function readTextFile(filename: string, options: Object) {
+async function readTextFile(filename: string, options: object) {
   try {
     const encodedContents = await readFile(filename, options);
     return new TextDecoder().decode(encodedContents);
