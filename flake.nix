@@ -96,28 +96,44 @@
                     # ensure cc, clang are using Apple version
                     export PATH="/usr/bin:$PATH"
                   '';
-                  scripts.lint.exec = ''
-                    pnpm exec eslint src --fix
-                  '';
-                  scripts.pretty.exec = ''
-                    pnpm exec prettier . --write
-                  '';
-                  scripts.check.exec = ''
-                    lint
-                    pretty
-                  '';
-                  scripts.build.exec = ''
-                    pnpm tauri build
-                  '';
-                  scripts.dev-desktop.exec = ''
-                    pnpm tauri dev
-                  '';
-                  scripts.dev-ios-simulator.exec = ''
-                    pnpm tauri ios dev 'iPad Pro 13-inch (M4)'
-                  '';
-                  scripts.dev-ios-physical.exec = ''
-                    pnpm tauri ios dev --open --host
-                  '';
+                  scripts = {
+                    lint = {
+                      exec = ''
+                        pnpm exec eslint src --fix
+                      '';
+                    };
+                    pretty = {
+                      exec = ''
+                        pnpm exec prettier . --write
+                      '';
+                    };
+                    check = {
+                      exec = ''
+                        lint
+                        pretty
+                      '';
+                    };
+                    build = {
+                      exec = ''
+                        pnpm tauri build
+                      '';
+                    };
+                    dev-desktop = {
+                      exec = ''
+                        pnpm tauri dev
+                      '';
+                    };
+                    dev-ios-simulator = {
+                      exec = ''
+                        pnpm tauri ios dev 'iPad Pro 13-inch (M4)'
+                      '';
+                    };
+                    dev-ios-physical = {
+                      exec = ''
+                        pnpm tauri ios dev --open --host
+                      '';
+                    };
+                  };
                 })
               ];
             };
