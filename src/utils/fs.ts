@@ -1,3 +1,5 @@
+import path from "path";
+
 import { convertFileSrc, invoke } from "@tauri-apps/api/core";
 import {
   BaseDirectory,
@@ -63,15 +65,36 @@ async function writeRecipeContents(
   filename: string,
   contents: string,
   collectionPath: string,
+  currentPlatform: string,
 ) {
-  try {
-    const path = `${collectionPath}/${filename}.json`;
-    await writeTextFile(path, contents, {
-      dir: BaseDirectory.Home,
-    });
-  } catch (err) {
-    console.error(err);
-    throw err;
+  if (currentPlatform === "ios") {
+    try {
+      console.log("Invoking plugin:icloud|write_text_file with args", {
+        payload: {
+          path: `${collectionPath}/${filename}.json`,
+          content: contents,
+        },
+      });
+      await invoke("plugin:icloud|write_text_file", {
+        payload: {
+          path: `${collectionPath}/${filename}.json`,
+          content: contents,
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  } else {
+    try {
+      const path = `${collectionPath}/${filename}.json`;
+      await writeTextFile(path, contents, {
+        dir: BaseDirectory.Home,
+      });
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   }
 }
 
@@ -148,16 +171,12 @@ async function getImageBase64(imagePath: string): Promise<string> {
 
   try {
     console.log("Invoking plugin:icloud|read_image_file with args", {
-      payload: {
-        path: imagePath,
-      },
+      path: imagePath,
     });
     const response = await invoke<ReadImageFileResponse>(
       "plugin:icloud|read_image_file",
       {
-        payload: {
-          path: imagePath,
-        },
+        path: imagePath,
       },
     );
     return response.content;

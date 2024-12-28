@@ -79,10 +79,15 @@ class Recipe {
   /**
    * Write recipe contents to a file
    */
-  async writeRecipe(): Promise<void> {
+  async writeRecipe(currentPlatform: string): Promise<void> {
     try {
       const contents = JSON.stringify(this.json, null, 4);
-      await writeRecipeContents(this.filename, contents, this.collectionPath);
+      await writeRecipeContents(
+        this.filename,
+        contents,
+        this.collectionPath,
+        currentPlatform,
+      );
     } catch (err) {
       console.error(err);
       throw err;

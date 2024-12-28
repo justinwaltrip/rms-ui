@@ -141,7 +141,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
 
       // save recipe
       recipe
-        .writeRecipe()
+        .writeRecipe(currentPlatform)
         .then(() => {})
         .catch((err) => console.error(err));
     }

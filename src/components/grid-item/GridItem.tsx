@@ -72,7 +72,7 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
     >
       {image ? (
         <img
-          src={`data:image/png;base64,${imageBase64}`}
+          src={imageBase64 && `data:image/png;base64,${imageBase64}`}
           alt="recipe"
           className={styles["grid-item-image"]}
         />

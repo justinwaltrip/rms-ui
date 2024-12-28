@@ -10,6 +10,7 @@
         "icloud:allow-open-folder",
         "icloud:allow-read-dir",
         "icloud:allow-read-text-file",
-        "icloud:allow-read-image-file"
+        "icloud:allow-read-image-file",
+        "icloud:allow-write-text-file"
     ]
 }
