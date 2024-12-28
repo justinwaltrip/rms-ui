@@ -22,15 +22,6 @@
         devenv-up = self.devShells.${system}.default.config.procfileScript;
       });
 
-      checks = forEachSystem (system: {
-        pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
-          src = ./.;
-          hooks = {
-            nixpkgs-fmt.enable = true;
-          };
-        };
-      });
-
       devShells = forEachSystem
         (system:
           let
@@ -42,9 +33,9 @@
               inherit inputs pkgs;
               modules = [
                 {
-                  # Add pre-commit hooks configuration
                   pre-commit.hooks = {
                     nixpkgs-fmt.enable = true;
+                    eslint.enable = true;
                   };
                 }
                 ({ pkgs, config, lib, ... }: with pkgs; {
