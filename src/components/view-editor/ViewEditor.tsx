@@ -3,6 +3,7 @@ import {
   BaseDirectory,
   readFile as readBinaryFile,
 } from "@tauri-apps/plugin-fs";
+import { platform } from "@tauri-apps/plugin-os";
 import React, {
   ChangeEvent,
   FC,
@@ -18,11 +19,14 @@ import close from "../../assets/close.png";
 import source from "../../assets/source.png";
 import upload from "../../assets/upload.png";
 import { AppContext } from "../../main";
+import { getImageBase64 } from "../../utils/fs";
 import { deleteImage, getImageUrl, writeImage } from "../../utils/fs";
 import { Ingredient, Recipe } from "../../utils/recipe";
 import AddButton from "../add-button/AddButton";
 import InfoBar from "../info-bar/InfoBar";
 import Properties from "../properties/Properties";
+
+const currentPlatform = platform();
 
 interface ViewEditorProps {
   filename: string;
@@ -69,6 +73,8 @@ const ViewEditor: FC<ViewEditorProps> = ({
   const [newIngredientIndex, setNewIngredientIndex] = useState<number>(-1);
   const [newDirectionIndex, setNewDirectionIndex] = useState<number>(-1);
   const [newNoteIndex, setNewNoteIndex] = useState<number>(-1);
+
+  const [imageBase64, setImageBase64] = useState<string | undefined>(undefined);
   // #endregion
 
   // #region effects
@@ -79,7 +85,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
   useEffect(() => {
     if (filename && collectionPath) {
       // load markdown from file
-      Recipe.loadRecipe(filename, collectionPath)
+      Recipe.loadRecipe(filename, collectionPath, currentPlatform)
         .then((recipe) => {
           setRecipe(recipe);
         })
@@ -209,6 +215,21 @@ const ViewEditor: FC<ViewEditorProps> = ({
     return () => window.removeEventListener("resize", resizeDirections);
   }, []);
 
+  /**
+   * Load image base64
+   */
+  useEffect(() => {
+    if (image) {
+      getImageBase64(`${collectionPath}/${image}`)
+        .then((base64) => {
+          setImageBase64(base64);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [image, collectionPath]);
+
   // #endregion
 
   // #region functions
@@ -292,7 +313,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
             <div className={styles["image-container"]}>
               {image ? (
                 <img
-                  src={image && getImageUrl(image, collectionPath)}
+                  src={`data:image/png;base64,${imageBase64}`}
                   alt={"recipe image"}
                   className={styles["image"]}
                 />
