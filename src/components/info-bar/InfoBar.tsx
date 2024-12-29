@@ -2,7 +2,10 @@ import { FC, useContext, useEffect, useState } from "react";
 
 import styles from "./InfoBar.module.css";
 import { AppContext } from "../../main";
+import { FileService } from "../../services/FileService";
 import { renameRecipe, writeRecipeContents } from "../../utils/fs";
+
+const fileService = new FileService();
 
 interface InfoBarProps {
   filename: string;
@@ -50,7 +53,12 @@ const InfoBar: FC<InfoBarProps> = ({
                 });
             } else if (!filename && tempFilename) {
               // create recipe file
-              writeRecipeContents(tempFilename, "{}", collectionPath)
+              writeRecipeContents(
+                tempFilename,
+                "{}",
+                collectionPath,
+                fileService,
+              )
                 .then(() => {
                   setFilename(tempFilename);
                   setDefaultTitle(tempFilename);
