@@ -1,10 +1,12 @@
-import { homeDir } from "@tauri-apps/api/path";
-import { open } from "@tauri-apps/plugin-dialog";
 import { FC, useEffect, useState } from "react";
 
 import styles from "./CreateCollectionDialog.module.css";
 import back from "../../assets/back.png";
+import { FileService } from "../../services/FileService";
 import { createCollection } from "../../utils/collection";
+import { getCollectionPathDisplayName } from "../../utils/fs";
+
+const fileService = new FileService();
 
 interface CreateCollectionDialogProps {
   close: () => void;
@@ -35,16 +37,12 @@ const CreateCollectionDialog: FC<CreateCollectionDialogProps> = ({
    */
   async function selectFolder(): Promise<void> {
     try {
-      const selected = await open({
-        multiple: false,
-        directory: true,
-        defaultPath: await homeDir(),
-      });
-      if (selected && !Array.isArray(selected)) {
+      const selected = await fileService.openFolder();
+      if (selected) {
         setCollectionLocation(selected);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -83,7 +81,9 @@ const CreateCollectionDialog: FC<CreateCollectionDialogProps> = ({
             <div className={styles["dialog-option-title"]}>Location</div>
             <div className={styles["dialog-option-description"]}>
               {collectionLocation
-                ? `Your collection will be stored at ${collectionLocation}/${collectionName}`
+                ? `Your collection will be stored at ${getCollectionPathDisplayName(
+                    `${collectionLocation}/${collectionName}`,
+                  )}`
                 : "Pick a place to store your collection"}
             </div>
           </div>
@@ -106,7 +106,10 @@ const CreateCollectionDialog: FC<CreateCollectionDialogProps> = ({
           <button
             className={`${styles["dialog-option-button"]} ${styles["create-button"]}`}
             onClick={() => {
-              createCollection(`${collectionLocation}/${collectionName}`)
+              createCollection(
+                `${collectionLocation}/${collectionName}`,
+                fileService,
+              )
                 .then(() => {
                   close();
                   reloadCollections();

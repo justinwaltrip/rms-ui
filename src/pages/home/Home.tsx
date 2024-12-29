@@ -14,6 +14,7 @@ import { AppContext } from "../../main";
 import { FileService } from "../../services/FileService";
 import { createCollection, renameCollection } from "../../utils/collection";
 import { readAppConfig, writeAppConfig } from "../../utils/fs";
+import { getCollectionPathDisplayName } from "../../utils/fs";
 
 const appWindow = getCurrentWindow();
 const currentPlatform = platform();
@@ -181,21 +182,6 @@ const Home: FC = () => {
       }
     } catch (error) {
       console.error(error);
-    }
-  }
-
-  /**
-   * Get collection path display name.
-   *
-   * @param collectionPath full path to collection
-   */
-  function getCollectionPathDisplayName(collectionPath: string) {
-    const cloudString = "com~apple~CloudDocs/";
-    const cloudIndex = collectionPath.indexOf(cloudString);
-    if (cloudIndex !== -1) {
-      return `☁ ~/${collectionPath.slice(cloudIndex + cloudString.length)}`;
-    } else {
-      return collectionPath;
     }
   }
   // #endregion

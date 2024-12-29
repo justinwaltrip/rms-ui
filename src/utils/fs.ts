@@ -261,6 +261,21 @@ async function deleteRecipe(filename: string, collectionPath: string) {
   }
 }
 
+/**
+ * Get collection path display name.
+ *
+ * @param collectionPath full path to collection
+ */
+function getCollectionPathDisplayName(collectionPath: string) {
+  const cloudString = "com~apple~CloudDocs/";
+  const cloudIndex = collectionPath.indexOf(cloudString);
+  if (cloudIndex !== -1) {
+    return `☁ ~/${collectionPath.slice(cloudIndex + cloudString.length)}`;
+  } else {
+    return collectionPath;
+  }
+}
+
 export {
   getImageUrl,
   writeAppConfig,
@@ -271,4 +286,5 @@ export {
   writeImage,
   renameRecipe,
   deleteRecipe,
+  getCollectionPathDisplayName,
 };

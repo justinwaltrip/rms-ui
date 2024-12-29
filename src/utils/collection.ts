@@ -1,25 +1,26 @@
 import {
   BaseDirectory,
-  mkdir as createDir,
   exists,
   readTextFile,
   rename as renameFile,
 } from "@tauri-apps/plugin-fs";
 
 import { readAppConfig, writeAppConfig } from "./fs";
+import { FileService } from "../services/FileService";
 
-async function createCollection(collectionPath: string) {
+async function createCollection(
+  collectionPath: string,
+  fileService: FileService,
+) {
   try {
-    // check if collection already exists
-    const collectionExists = await exists(collectionPath, {
-      dir: BaseDirectory.Home,
-    });
-
-    if (!collectionExists) {
-      // create new collection directory
-      await createDir(collectionPath, {
-        dir: BaseDirectory.Home,
-      });
+    try {
+      const collectionExists = await fileService.exists(collectionPath);
+      if (!collectionExists) {
+        await fileService.createDirectory(collectionPath);
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error("Failed to create collection");
     }
 
     // check if app.json exists

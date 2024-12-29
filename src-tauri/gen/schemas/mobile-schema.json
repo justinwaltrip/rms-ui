@@ -4834,6 +4834,21 @@
           "const": "icloud:default"
         },
         {
+          "description": "Enables the create_dir command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:allow-create-dir"
+        },
+        {
+          "description": "Enables the create_folder command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:allow-create-folder"
+        },
+        {
+          "description": "Enables the exists command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:allow-exists"
+        },
+        {
           "description": "Enables the open_folder command without any pre-configured scope.",
           "type": "string",
           "const": "icloud:allow-open-folder"
@@ -4862,6 +4877,21 @@
           "description": "Enables the write_text_file command without any pre-configured scope.",
           "type": "string",
           "const": "icloud:allow-write-text-file"
+        },
+        {
+          "description": "Denies the create_dir command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:deny-create-dir"
+        },
+        {
+          "description": "Denies the create_folder command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:deny-create-folder"
+        },
+        {
+          "description": "Denies the exists command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:deny-exists"
         },
         {
           "description": "Denies the open_folder command without any pre-configured scope.",

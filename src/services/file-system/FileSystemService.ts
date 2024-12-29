@@ -2,6 +2,8 @@ import { convertFileSrc } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import {
   BaseDirectory,
+  exists,
+  mkdir,
   readDir,
   readTextFile,
   writeTextFile,
@@ -58,6 +60,28 @@ export class FileSystemService {
   async writeTextFile(path: string, contents: string) {
     try {
       await writeTextFile(path, contents, {
+        baseDir: BaseDirectory.Home,
+      });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async exists(path: string): Promise<boolean> {
+    try {
+      return await exists(path, {
+        baseDir: BaseDirectory.Home,
+      });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async createDirectory(path: string) {
+    try {
+      await mkdir(path, {
         baseDir: BaseDirectory.Home,
       });
     } catch (error) {

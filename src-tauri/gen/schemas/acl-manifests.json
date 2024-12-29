@@ -3408,6 +3408,21 @@
       "permissions": ["allow-ping"]
     },
     "permissions": {
+      "allow-create-dir": {
+        "identifier": "allow-create-dir",
+        "description": "Enables the create_dir command without any pre-configured scope.",
+        "commands": { "allow": ["create_dir"], "deny": [] }
+      },
+      "allow-create-folder": {
+        "identifier": "allow-create-folder",
+        "description": "Enables the create_folder command without any pre-configured scope.",
+        "commands": { "allow": ["create_folder"], "deny": [] }
+      },
+      "allow-exists": {
+        "identifier": "allow-exists",
+        "description": "Enables the exists command without any pre-configured scope.",
+        "commands": { "allow": ["exists"], "deny": [] }
+      },
       "allow-open-folder": {
         "identifier": "allow-open-folder",
         "description": "Enables the open_folder command without any pre-configured scope.",
@@ -3437,6 +3452,21 @@
         "identifier": "allow-write-text-file",
         "description": "Enables the write_text_file command without any pre-configured scope.",
         "commands": { "allow": ["write_text_file"], "deny": [] }
+      },
+      "deny-create-dir": {
+        "identifier": "deny-create-dir",
+        "description": "Denies the create_dir command without any pre-configured scope.",
+        "commands": { "allow": [], "deny": ["create_dir"] }
+      },
+      "deny-create-folder": {
+        "identifier": "deny-create-folder",
+        "description": "Denies the create_folder command without any pre-configured scope.",
+        "commands": { "allow": [], "deny": ["create_folder"] }
+      },
+      "deny-exists": {
+        "identifier": "deny-exists",
+        "description": "Denies the exists command without any pre-configured scope.",
+        "commands": { "allow": [], "deny": ["exists"] }
       },
       "deny-open-folder": {
         "identifier": "deny-open-folder",

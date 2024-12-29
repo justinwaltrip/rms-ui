@@ -12,6 +12,15 @@ interface ReadTextFileResponse {
   content: string;
 }
 
+interface ExistsResponse {
+  exists: boolean;
+}
+
+interface CreateFolderResponse {
+  success: boolean;
+  path: string;
+}
+
 export class iCloudService {
   constructor() {}
 
@@ -109,6 +118,44 @@ export class iCloudService {
       await invoke("plugin:icloud|write_text_file", {
         payload: payload,
       });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async exists(path: string): Promise<boolean> {
+    const payload = {
+      path: path,
+    };
+    console.log("Invoking plugin:icloud|exists with args", payload);
+    try {
+      const response = await invoke<ExistsResponse>(
+        "plugin:icloud|exists",
+        payload,
+      );
+      console.log("Got response from exists");
+      console.log(response);
+      return response.exists;
+    } catch (error) {
+      console.log("Got error from exists");
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async createDirectory(path: string): Promise<void> {
+    const payload = {
+      path: path,
+    };
+    console.log("Invoking plugin:icloud|create_directory with args", {
+      payload: payload,
+    });
+    try {
+      await invoke<CreateFolderResponse>("plugin:icloud|create_folder", {
+        payload: payload,
+      });
+      return;
     } catch (error) {
       console.error(error);
       throw error;

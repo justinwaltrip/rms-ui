@@ -54,4 +54,20 @@ export class FileService {
       return this.fileSystemService.writeTextFile(path, contents);
     }
   }
+
+  async exists(path: string): Promise<boolean> {
+    if (this.currentPlatform === "ios") {
+      return this.cloudService.exists(path);
+    } else {
+      return this.fileSystemService.exists(path);
+    }
+  }
+
+  async createDirectory(path: string): Promise<void> {
+    if (this.currentPlatform === "ios") {
+      return this.cloudService.createDirectory(path);
+    } else {
+      return this.fileSystemService.createDirectory(path);
+    }
+  }
 }
