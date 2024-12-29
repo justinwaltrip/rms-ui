@@ -3408,11 +3408,6 @@
       "permissions": ["allow-ping"]
     },
     "permissions": {
-      "allow-create-dir": {
-        "identifier": "allow-create-dir",
-        "description": "Enables the create_dir command without any pre-configured scope.",
-        "commands": { "allow": ["create_dir"], "deny": [] }
-      },
       "allow-create-folder": {
         "identifier": "allow-create-folder",
         "description": "Enables the create_folder command without any pre-configured scope.",
@@ -3448,15 +3443,15 @@
         "description": "Enables the read_text_file command without any pre-configured scope.",
         "commands": { "allow": ["read_text_file"], "deny": [] }
       },
+      "allow-rename": {
+        "identifier": "allow-rename",
+        "description": "Enables the rename command without any pre-configured scope.",
+        "commands": { "allow": ["rename"], "deny": [] }
+      },
       "allow-write-text-file": {
         "identifier": "allow-write-text-file",
         "description": "Enables the write_text_file command without any pre-configured scope.",
         "commands": { "allow": ["write_text_file"], "deny": [] }
-      },
-      "deny-create-dir": {
-        "identifier": "deny-create-dir",
-        "description": "Denies the create_dir command without any pre-configured scope.",
-        "commands": { "allow": [], "deny": ["create_dir"] }
       },
       "deny-create-folder": {
         "identifier": "deny-create-folder",
@@ -3492,6 +3487,11 @@
         "identifier": "deny-read-text-file",
         "description": "Denies the read_text_file command without any pre-configured scope.",
         "commands": { "allow": [], "deny": ["read_text_file"] }
+      },
+      "deny-rename": {
+        "identifier": "deny-rename",
+        "description": "Denies the rename command without any pre-configured scope.",
+        "commands": { "allow": [], "deny": ["rename"] }
       },
       "deny-write-text-file": {
         "identifier": "deny-write-text-file",

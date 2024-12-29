@@ -25,7 +25,7 @@
 
 - The collection is displayed in the home page sidebar
 
-## As a user, I want to see the location of a collection.
+## As a desktop user, I want to see the location of a collection.
 
 **Steps:**
 
@@ -36,7 +36,7 @@
 
 - The folder of the collection is opened in the file explorer
 
-## As a user, I want to rename a collection.
+## As a desktop user, I want to rename a collection.
 
 **Steps:**
 

@@ -1,9 +1,4 @@
-import {
-  BaseDirectory,
-  exists,
-  readTextFile,
-  rename as renameFile,
-} from "@tauri-apps/plugin-fs";
+import { BaseDirectory, exists, readTextFile } from "@tauri-apps/plugin-fs";
 
 import { readAppConfig, writeAppConfig } from "./fs";
 import { FileService } from "../services/FileService";
@@ -57,12 +52,14 @@ async function createCollection(
   }
 }
 
-async function renameCollection(oldPath: string, newPath: string) {
+async function renameCollection(
+  oldPath: string,
+  newPath: string,
+  fileService: FileService,
+) {
   try {
     // rename file
-    await renameFile(oldPath, newPath, {
-      dir: BaseDirectory.Home,
-    });
+    await fileService.rename(oldPath, newPath);
 
     // update app config
     const appConfig = await readAppConfig();

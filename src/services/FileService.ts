@@ -70,4 +70,12 @@ export class FileService {
       return this.fileSystemService.createDirectory(path);
     }
   }
+
+  async rename(oldPath: string, newPath: string): Promise<void> {
+    if (this.currentPlatform === "ios") {
+      return this.cloudService.rename(oldPath, newPath);
+    } else {
+      return this.fileSystemService.rename(oldPath, newPath);
+    }
+  }
 }

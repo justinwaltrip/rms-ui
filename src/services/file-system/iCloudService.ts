@@ -21,6 +21,12 @@ interface CreateFolderResponse {
   path: string;
 }
 
+interface RenameResponse {
+  success: boolean;
+  old: string;
+  new: string;
+}
+
 export class iCloudService {
   constructor() {}
 
@@ -153,6 +159,25 @@ export class iCloudService {
     });
     try {
       await invoke<CreateFolderResponse>("plugin:icloud|create_folder", {
+        payload: payload,
+      });
+      return;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async rename(oldPath: string, newPath: string): Promise<void> {
+    const payload = {
+      old: oldPath,
+      new: newPath,
+    };
+    console.log("Invoking plugin:icloud|rename with args", {
+      payload: payload,
+    });
+    try {
+      await invoke<RenameResponse>("plugin:icloud|rename", {
         payload: payload,
       });
       return;

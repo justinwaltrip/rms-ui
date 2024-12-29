@@ -11,6 +11,7 @@
     "icloud:allow-read-image-file",
     "icloud:allow-write-text-file",
     "icloud:allow-exists",
-    "icloud:allow-create-folder"
+    "icloud:allow-create-folder",
+    "icloud:allow-rename"
   ]
 }

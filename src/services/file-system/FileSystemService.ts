@@ -6,6 +6,7 @@ import {
   mkdir,
   readDir,
   readTextFile,
+  rename,
   writeTextFile,
 } from "@tauri-apps/plugin-fs";
 
@@ -83,6 +84,18 @@ export class FileSystemService {
     try {
       await mkdir(path, {
         baseDir: BaseDirectory.Home,
+      });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async rename(oldPath: string, newPath: string) {
+    try {
+      await rename(oldPath, newPath, {
+        oldPathBaseDir: BaseDirectory.Home,
+        newPathBaseDir: BaseDirectory.Home,
       });
     } catch (error) {
       console.error(error);

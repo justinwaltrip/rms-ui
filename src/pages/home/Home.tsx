@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api/core";
 import { LogicalSize, getCurrentWindow } from "@tauri-apps/api/window";
 import { platform } from "@tauri-apps/plugin-os";
 import { FC, useContext, useEffect, useState } from "react";
@@ -172,7 +173,7 @@ const Home: FC = () => {
     try {
       const collectionPath = await fileService.openFolder();
       if (collectionPath) {
-        createCollection(collectionPath)
+        createCollection(collectionPath, fileService)
           .then(() => {
             setCollections([...collections, collectionPath]);
           })
@@ -238,6 +239,7 @@ const Home: FC = () => {
                             .split("/")
                             .slice(0, -1)
                             .join("/")}/${tempCollectionName}`,
+                          fileService,
                         )
                           .then(() => {
                             setRenameCollectionIndex(-1);
@@ -310,30 +312,34 @@ const Home: FC = () => {
           x={collectionOptionsPosition.x}
           y={collectionOptionsPosition.y}
           options={[
-            {
-              onClick: () => {
-                tauri
-                  .invoke("show_in_folder", {
-                    path: collections[collectionOptionsIndex],
-                  })
-                  .then(() => {})
-                  .catch((err: Error) => {
-                    console.error(err);
-                  });
-              },
-              icon: folder,
-              text: "Reveal in Finder",
-            },
-            {
-              onClick: () => {
-                setRenameCollectionIndex(collectionOptionsIndex);
-                setTempCollectionName(
-                  collections[collectionOptionsIndex].split("/").pop() || "",
-                );
-              },
-              icon: rename,
-              text: "Rename collection",
-            },
+            ...(currentPlatform !== "ios"
+              ? [
+                  {
+                    onClick: () => {
+                      invoke("show_in_folder", {
+                        path: collections[collectionOptionsIndex],
+                      })
+                        .then(() => {})
+                        .catch((err: Error) => {
+                          console.error(err);
+                        });
+                    },
+                    icon: folder,
+                    text: "Reveal in Finder",
+                  },
+                  {
+                    onClick: () => {
+                      setRenameCollectionIndex(collectionOptionsIndex);
+                      setTempCollectionName(
+                        collections[collectionOptionsIndex].split("/").pop() ||
+                          "",
+                      );
+                    },
+                    icon: rename,
+                    text: "Rename collection",
+                  },
+                ]
+              : []),
             {
               onClick: () => {
                 removeCollection(collectionOptionsIndex);
