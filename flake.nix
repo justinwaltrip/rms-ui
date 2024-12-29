@@ -115,8 +115,7 @@
                     '';
                     build.exec = "pnpm tauri build";
                     dev-desktop.exec = "pnpm tauri dev";
-                    dev-ios-simulator.exec = ''pnpm tauri ios dev 'iPad Pro 13-inch (M4)' '';
-                    dev-ios-physical.exec = "pnpm tauri ios dev --open --host";
+                    dev-mobile.exec = "pnpm tauri ios dev --open --host";
                   };
                 })
               ];
