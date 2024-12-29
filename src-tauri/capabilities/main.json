@@ -1,16 +1,14 @@
 {
-    "$schema": "../gen/schemas/desktop-schema.json",
-    "identifier": "main-capability",
-    "description": "Capability for the main window",
-    "windows": [
-        "main"
-    ],
-    "permissions": [
-        "fs:write-all",
-        "icloud:allow-open-folder",
-        "icloud:allow-read-dir",
-        "icloud:allow-read-text-file",
-        "icloud:allow-read-image-file",
-        "icloud:allow-write-text-file"
-    ]
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main-capability",
+  "description": "Capability for the main window",
+  "windows": ["main"],
+  "permissions": [
+    "fs:write-all",
+    "icloud:allow-open-folder",
+    "icloud:allow-read-dir",
+    "icloud:allow-read-text-file",
+    "icloud:allow-read-image-file",
+    "icloud:allow-write-text-file"
+  ]
 }
