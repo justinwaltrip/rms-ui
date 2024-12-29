@@ -1,4 +1,3 @@
-import { platform } from "@tauri-apps/plugin-os";
 import { FC, useEffect, useRef, useState } from "react";
 
 import styles from "./Properties.module.css";
@@ -9,11 +8,12 @@ import prepIcon from "../../assets/prep.png";
 import remove from "../../assets/remove.png";
 import servingsIcon from "../../assets/servings.png";
 import tagsIcon from "../../assets/tags.png";
+import { FileService } from "../../services/FileService";
 import { Recipe } from "../../utils/recipe";
 import AddButton from "../add-button/AddButton";
 import Dropdown from "../dropdown/Dropdown";
 
-const currentPlatform = platform();
+const fileService = new FileService();
 
 interface PropertiesProps {
   recipe: Recipe | null;
@@ -82,7 +82,7 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
 
       // save recipe
       recipe
-        .writeRecipe(currentPlatform)
+        .writeRecipe(fileService)
         .then(() => {})
         .catch((err) => console.error(err));
     }

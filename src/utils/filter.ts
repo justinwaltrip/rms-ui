@@ -29,19 +29,26 @@ function filterRecipes(
 ): Array<Recipe> {
   return recipes.filter((item) => {
     const matches = filters.map((filter) => {
+      const fieldValue = item[filter.field];
       switch (filter.operator) {
         case "is":
-          return item[filter.field] === filter.value;
+          return fieldValue === filter.value;
         case "is not":
-          return item[filter.field] !== filter.value;
+          return fieldValue !== filter.value;
         case "contains":
-          return (item[filter.field] as string).includes(filter.value);
+          return (
+            typeof fieldValue === "string" && fieldValue.includes(filter.value)
+          );
         case "does not contain":
-          return !(item[filter.field] as string).includes(filter.value);
+          return (
+            typeof fieldValue === "string" && !fieldValue.includes(filter.value)
+          );
         case "includes":
-          return (item[filter.field] as Array<string>).includes(filter.value);
+          return Array.isArray(fieldValue) && fieldValue.includes(filter.value);
         case "does not include":
-          return !(item[filter.field] as Array<string>).includes(filter.value);
+          return (
+            Array.isArray(fieldValue) && !fieldValue.includes(filter.value)
+          );
       }
       return false; // default return value if no operator matched
     });

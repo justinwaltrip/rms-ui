@@ -3,7 +3,6 @@ import {
   BaseDirectory,
   readFile as readBinaryFile,
 } from "@tauri-apps/plugin-fs";
-import { platform } from "@tauri-apps/plugin-os";
 import React, {
   ChangeEvent,
   FC,
@@ -26,7 +25,6 @@ import AddButton from "../add-button/AddButton";
 import InfoBar from "../info-bar/InfoBar";
 import Properties from "../properties/Properties";
 
-const currentPlatform = platform();
 const fileService = new FileService();
 
 interface ViewEditorProps {
@@ -142,7 +140,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
 
       // save recipe
       recipe
-        .writeRecipe(currentPlatform)
+        .writeRecipe(fileService)
         .then(() => {})
         .catch((err) => console.error(err));
     }

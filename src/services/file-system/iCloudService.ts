@@ -117,13 +117,9 @@ export class iCloudService {
       path: path,
       content: content,
     };
-    console.log("Invoking plugin:icloud|write_text_file with args", {
-      payload: payload,
-    });
+    console.log("Invoking plugin:icloud|write_text_file with args", payload);
     try {
-      await invoke("plugin:icloud|write_text_file", {
-        payload: payload,
-      });
+      await invoke("plugin:icloud|write_text_file", payload);
     } catch (error) {
       console.error(error);
       throw error;
