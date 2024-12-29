@@ -1,13 +1,14 @@
-// Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-// use tauri::menu::{MenuBuilder, SubmenuBuilder};
+// Only import menu-related items for non-mobile platforms
+#[cfg(not(target_os = "ios"))]
+use tauri::menu::{MenuBuilder, SubmenuBuilder};
 
 #[cfg(target_os = "linux")]
 use fork::{daemon, Fork};
 use std::process::Command;
 #[cfg(target_os = "linux")]
-use std::{fs::metadata, path::PathBuf}; // dep: fork = "0.1"
+use std::{fs::metadata, path::PathBuf};
 
 #[tauri::command]
 fn show_in_folder(path: String) {
@@ -58,30 +59,34 @@ fn show_in_folder(path: String) {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let builder = tauri::Builder::default()
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_fs::init())
-        .plugin(tauri_plugin_icloud::init())
-        // .setup(|app| {
-        //     let app_menu = SubmenuBuilder::new(app, "rms")
-        //         .minimize()
-        //         .quit()
-        //         .build()?;
-        //     let edit_menu = SubmenuBuilder::new(app, "Edit")
-        //         .undo()
-        //         .redo()
-        //         .separator()
-        //         .cut()
-        //         .copy()
-        //         .paste()
-        //         .separator()
-        //         .select_all()
-        //         .build()?;
-        //     let _menu = MenuBuilder::new(app).item(&app_menu).item(&edit_menu).build()?;
-        //     Ok(())
-        // })
+        .plugin(tauri_plugin_icloud::init());
+
+    #[cfg(not(target_os = "ios"))]
+    let builder = builder.setup(|app| {
+        let app_menu = SubmenuBuilder::new(app, "rms").minimize().quit().build()?;
+        let edit_menu = SubmenuBuilder::new(app, "Edit")
+            .undo()
+            .redo()
+            .separator()
+            .cut()
+            .copy()
+            .paste()
+            .separator()
+            .select_all()
+            .build()?;
+        let _menu = MenuBuilder::new(app)
+            .item(&app_menu)
+            .item(&edit_menu)
+            .build()?;
+        Ok(())
+    });
+
+    builder
         .invoke_handler(tauri::generate_handler![show_in_folder])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
