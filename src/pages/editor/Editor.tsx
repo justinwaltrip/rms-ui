@@ -1,5 +1,5 @@
 import { FC, useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import NoFile from "../../components/no-file/NoFile";
 import SideBar from "../../components/sidebar/SideBar";
@@ -13,6 +13,7 @@ const Editor: FC = () => {
   const appContext = useContext(AppContext);
   const { openFiles, setOpenFiles } = appContext;
   const location = useLocation();
+  const navigate = useNavigate();
   // #endregion
 
   // #region states
@@ -30,8 +31,9 @@ const Editor: FC = () => {
       setActiveFileIndex(openFiles.length - 1);
     } else {
       setActiveFileIndex(-1);
+      navigate("/grid");
     }
-  }, [openFiles]);
+  }, [openFiles, navigate]);
 
   /**
    * Get activeFileIndex from location.state
