@@ -20,7 +20,7 @@ import source from "../../assets/source.png";
 import upload from "../../assets/upload.png";
 import { AppContext } from "../../main";
 import { getImageBase64 } from "../../utils/fs";
-import { deleteImage, writeImage } from "../../utils/fs";
+import { deleteImage, getImageUrl, writeImage } from "../../utils/fs";
 import { Ingredient, Recipe } from "../../utils/recipe";
 import AddButton from "../add-button/AddButton";
 import InfoBar from "../info-bar/InfoBar";
@@ -219,7 +219,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
    * Load image base64
    */
   useEffect(() => {
-    if (image) {
+    if (image && currentPlatform === "ios") {
       getImageBase64(`${collectionPath}/${image}`)
         .then((base64) => {
           setImageBase64(base64);
@@ -228,7 +228,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
           console.error(err);
         });
     }
-  }, [image, collectionPath]);
+  }, [image, collectionPath, currentPlatform]);
 
   // #endregion
 
@@ -313,7 +313,11 @@ const ViewEditor: FC<ViewEditorProps> = ({
             <div className={styles["image-container"]}>
               {image ? (
                 <img
-                  src={imageBase64 && `data:image/png;base64,${imageBase64}`}
+                  src={
+                    currentPlatform === "ios"
+                      ? imageBase64 && `data:image/png;base64,${imageBase64}`
+                      : getImageUrl(image, collectionPath)
+                  }
                   alt={"recipe image"}
                   className={styles["image"]}
                 />
