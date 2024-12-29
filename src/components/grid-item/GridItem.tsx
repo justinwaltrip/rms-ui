@@ -27,7 +27,6 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
   // #region states
   const [image, setImage] = useState<string | undefined>(undefined);
   const [showMoreDropdown, setShowMoreDropdown] = useState<boolean>(false);
-  // const [imageBase64, setImageBase64] = useState<string | undefined>(undefined);
   const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
   // #endregion
 
