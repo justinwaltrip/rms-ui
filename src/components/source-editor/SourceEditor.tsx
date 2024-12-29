@@ -3,8 +3,11 @@ import { FC, useContext, useEffect, useState } from "react";
 import styles from "./SourceEditor.module.css";
 import view from "../../assets/view.png";
 import { AppContext } from "../../main";
+import { FileService } from "../../services/FileService";
 import { readRecipeContents, writeRecipeContents } from "../../utils/fs";
 import InfoBar from "../info-bar/InfoBar";
+
+const fileService = new FileService();
 
 interface SourceEditorProps {
   filename: string;
@@ -35,7 +38,7 @@ const SourceEditor: FC<SourceEditorProps> = ({
   useEffect(() => {
     if (filename && collectionPath) {
       // load markdown from file
-      readRecipeContents(filename, collectionPath)
+      readRecipeContents(filename, collectionPath, fileService)
         .then((json) => {
           setJson(json);
           setFileLoaded(true);
@@ -52,7 +55,7 @@ const SourceEditor: FC<SourceEditorProps> = ({
    */
   useEffect(() => {
     if (filename && fileLoaded) {
-      writeRecipeContents(filename, json, collectionPath)
+      writeRecipeContents(filename, json, collectionPath, fileService)
         .then(() => {})
         .catch((err) => console.error(err));
     }
