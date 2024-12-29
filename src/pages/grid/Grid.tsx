@@ -87,6 +87,7 @@ const Grid: FC = () => {
           );
         }
       }
+      return await Promise.all(promises);
     } catch (err) {
       console.error(err);
       return [];
