@@ -8,6 +8,10 @@ interface ReadDirResponse {
   entries: Array<{ name: string }>;
 }
 
+interface ReadTextFileResponse {
+  content: string;
+}
+
 export class iCloudService {
   constructor() {}
 
@@ -48,6 +52,64 @@ export class iCloudService {
       return response.entries.map((entry) => entry.name);
     } catch (error) {
       console.log("Got error from read_dir");
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async readTextFile(path: string): Promise<string> {
+    const payload = {
+      path: path,
+    };
+    console.log("Invoking plugin:icloud|read_text_file with args", payload);
+    try {
+      const response = await invoke<ReadTextFileResponse>(
+        "plugin:icloud|read_text_file",
+        payload,
+      );
+      console.log("Got response from read_text_file");
+      console.log(response);
+      return response.content;
+    } catch (error) {
+      console.log("Got error from read_text_file");
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async readImageFile(path: string): Promise<string> {
+    const payload = {
+      path: path,
+    };
+    console.log("Invoking plugin:icloud|read_image_file with args", payload);
+    try {
+      const response = await invoke<ReadTextFileResponse>(
+        "plugin:icloud|read_image_file",
+        payload,
+      );
+      console.log("Got response from read_image_file");
+      console.log(response);
+      return response.content;
+    } catch (error) {
+      console.log("Got error from read_image_file");
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async writeTextFile(path: string, content: string): Promise<void> {
+    const payload = {
+      path: path,
+      content: content,
+    };
+    console.log("Invoking plugin:icloud|write_text_file with args", {
+      payload: payload,
+    });
+    try {
+      await invoke("plugin:icloud|write_text_file", {
+        payload: payload,
+      });
+    } catch (error) {
       console.error(error);
       throw error;
     }

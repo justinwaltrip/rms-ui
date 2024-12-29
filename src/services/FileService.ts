@@ -29,4 +29,29 @@ export class FileService {
       return this.fileSystemService.readDir(path);
     }
   }
+
+  async readTextFile(path: string): Promise<string> {
+    if (this.currentPlatform === "ios") {
+      return this.cloudService.readTextFile(path);
+    } else {
+      return this.fileSystemService.readTextFile(path);
+    }
+  }
+
+  async getImageSrc(path: string): Promise<string> {
+    if (this.currentPlatform === "ios") {
+      const base64 = await this.cloudService.readImageFile(path);
+      return `data:image/png;base64,${base64}`;
+    } else {
+      return this.fileSystemService.getImageUrl(path);
+    }
+  }
+
+  async writeTextFile(path: string, contents: string) {
+    if (this.currentPlatform === "ios") {
+      return this.cloudService.writeTextFile(path, contents);
+    } else {
+      return this.fileSystemService.writeTextFile(path, contents);
+    }
+  }
 }

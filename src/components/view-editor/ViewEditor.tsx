@@ -19,14 +19,15 @@ import close from "../../assets/close.png";
 import source from "../../assets/source.png";
 import upload from "../../assets/upload.png";
 import { AppContext } from "../../main";
-import { getImageBase64 } from "../../utils/fs";
-import { deleteImage, getImageUrl, writeImage } from "../../utils/fs";
+import { FileService } from "../../services/FileService";
+import { deleteImage, writeImage } from "../../utils/fs";
 import { Ingredient, Recipe } from "../../utils/recipe";
 import AddButton from "../add-button/AddButton";
 import InfoBar from "../info-bar/InfoBar";
 import Properties from "../properties/Properties";
 
 const currentPlatform = platform();
+const fileService = new FileService();
 
 interface ViewEditorProps {
   filename: string;
@@ -74,7 +75,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
   const [newDirectionIndex, setNewDirectionIndex] = useState<number>(-1);
   const [newNoteIndex, setNewNoteIndex] = useState<number>(-1);
 
-  const [imageBase64, setImageBase64] = useState<string | undefined>(undefined);
+  const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
   // #endregion
 
   // #region effects
@@ -85,7 +86,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
   useEffect(() => {
     if (filename && collectionPath) {
       // load markdown from file
-      Recipe.loadRecipe(filename, collectionPath, currentPlatform)
+      Recipe.loadRecipe(filename, collectionPath, fileService)
         .then((recipe) => {
           setRecipe(recipe);
         })
@@ -216,19 +217,20 @@ const ViewEditor: FC<ViewEditorProps> = ({
   }, []);
 
   /**
-   * Load image base64
-   */
+   * Get image src
+   * */
   useEffect(() => {
-    if (image && currentPlatform === "ios") {
-      getImageBase64(`${collectionPath}/${image}`)
-        .then((base64) => {
-          setImageBase64(base64);
+    if (image) {
+      fileService
+        .getImageSrc(`${collectionPath}/${image}`)
+        .then((src) => {
+          setImageSrc(src);
         })
         .catch((err) => {
           console.error(err);
         });
     }
-  }, [image, collectionPath, currentPlatform]);
+  }, [image, collectionPath]);
 
   // #endregion
 
@@ -313,11 +315,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
             <div className={styles["image-container"]}>
               {image ? (
                 <img
-                  src={
-                    currentPlatform === "ios"
-                      ? imageBase64 && `data:image/png;base64,${imageBase64}`
-                      : getImageUrl(image, collectionPath)
-                  }
+                  src={imageSrc}
                   alt={"recipe image"}
                   className={styles["image"]}
                 />

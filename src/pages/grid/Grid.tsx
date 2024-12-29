@@ -83,7 +83,7 @@ const Grid: FC = () => {
         if (file.endsWith(".json")) {
           const filename = file.substring(0, file.length - ".json".length);
           promises.push(
-            Recipe.loadRecipe(filename, collectionPath, currentPlatform),
+            Recipe.loadRecipe(filename, collectionPath, fileService),
           );
         }
       }
