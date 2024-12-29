@@ -1,4 +1,3 @@
-import { platform } from "@tauri-apps/plugin-os";
 import { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -6,12 +5,12 @@ import styles from "./GridItem.module.css";
 import close from "../../assets/close.png";
 import hdots from "../../assets/hdots.png";
 import { AppContext } from "../../main";
-import { deleteRecipe, getImageUrl } from "../../utils/fs";
-import { getImageBase64 } from "../../utils/fs";
+import { FileService } from "../../services/FileService";
+import { deleteRecipe } from "../../utils/fs";
 import { Recipe } from "../../utils/recipe";
 import Dropdown from "../dropdown/Dropdown";
 
-const currentPlatform = platform();
+const fileService = new FileService();
 
 interface GridItemProps {
   recipe: Recipe;
@@ -28,7 +27,7 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
   // #region states
   const [image, setImage] = useState<string | undefined>(undefined);
   const [showMoreDropdown, setShowMoreDropdown] = useState<boolean>(false);
-  const [imageBase64, setImageBase64] = useState<string | undefined>(undefined);
+  const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
   // #endregion
 
   // #region effects
@@ -46,16 +45,17 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
    * Load image base64 for iOS
    */
   useEffect(() => {
-    if (image && currentPlatform === "ios") {
-      getImageBase64(`${collectionPath}/${image}`)
-        .then((base64) => {
-          setImageBase64(base64);
+    if (image) {
+      fileService
+        .getImageSrc(`${collectionPath}/${image}`)
+        .then((src) => {
+          setImageSrc(src);
         })
         .catch((err) => {
           console.error(err);
         });
     }
-  }, [image, collectionPath, currentPlatform]);
+  }, [image, collectionPath]);
 
   return (
     <div
@@ -75,11 +75,7 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
     >
       {image ? (
         <img
-          src={
-            currentPlatform === "ios"
-              ? imageBase64 && `data:image/png;base64,${imageBase64}`
-              : getImageUrl(image, collectionPath)
-          }
+          src={imageSrc}
           alt="recipe"
           className={styles["grid-item-image"]}
         />

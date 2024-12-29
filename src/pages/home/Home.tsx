@@ -1,6 +1,4 @@
-import { invoke } from "@tauri-apps/api/core";
 import { LogicalSize, getCurrentWindow } from "@tauri-apps/api/window";
-import { open } from "@tauri-apps/plugin-dialog";
 import { platform } from "@tauri-apps/plugin-os";
 import { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -13,11 +11,13 @@ import rename from "../../assets/rename.png";
 import CreateCollectionDialog from "../../components/create-collection-dialog/CreateCollectionDialog";
 import Dropdown from "../../components/dropdown/Dropdown";
 import { AppContext } from "../../main";
+import { FileService } from "../../services/FileService";
 import { createCollection, renameCollection } from "../../utils/collection";
 import { readAppConfig, writeAppConfig } from "../../utils/fs";
 
 const appWindow = getCurrentWindow();
 const currentPlatform = platform();
+const fileService = new FileService();
 
 const Home: FC = () => {
   // #region variables
@@ -165,55 +165,22 @@ const Home: FC = () => {
   }
 
   /**
-   * Select folder
+   * Open collection
    */
-  function openCollection() {
-    if (currentPlatform === "ios") {
-      interface OpenFolderResponse {
-        path: string;
+  async function openCollection() {
+    try {
+      const collectionPath = await fileService.openFolder();
+      if (collectionPath) {
+        createCollection(collectionPath)
+          .then(() => {
+            setCollections([...collections, collectionPath]);
+          })
+          .catch((err: Error) => {
+            console.error(err);
+          });
       }
-
-      console.log("Invoking plugin:icloud|open_folder with args", {
-        payload: {},
-      });
-      invoke<OpenFolderResponse>("plugin:icloud|open_folder", { payload: {} })
-        .then((response) => {
-          const collectionPath = response.path;
-          if (collectionPath) {
-            createCollection(collectionPath)
-              .then(() => {
-                setCollections([...collections, collectionPath]);
-              })
-              .catch((err: Error) => {
-                console.error(err);
-              });
-          }
-          console.log("Got response from open_folder");
-          console.log(response);
-        })
-        .catch((error: Error) => {
-          console.log("Got error from open_folder");
-          console.error(error);
-        });
-    } else {
-      open({
-        multiple: false,
-        directory: true,
-      })
-        .then((collectionPath) => {
-          if (collectionPath && !Array.isArray(collectionPath)) {
-            createCollection(collectionPath)
-              .then(() => {
-                setCollections([...collections, collectionPath]);
-              })
-              .catch((err) => {
-                console.error(err);
-              });
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+    } catch (error) {
+      console.error(error);
     }
   }
 

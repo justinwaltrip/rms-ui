@@ -1,4 +1,4 @@
-import { convertFileSrc, invoke } from "@tauri-apps/api/core";
+import { convertFileSrc } from "@tauri-apps/api/core";
 import {
   BaseDirectory,
   BinaryFileContents,
@@ -10,10 +10,7 @@ import {
   writeFile,
 } from "@tauri-apps/plugin-fs";
 
-interface WriteTextFileResponse {
-  success: boolean;
-  path: string;
-}
+import { FileService } from "../services/FileService";
 
 /**
  * Write text to file.
@@ -68,36 +65,14 @@ async function writeRecipeContents(
   filename: string,
   contents: string,
   collectionPath: string,
-  currentPlatform: string,
+  fileService: FileService,
 ) {
-  if (currentPlatform === "ios") {
-    try {
-      console.log("Invoking plugin:icloud|write_text_file with args", {
-        payload: {
-          path: `${collectionPath}/${filename}.json`,
-          content: contents,
-        },
-      });
-      await invoke<WriteTextFileResponse>("plugin:icloud|write_text_file", {
-        payload: {
-          path: `${collectionPath}/${filename}.json`,
-          content: contents,
-        },
-      });
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  } else {
-    try {
-      const path = `${collectionPath}/${filename}.json`;
-      await writeTextFile(path, contents, {
-        dir: BaseDirectory.Home,
-      });
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
+  try {
+    const path = `${collectionPath}/${filename}.json`;
+    await fileService.writeTextFile(path, contents);
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
 }
 
@@ -107,44 +82,14 @@ async function writeRecipeContents(
 async function readRecipeContents(
   filename: string,
   collectionPath: string,
-  currentPlatform: string,
+  fileService: FileService,
 ) {
-  if (currentPlatform === "ios") {
-    interface ReadTextFileResponse {
-      content: string;
-    }
-
-    try {
-      console.log("Invoking plugin:icloud|read_text_file with args", {
-        path: `${collectionPath}/${filename}.json`,
-      });
-      return await invoke<ReadTextFileResponse>(
-        "plugin:icloud|read_text_file",
-        {
-          path: `${collectionPath}/${filename}.json`,
-        },
-      )
-        .then((response) => {
-          return response.content;
-        })
-        .catch((error: Error) => {
-          console.error(error);
-          throw error;
-        });
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  } else {
-    try {
-      const path = `${collectionPath}/${filename}.json`;
-      return await readTextFile(path, {
-        baseDir: BaseDirectory.Home,
-      });
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
+  try {
+    const path = `${collectionPath}/${filename}.json`;
+    return await fileService.readTextFile(path);
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
 }
 
@@ -161,31 +106,6 @@ function getImageUrl(filename: string, collectionPath: string) {
   } catch (err) {
     console.error(err);
     throw err;
-  }
-}
-
-/**
- * Get image base64
- */
-async function getImageBase64(imagePath: string): Promise<string> {
-  interface ReadImageFileResponse {
-    content: string;
-  }
-
-  try {
-    console.log("Invoking plugin:icloud|read_image_file with args", {
-      path: imagePath,
-    });
-    const response = await invoke<ReadImageFileResponse>(
-      "plugin:icloud|read_image_file",
-      {
-        path: imagePath,
-      },
-    );
-    return response.content;
-  } catch (error) {
-    console.error(error);
-    throw error;
   }
 }
 
@@ -351,5 +271,4 @@ export {
   writeImage,
   renameRecipe,
   deleteRecipe,
-  getImageBase64,
 };

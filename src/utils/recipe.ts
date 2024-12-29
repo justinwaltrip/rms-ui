@@ -1,4 +1,5 @@
 import { readRecipeContents, writeRecipeContents } from "./fs";
+import { FileService } from "../services/FileService";
 
 class Ingredient {
   public primary_measure: string;
@@ -52,13 +53,13 @@ class Recipe {
   static async loadRecipe(
     filename: string,
     collectionPath: string,
-    currentPlatform: string,
+    fileService: FileService,
   ): Promise<Recipe> {
     try {
       const contents = await readRecipeContents(
         filename,
         collectionPath,
-        currentPlatform,
+        fileService,
       );
 
       const json: { [key: string]: unknown } = JSON.parse(contents);

@@ -1,6 +1,4 @@
-import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-import { BaseDirectory, readDir } from "@tauri-apps/plugin-fs";
 import { platform } from "@tauri-apps/plugin-os";
 import { FC, useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -14,18 +12,16 @@ import GridItem from "../../components/grid-item/GridItem";
 import SideBar from "../../components/sidebar/SideBar";
 import TitleBar from "../../components/title-bar/TitleBar";
 import { AppContext } from "../../main";
+import { FileService } from "../../services/FileService";
 import { Filter } from "../../utils/filter";
 import { filterRecipes } from "../../utils/filter";
 import { Recipe } from "../../utils/recipe";
 
 const appWindow = getCurrentWebviewWindow();
 const currentPlatform = platform();
+const fileService = new FileService();
 
 const SORT_FIELDS = ["title"];
-
-interface ReadDirResponse {
-  entries: Array<{ name: string }>;
-}
 
 const Grid: FC = () => {
   // #region contexts
@@ -80,58 +76,20 @@ const Grid: FC = () => {
    * Load recipes from collectionPath
    */
   const loadRecipesFromDirectory = async (collectionPath: string) => {
-    if (currentPlatform === "ios") {
-      try {
-        console.log("Invoking plugin:icloud|read_dir with args", {
-          path: collectionPath,
-        });
-        const files = await invoke<ReadDirResponse>("plugin:icloud|read_dir", {
-          path: collectionPath,
-        });
-        const promises: Array<Promise<Recipe>> = [];
-        for (const entry of files.entries) {
-          if (entry.name.endsWith(".json")) {
-            const filename = entry.name.substring(
-              0,
-              entry.name.length - ".json".length,
-            );
-            promises.push(
-              Recipe.loadRecipe(filename, collectionPath, currentPlatform),
-            );
-          }
+    try {
+      const files = await fileService.readDir(collectionPath);
+      const promises: Array<Promise<Recipe>> = [];
+      for (const file of files) {
+        if (file.endsWith(".json")) {
+          const filename = file.substring(0, file.length - ".json".length);
+          promises.push(
+            Recipe.loadRecipe(filename, collectionPath, fileService),
+          );
         }
-
-        const recipes = await Promise.all(promises);
-        return recipes;
-      } catch (err) {
-        console.error(err);
       }
-    } else {
-      try {
-        const files = await readDir(collectionPath, {
-          dir: BaseDirectory.Home,
-          recursive: true,
-        });
-
-        const promises: Array<Promise<Recipe>> = [];
-        for (const file of files) {
-          if (file.name?.endsWith(".json")) {
-            const filename = file.name.substring(
-              0,
-              file.name.length - ".json".length,
-            );
-            promises.push(
-              Recipe.loadRecipe(filename, collectionPath, currentPlatform),
-            );
-          }
-        }
-
-        const recipes = await Promise.all(promises);
-        return recipes;
-      } catch (err) {
-        console.error(err);
-        return [];
-      }
+    } catch (err) {
+      console.error(err);
+      return [];
     }
   };
 
