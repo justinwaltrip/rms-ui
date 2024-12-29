@@ -21,4 +21,12 @@ export class FileService {
       return this.fileSystemService.openFolder();
     }
   }
+
+  async readDir(path: string): Promise<Array<string>> {
+    if (this.currentPlatform === "ios") {
+      return this.cloudService.readDir(path);
+    } else {
+      return this.fileSystemService.readDir(path);
+    }
+  }
 }
