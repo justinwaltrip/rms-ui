@@ -1,3 +1,4 @@
+import { platform } from "@tauri-apps/plugin-os";
 import { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -5,10 +6,12 @@ import styles from "./GridItem.module.css";
 import close from "../../assets/close.png";
 import hdots from "../../assets/hdots.png";
 import { AppContext } from "../../main";
-import { deleteRecipe } from "../../utils/fs";
+import { deleteRecipe, getImageUrl } from "../../utils/fs";
 import { getImageBase64 } from "../../utils/fs";
 import { Recipe } from "../../utils/recipe";
 import Dropdown from "../dropdown/Dropdown";
+
+const currentPlatform = platform();
 
 interface GridItemProps {
   recipe: Recipe;
@@ -40,10 +43,10 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
   }, [recipe]);
 
   /**
-   * Load image base64
+   * Load image base64 for iOS
    */
   useEffect(() => {
-    if (image) {
+    if (image && currentPlatform === "ios") {
       getImageBase64(`${collectionPath}/${image}`)
         .then((base64) => {
           setImageBase64(base64);
@@ -52,7 +55,7 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
           console.error(err);
         });
     }
-  }, [image, collectionPath]);
+  }, [image, collectionPath, currentPlatform]);
 
   return (
     <div
@@ -72,7 +75,11 @@ const GridItem: FC<GridItemProps> = ({ recipe }) => {
     >
       {image ? (
         <img
-          src={imageBase64 && `data:image/png;base64,${imageBase64}`}
+          src={
+            currentPlatform === "ios"
+              ? imageBase64 && `data:image/png;base64,${imageBase64}`
+              : getImageUrl(image, collectionPath)
+          }
           alt="recipe"
           className={styles["grid-item-image"]}
         />
