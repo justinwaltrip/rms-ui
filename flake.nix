@@ -40,6 +40,11 @@
                       files = "\\.(js|ts|tsx)$";
                       entry = "pnpm exec eslint --fix";
                     };
+                    prettier = {
+                      enable = true;
+                      files = "\\.(js|ts|tsx|json|md)$";
+                      entry = "pnpm exec prettier --write";
+                    };
                   };
                 }
                 ({ pkgs, config, lib, ... }: with pkgs; {
@@ -107,12 +112,7 @@
                     export PATH="/usr/bin:$PATH"
                   '';
                   scripts = {
-                    lint.exec = "pnpm exec eslint src --fix";
-                    pretty.exec = "pnpm exec prettier . --write";
-                    check.exec = ''
-                      lint
-                      pretty
-                    '';
+                    check.exec = "pre-commit run --all-files";
                     build.exec = "pnpm tauri build";
                     dev-desktop.exec = "pnpm tauri dev";
                     dev-mobile.exec = "pnpm tauri ios dev --open --host";
