@@ -220,7 +220,7 @@ const Home: FC = () => {
   /**
    * Get collection path display name
    *
-   * - If on iOS, show only the path after com~apple~CloudDocs and prefix with (iCloud)
+   * - If on iOS, show only the path after com~apple~CloudDocs and prepend with ~/
    * - If on other platforms, show the full path
    *
    * @param collectionPath full path to collection
