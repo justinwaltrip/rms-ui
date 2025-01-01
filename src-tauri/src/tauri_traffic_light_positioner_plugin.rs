@@ -1,13 +1,13 @@
 use objc::{msg_send, sel, sel_impl};
 use rand::{distributions::Alphanumeric, Rng};
+use tauri::Emitter;
 use tauri::{
     plugin::{Builder, TauriPlugin},
-    Manager, Runtime, Window,
+    Runtime, Window,
 }; // 0.8
-use tauri::Emitter;
 
 const WINDOW_CONTROL_PAD_X: f64 = 15.0;
-const WINDOW_CONTROL_PAD_Y: f64 = 23.0;
+const WINDOW_CONTROL_PAD_Y: f64 = 18.0;
 
 struct UnsafeWindowHandle(*mut std::ffi::c_void);
 unsafe impl Send for UnsafeWindowHandle {}
@@ -322,7 +322,7 @@ pub fn setup_traffic_light_positioner<R: Runtime>(window: Window<R>) {
             .take(20)
             .map(char::from)
             .collect();
-        
+
         // We need to ensure we have a unique delegate name, otherwise we will panic while trying to create a duplicate
         // delegate with the same name.
         let delegate_name = format!("windowDelegate_{}_{}", window_label, random_str);
