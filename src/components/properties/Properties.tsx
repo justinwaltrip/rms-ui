@@ -9,6 +9,7 @@ import remove from "../../assets/remove.png";
 import servingsIcon from "../../assets/servings.png";
 import tagsIcon from "../../assets/tags.png";
 import { FileService } from "../../services/FileService";
+import { useDebounce } from "../../utils/hooks";
 import { Recipe } from "../../utils/recipe";
 import AddButton from "../add-button/AddButton";
 import Dropdown from "../dropdown/Dropdown";
@@ -68,6 +69,15 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
     }
   }, [recipe]);
 
+  // Create debounced write function
+  const debouncedWrite = useDebounce(async (recipeToWrite: Recipe) => {
+    try {
+      await recipeToWrite.writeRecipe(fileService);
+    } catch (err) {
+      console.error(err);
+    }
+  }, 1000); // 1 second delay
+
   /**
    * Update recipe data
    */
@@ -80,11 +90,8 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       recipe.setCook(cook);
       recipe.setServings(servings);
 
-      // save recipe
-      recipe
-        .writeRecipe(fileService)
-        .then(() => {})
-        .catch((err) => console.error(err));
+      // Call debounced write function instead of immediate write
+      debouncedWrite(recipe);
     }
   }, [recipe, tags, date, source, prep, cook, servings, recipeLoaded]);
 
