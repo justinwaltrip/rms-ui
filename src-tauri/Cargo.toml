@@ -23,6 +23,11 @@ tauri-plugin-dialog = "2.0.3"
 tauri-plugin-os = "2.0.0-rc"
 tauri-plugin-icloud = { git = "https://github.com/justinwaltrip/tauri-plugin-icloud.git" }
 
+[target.'cfg(target_os = "macos")'.dependencies]
+cocoa = "0.25.0"
+objc = "0.2.7"
+rand = "0.8.5"
+
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
 # DO NOT REMOVE!!

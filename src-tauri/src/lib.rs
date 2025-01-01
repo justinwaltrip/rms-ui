@@ -10,6 +10,16 @@ use std::process::Command;
 #[cfg(target_os = "linux")]
 use std::{fs::metadata, path::PathBuf};
 
+#[cfg(target_os = "macos")]
+#[macro_use]
+extern crate cocoa;
+
+#[cfg(target_os = "macos")]
+#[macro_use]
+extern crate objc;
+
+mod tauri_traffic_light_positioner_plugin;
+
 #[tauri::command]
 fn show_in_folder(path: String) {
     #[cfg(target_os = "windows")]
@@ -64,7 +74,8 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_fs::init())
-        .plugin(tauri_plugin_icloud::init());
+        .plugin(tauri_plugin_icloud::init())
+        .plugin(tauri_traffic_light_positioner_plugin::init());
 
     #[cfg(not(target_os = "ios"))]
     let builder = builder.setup(|app| {
