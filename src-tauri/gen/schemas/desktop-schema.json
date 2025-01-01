@@ -4834,6 +4834,16 @@
           "const": "icloud:default"
         },
         {
+          "description": "Enables the create_folder command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:allow-create-folder"
+        },
+        {
+          "description": "Enables the exists command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:allow-exists"
+        },
+        {
           "description": "Enables the open_folder command without any pre-configured scope.",
           "type": "string",
           "const": "icloud:allow-open-folder"
@@ -4859,9 +4869,24 @@
           "const": "icloud:allow-read-text-file"
         },
         {
+          "description": "Enables the rename command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:allow-rename"
+        },
+        {
           "description": "Enables the write_text_file command without any pre-configured scope.",
           "type": "string",
           "const": "icloud:allow-write-text-file"
+        },
+        {
+          "description": "Denies the create_folder command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:deny-create-folder"
+        },
+        {
+          "description": "Denies the exists command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:deny-exists"
         },
         {
           "description": "Denies the open_folder command without any pre-configured scope.",
@@ -4887,6 +4912,11 @@
           "description": "Denies the read_text_file command without any pre-configured scope.",
           "type": "string",
           "const": "icloud:deny-read-text-file"
+        },
+        {
+          "description": "Denies the rename command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:deny-rename"
         },
         {
           "description": "Denies the write_text_file command without any pre-configured scope.",
