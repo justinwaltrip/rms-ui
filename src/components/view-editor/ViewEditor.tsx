@@ -3,14 +3,8 @@ import {
   BaseDirectory,
   readFile as readBinaryFile,
 } from "@tauri-apps/plugin-fs";
-import React, {
-  ChangeEvent,
-  FC,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { ChangeEvent, FC, useContext, useEffect, useState } from "react";
+import { useRef } from "react";
 import AutosizeInput from "react-input-autosize";
 
 import styles from "./ViewEditor.module.css";
@@ -20,6 +14,7 @@ import upload from "../../assets/upload.png";
 import { AppContext } from "../../main";
 import { FileService } from "../../services/FileService";
 import { deleteImage, writeImage } from "../../utils/fs";
+import { useDebounce } from "../../utils/hooks";
 import { Ingredient, Recipe } from "../../utils/recipe";
 import AddButton from "../add-button/AddButton";
 import InfoBar from "../info-bar/InfoBar";
@@ -125,9 +120,16 @@ const ViewEditor: FC<ViewEditorProps> = ({
     }
   }, [recipe]);
 
-  /**
-   * Update recipe data
-   */
+  // Create debounced write function
+  const debouncedWrite = useDebounce(async (recipeToWrite: Recipe) => {
+    try {
+      await recipeToWrite.writeRecipe(fileService);
+    } catch (err) {
+      console.error(err);
+    }
+  }, 1000); // 1 second delay
+
+  // Modify the effect that handles recipe updates
   useEffect(() => {
     if (recipe && recipeLoaded) {
       // set recipe data
@@ -138,11 +140,8 @@ const ViewEditor: FC<ViewEditorProps> = ({
       recipe.setDirections(directions);
       recipe.setNotes(notes);
 
-      // save recipe
-      recipe
-        .writeRecipe(fileService)
-        .then(() => {})
-        .catch((err) => console.error(err));
+      // Call debounced write instead of immediate write
+      debouncedWrite(recipe);
     }
   }, [
     recipe,
@@ -153,6 +152,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
     recipeLoaded,
     directions,
     notes,
+    debouncedWrite,
   ]);
 
   /**
