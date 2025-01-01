@@ -1,7 +1,6 @@
 import { convertFileSrc } from "@tauri-apps/api/core";
 import {
   BaseDirectory,
-  BinaryFileContents,
   mkdir as createDir,
   exists,
   readFile,
@@ -130,7 +129,7 @@ async function deleteImage(filename: string, collectionPath: string) {
  */
 async function writeImage(
   filename: string,
-  image: BinaryFileContents,
+  image: Uint8Array | ReadableStream<Uint8Array>,
   collectionPath: string,
 ) {
   try {

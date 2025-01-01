@@ -252,7 +252,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
       if (result && !Array.isArray(result)) {
         // read image from file
         const bytes = await readBinaryFile(result, {
-          dir: BaseDirectory.Home,
+          baseDir: BaseDirectory.Home,
         });
 
         // get filename
