@@ -18,6 +18,8 @@ extern crate cocoa;
 #[macro_use]
 extern crate objc;
 
+// Only import the plugin for macOS
+#[cfg(target_os = "macos")]
 mod tauri_traffic_light_positioner_plugin;
 
 #[tauri::command]
@@ -74,8 +76,7 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_fs::init())
-        .plugin(tauri_plugin_icloud::init())
-        .plugin(tauri_traffic_light_positioner_plugin::init());
+        .plugin(tauri_plugin_icloud::init());
 
     #[cfg(not(target_os = "ios"))]
     let builder = builder.setup(|app| {
@@ -96,6 +97,10 @@ pub fn run() {
             .build()?;
         Ok(())
     });
+
+    // only enable the traffic light positioner plugin on macOS
+    #[cfg(target_os = "macos")]
+    let builder = builder.plugin(tauri_traffic_light_positioner_plugin::init());
 
     builder
         .invoke_handler(tauri::generate_handler![show_in_folder])
