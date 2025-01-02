@@ -3006,7 +3006,7 @@ dependencies = [
 
 [[package]]
 name = "rms"
-version = "0.0.0"
+version = "0.1.0-alpha"
 dependencies = [
  "cocoa 0.25.0",
  "fork",

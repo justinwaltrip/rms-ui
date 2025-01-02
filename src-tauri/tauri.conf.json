@@ -18,7 +18,7 @@
   },
   "productName": "rms",
   "mainBinaryName": "rms",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "identifier": "com.rms.dev",
   "app": {
     "withGlobalTauri": false,

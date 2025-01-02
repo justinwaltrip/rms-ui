@@ -1,6 +1,6 @@
 [package]
 name = "rms"
-version = "0.0.0"
+version = "0.1.0-alpha"
 description = "Local-first recipe management system inspired by Obsidian"
 authors = ["Justin Waltrip"]
 license = ""
@@ -22,7 +22,6 @@ tauri-plugin-shell = "2.0.0-rc"
 tauri-plugin-dialog = "2.0.3"
 tauri-plugin-os = "2.0.0-rc"
 tauri-plugin-icloud = { git = "https://github.com/justinwaltrip/tauri-plugin-icloud.git" }
-# tauri-plugin-icloud = { path = "../../tauri-plugin-icloud" }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 cocoa = "0.25.0"
