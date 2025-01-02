@@ -3753,7 +3753,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-icloud"
 version = "0.1.0"
-source = "git+https://github.com/justinwaltrip/tauri-plugin-icloud.git#97dd76771c5ec7b008576bbc25e435550c7b9881"
+source = "git+https://github.com/justinwaltrip/tauri-plugin-icloud.git#539caece1010d6fccd6f7e445291576bfebdd6d9"
 dependencies = [
  "serde",
  "tauri",
