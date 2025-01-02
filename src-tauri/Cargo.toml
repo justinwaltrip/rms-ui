@@ -22,6 +22,7 @@ tauri-plugin-shell = "2.0.0-rc"
 tauri-plugin-dialog = "2.0.3"
 tauri-plugin-os = "2.0.0-rc"
 tauri-plugin-icloud = { git = "https://github.com/justinwaltrip/tauri-plugin-icloud.git" }
+# tauri-plugin-icloud = { path = "../../tauri-plugin-icloud" }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 cocoa = "0.25.0"
