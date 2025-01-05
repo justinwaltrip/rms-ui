@@ -207,6 +207,13 @@ const ViewEditor: FC<ViewEditorProps> = ({
   }, [directions]);
 
   /**
+   * On ingredients change, set height of ingredients
+   */
+  useEffect(() => {
+    resizeIngredients();
+  }, [ingredients]);
+
+  /**
    * On mount, add listener for resize
    */
   useEffect(() => {
@@ -281,6 +288,20 @@ const ViewEditor: FC<ViewEditorProps> = ({
       const direction = directions[i] as HTMLTextAreaElement;
       direction.style.height = "";
       direction.style.height = direction.scrollHeight + "px";
+    }
+  }
+
+  /**
+   * Resize ingredients
+   */
+  function resizeIngredients() {
+    const ingredients = document.getElementsByClassName(
+      styles["ingredient-name"],
+    );
+    for (let i = 0; i < ingredients.length; i++) {
+      const ingredient = ingredients[i] as HTMLTextAreaElement;
+      ingredient.style.height = "";
+      ingredient.style.height = ingredient.scrollHeight + "px";
     }
   }
 
@@ -417,7 +438,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                               )[index - 1] as HTMLInputElement;
                             const ingredientName =
                               ingredientNameDiv.getElementsByTagName(
-                                "input",
+                                "textarea",
                               )[0];
                             ingredientName.focus();
                           }
@@ -426,21 +447,26 @@ const ViewEditor: FC<ViewEditorProps> = ({
                     />
 
                     {/* ingredient name */}
-                    <input
+                    <textarea
                       className={styles["ingredient-name"]}
-                      type="text"
+                      rows={1}
                       value={name || ""}
-                      onChange={function (e: ChangeEvent<HTMLInputElement>) {
+                      onInput={(e) => {
+                        e.currentTarget.style.height = "";
+                        e.currentTarget.style.height =
+                          e.currentTarget.scrollHeight + "px";
+                      }}
+                      onChange={function (e: ChangeEvent<HTMLTextAreaElement>) {
                         const newIngredients = [...ingredients];
                         newIngredients[index].name = e.target.value;
                         setIngredients(newIngredients);
                       }}
                       onKeyDown={function (
-                        e: React.KeyboardEvent<HTMLInputElement>,
+                        e: React.KeyboardEvent<HTMLTextAreaElement>,
                       ) {
                         if (
                           e.key === "Backspace" &&
-                          (e.currentTarget as HTMLInputElement).value === ""
+                          (e.currentTarget as HTMLTextAreaElement).value === ""
                         ) {
                           e.preventDefault();
 
