@@ -411,6 +411,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                       className={styles["ingredient-measure"]}
                       type="text"
                       value={primary_measure || ""}
+                      placeholder="measure"
                       onChange={function (e: ChangeEvent<HTMLInputElement>) {
                         const newIngredients = [...ingredients];
                         newIngredients[index].primary_measure = e.target.value;
@@ -451,6 +452,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                       className={styles["ingredient-name"]}
                       rows={1}
                       value={name || ""}
+                      placeholder="ingredient"
                       onInput={(e) => {
                         e.currentTarget.style.height = "";
                         e.currentTarget.style.height =
