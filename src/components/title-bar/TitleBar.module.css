@@ -12,12 +12,20 @@
   overflow-y: hidden;
 }
 
+[data-theme="light"] .title-bar {
+  background-color: #f6f6f6;
+}
+
 .create-icon {
   position: relative;
   left: 80px;
   width: 25px;
   height: 25px;
   opacity: 0.6;
+}
+
+[data-theme="light"] .create-icon {
+  filter: invert(1);
 }
 
 .create-icon:hover {
@@ -41,12 +49,24 @@
   background-color: #2f2f2f;
 }
 
+[data-theme="light"] .active-tab {
+  background-color: #ffffff;
+}
+
 .inactive-tab {
   background-color: #1e1e1e;
 }
 
+[data-theme="light"] .inactive-tab {
+  background-color: #f6f6f6;
+}
+
 .inactive-tab:hover {
   background-color: #2f2f2f;
+}
+
+[data-theme="light"] .inactive-tab:hover {
+  background-color: #ffffff;
 }
 
 .tab-label {
@@ -65,6 +85,10 @@
   height: 20px;
   width: 20px;
   opacity: 0.6;
+}
+
+[data-theme="light"] .close-icon {
+  filter: invert(1);
 }
 
 .close-icon:hover {

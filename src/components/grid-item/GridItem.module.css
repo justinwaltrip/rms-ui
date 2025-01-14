@@ -7,9 +7,17 @@
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
 }
 
+[data-theme="light"] .grid-item {
+  background: rgb(228, 228, 228);
+}
+
 .grid-item:hover {
   cursor: pointer;
   background: #454545;
+}
+
+[data-theme="light"] .grid-item:hover {
+  background: rgb(218, 218, 218);
 }
 
 .grid-item-image {
@@ -60,6 +68,10 @@
   line-height: 15px;
 }
 
+[data-theme="light"] .grid-item-tag {
+  background-color: rgb(246, 246, 246);
+}
+
 .more-icon {
   position: absolute;
   top: 50%;
@@ -67,6 +79,10 @@
   right: 10px;
   height: 15px;
   width: 15px;
+}
+
+[data-theme="light"] .more-icon {
+  filter: invert(1);
 }
 
 .more-icon:hover {
@@ -83,6 +99,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+[data-theme="light"] .grid-item-image-placeholder {
+  background-color: rgb(246, 246, 246);
 }
 
 .more-dropdown-container {

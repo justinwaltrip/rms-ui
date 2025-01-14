@@ -11,9 +11,17 @@
   border-radius: 5px;
 }
 
+[data-theme="light"] .add-button {
+  background-color: #ffffff;
+}
+
 .add-button-text {
   color: #ebebf5;
   line-height: 10px;
+}
+
+[data-theme="light"] .add-button-text {
+  color: #464646;
 }
 
 .add-button:hover {
@@ -27,4 +35,8 @@
 .add-icon {
   height: 25px;
   width: 25px;
+}
+
+[data-theme="light"] .add-icon {
+  filter: invert(1);
 }

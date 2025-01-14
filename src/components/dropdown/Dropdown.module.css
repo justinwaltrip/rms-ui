@@ -22,10 +22,18 @@
   border-radius: 5px;
 }
 
+[data-theme="light"] .option:hover {
+  background-color: rgb(228, 228, 228);
+}
+
 .option-icon {
   width: 25px;
   height: 25px;
   opacity: 0.6;
+}
+
+[data-theme="light"] .option-icon {
+  filter: invert(1);
 }
 
 .option-text {

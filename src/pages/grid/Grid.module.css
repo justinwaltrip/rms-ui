@@ -56,6 +56,10 @@
   width: 15px;
 }
 
+[data-theme="light"] .filter-icon {
+  filter: invert(1);
+}
+
 .filter-text {
   font-size: 14px;
   font-weight: 600;
@@ -112,6 +116,10 @@
   width: 15px;
 }
 
+[data-theme="light"] .remove-icon {
+  filter: invert(1);
+}
+
 .remove-icon:hover {
   cursor: pointer;
 }
@@ -124,6 +132,10 @@
   opacity: 0.6;
   height: 15px;
   width: 15px;
+}
+
+[data-theme="light"] .sort-icon {
+  filter: invert(1);
 }
 
 .sort-icon-desc {

@@ -32,6 +32,10 @@
   width: 25px;
 }
 
+[data-theme="light"] .icon {
+  filter: invert(1);
+}
+
 .label {
   position: relative;
   left: 10px;
@@ -49,10 +53,18 @@
   padding-right: 15px;
 }
 
+[data-theme="light"] .tag {
+  background-color: rgb(246, 246, 246);
+}
+
 .remove-icon {
   opacity: 0.6;
   height: 15px;
   width: 15px;
+}
+
+[data-theme="light"] .remove-icon {
+  filter: invert(1);
 }
 
 .remove-icon:hover {

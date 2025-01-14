@@ -13,6 +13,10 @@
   gap: 10px;
 }
 
+[data-theme="light"] .dialog {
+  background: rgb(228, 228, 228);
+}
+
 .filter-dropdown {
   display: flex;
   flex-direction: row;

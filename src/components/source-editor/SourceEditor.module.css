@@ -31,6 +31,10 @@
   opacity: 0.6;
 }
 
+[data-theme="light"] .view-icon {
+  filter: invert(1);
+}
+
 .view-icon:hover {
   cursor: pointer;
 }
