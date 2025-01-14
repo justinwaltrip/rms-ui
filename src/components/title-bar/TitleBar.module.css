@@ -1,5 +1,5 @@
 .title-bar {
-  background-color: #1e1e1e;
+  background-color: var(--background-secondary);
   user-select: none;
   position: fixed;
   top: 0;
@@ -13,7 +13,7 @@
 }
 
 [data-theme="light"] .title-bar {
-  background-color: #f6f6f6;
+  background-color: var(--background-secondary);
 }
 
 .create-icon {
@@ -46,27 +46,27 @@
 }
 
 .active-tab {
-  background-color: #2f2f2f;
+  background-color: var(--background-primary);
 }
 
 [data-theme="light"] .active-tab {
-  background-color: #ffffff;
+  background-color: var(--background-primary);
 }
 
 .inactive-tab {
-  background-color: #1e1e1e;
+  background-color: var(--background-secondary);
 }
 
 [data-theme="light"] .inactive-tab {
-  background-color: #f6f6f6;
+  background-color: var(--background-secondary);
 }
 
 .inactive-tab:hover {
-  background-color: #2f2f2f;
+  background-color: var(--background-primary);
 }
 
 [data-theme="light"] .inactive-tab:hover {
-  background-color: #ffffff;
+  background-color: var(--background-primary);
 }
 
 .tab-label {

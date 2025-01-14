@@ -13,7 +13,7 @@
 }
 
 [data-theme="light"] .dialog {
-  background-color: rgb(246, 246, 246);
+  background-color: var(--dialog-background);
 }
 
 .back-icon {
@@ -52,7 +52,7 @@
 }
 
 [data-theme="light"] .divider {
-  background-color: rgb(223, 223, 223);
+  background-color: var(--border-color);
 }
 
 .dialog-option {
@@ -75,12 +75,12 @@
 
 .dialog-option-description {
   font-size: 11px;
-  color: #ebebf5;
+  color: var(--text-secondary);
   opacity: 0.6;
 }
 
 [data-theme="light"] .dialog-option-description {
-  color: #464646;
+  color: var(--text-secondary);
 }
 
 .dialog-option-spacer {
@@ -92,9 +92,9 @@
   width: 100px;
   height: 25px;
   border-radius: 10px;
-  background-color: #1e1e1e;
+  background-color: var(--background-secondary);
   border: none;
-  color: #ebebf5;
+  color: var(--text-secondary);
   font-weight: bold;
 }
 
@@ -127,7 +127,7 @@
 }
 
 [data-theme="light"] .dialog-option-input {
-  background-color: rgb(228, 228, 228);
+  background-color: var(--hover-color);
 }
 
 .spacer {

@@ -11,7 +11,7 @@
 }
 
 [data-theme="light"] .sidebar {
-  border-right: 1px solid rgb(223, 223, 223);
+  border-right: 1px solid var(--border-color);
 }
 
 .sidebar-item {

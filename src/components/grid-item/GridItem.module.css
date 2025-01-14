@@ -8,12 +8,12 @@
 }
 
 [data-theme="light"] .grid-item {
-  background: rgb(228, 228, 228);
+  background: var(--hover-color);
 }
 
 .grid-item:hover {
   cursor: pointer;
-  background: #454545;
+  background: var(--text-secondary);
 }
 
 [data-theme="light"] .grid-item:hover {
@@ -69,7 +69,7 @@
 }
 
 [data-theme="light"] .grid-item-tag {
-  background-color: rgb(246, 246, 246);
+  background-color: var(--dialog-background);
 }
 
 .more-icon {
@@ -102,7 +102,7 @@
 }
 
 [data-theme="light"] .grid-item-image-placeholder {
-  background-color: rgb(246, 246, 246);
+  background-color: var(--dialog-background);
 }
 
 .more-dropdown-container {

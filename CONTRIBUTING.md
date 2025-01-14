@@ -62,8 +62,17 @@ build
 
 ## Color Palette
 
-- **Icons**: `#EBEBF5`
+### Dark Mode
+
+- **Primary**: `rgb(47, 47, 47)`
+- **Secondary**: `rgb(30, 30, 30)`
+
+### Light Mode
+
+- **Primary**: `rgb(255, 255, 255)`
+- **Secondary**: `rgb(246, 246, 246)`
 
 ## Icons
 
 - **Library**: [SF Regular](https://icons8.com)
+- **Color**: `#ebebf5`

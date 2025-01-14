@@ -54,7 +54,7 @@
 }
 
 [data-theme="light"] .tag {
-  background-color: rgb(246, 246, 246);
+  background-color: var(--dialog-background);
 }
 
 .remove-icon {

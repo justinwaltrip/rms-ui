@@ -18,12 +18,12 @@
 
 .option:hover {
   cursor: pointer;
-  background-color: #1e1e1e;
+  background-color: var(--background-secondary);
   border-radius: 5px;
 }
 
 [data-theme="light"] .option:hover {
-  background-color: rgb(228, 228, 228);
+  background-color: var(--hover-color);
 }
 
 .option-icon {

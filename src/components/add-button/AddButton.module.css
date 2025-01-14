@@ -11,17 +11,9 @@
   border-radius: 5px;
 }
 
-[data-theme="light"] .add-button {
-  background-color: #ffffff;
-}
-
 .add-button-text {
-  color: #ebebf5;
+  color: var(--text-secondary);
   line-height: 10px;
-}
-
-[data-theme="light"] .add-button-text {
-  color: #464646;
 }
 
 .add-button:hover {
@@ -29,7 +21,7 @@
 }
 
 .add-button:focus {
-  outline: 1px solid #ebebf5;
+  outline: 1px solid var(--text-secondary);
 }
 
 .add-icon {
@@ -38,5 +30,5 @@
 }
 
 [data-theme="light"] .add-icon {
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
