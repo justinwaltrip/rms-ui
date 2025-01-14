@@ -63,3 +63,7 @@ build
 ## Color Palette
 
 - **Icons**: `#EBEBF5`
+
+## Icons
+
+- **Library**: [SF Regular](https://icons8.com)
