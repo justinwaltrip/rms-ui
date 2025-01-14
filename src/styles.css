@@ -4,6 +4,7 @@
   line-height: 24px;
   font-weight: 400;
 
+  /* Default dark theme */
   color: #f6f6f6;
   background-color: #2f2f2f;
 
@@ -20,7 +21,12 @@
   overflow: hidden;
 }
 
-/* prevent default input css */
+[data-theme="light"] {
+  /* Light theme */
+  color: #2f2f2f; /* Dark text for light background */
+  background-color: #f6f6f6; /* Light background */
+}
+
 input,
 textarea {
   border: none;
@@ -53,6 +59,11 @@ select {
 
 select:focus-visible {
   outline: none;
+}
+
+/* Light theme overrides for select */
+[data-theme="light"] select {
+  color: #2f2f2f;
 }
 
 /* custom checkbox styles */
@@ -102,86 +113,12 @@ select:focus-visible {
     box-shadow 0.1s;
 }
 
-.checkbox-wrapper-1 [type="checkbox"].substituted:enabled:active + label:before,
-.checkbox-wrapper-1
-  [type="checkbox"].substituted:enabled
-  + label:active:before {
-  box-shadow:
-    0 0 0.04em,
-    0 0.06em 0.16em -0.03em transparent inset,
-    0 0 0 0.07em rgba(0, 0, 0, 0.1) inset;
-  background-color: #f0f0f0;
+/* Checkbox styles for light theme */
+[data-theme="light"] .checkbox-wrapper-1 [type="checkbox"].substituted + label:before {
+  color: rgba(0, 0, 0, 0.275);
+  background-color: #f6f6f6;
 }
 
-.checkbox-wrapper-1 [type="checkbox"].substituted:checked + label:before {
+[data-theme="light"] .checkbox-wrapper-1 [type="checkbox"].substituted:checked + label:before {
   background-color: #3b99fc;
-  background-size: 0.75em;
-  color: rgba(0, 0, 0, 0.075);
-}
-
-.checkbox-wrapper-1
-  [type="checkbox"].substituted:checked:enabled:active
-  + label:before,
-.checkbox-wrapper-1
-  [type="checkbox"].substituted:checked:enabled
-  + label:active:before {
-  background-color: #0a7ffb;
-  color: rgba(0, 0, 0, 0.275);
-}
-
-.checkbox-wrapper-1 [type="checkbox"].substituted:focus + label:before {
-  box-shadow:
-    0 0 0.04em,
-    0 0.06em 0.16em -0.03em transparent inset,
-    0 0 0 0.07em rgba(0, 0, 0, 0.1) inset,
-    0 0 0 3.3px rgba(65, 159, 255, 0.55),
-    0 0 0 5px rgba(65, 159, 255, 0.3);
-}
-
-.checkbox-wrapper-1 [type="checkbox"].substituted:focus:active + label:before,
-.checkbox-wrapper-1 [type="checkbox"].substituted:focus + label:active:before {
-  box-shadow:
-    0 0 0.04em,
-    0 0.06em 0.16em -0.03em transparent inset,
-    0 0 0 0.07em rgba(0, 0, 0, 0.1) inset,
-    0 0 0 3.3px rgba(65, 159, 255, 0.55),
-    0 0 0 5px rgba(65, 159, 255, 0.3);
-}
-
-.checkbox-wrapper-1 [type="checkbox"].substituted:disabled + label:before {
-  opacity: 0.5;
-}
-
-.checkbox-wrapper-1 [type="checkbox"].substituted.dark + label:before {
-  color: rgba(255, 255, 255, 0.275);
-  background-color: #222;
-  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xml:space="preserve" fill="rgba(34, 34, 34, 0.999)" viewBox="0 0 9 9"><rect x="0" y="4.3" transform="matrix(-0.707 -0.7072 0.7072 -0.707 0.5891 10.4702)" width="4.3" height="1.6" /><rect x="2.2" y="2.9" transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 12.1877 2.9833)" width="6.1" height="1.7" /></svg>');
-}
-
-.checkbox-wrapper-1
-  [type="checkbox"].substituted.dark:enabled:active
-  + label:before,
-.checkbox-wrapper-1
-  [type="checkbox"].substituted.dark:enabled
-  + label:active:before {
-  background-color: #444;
-  box-shadow:
-    0 0 0.04em,
-    0 0.06em 0.16em -0.03em transparent inset,
-    0 0 0 0.07em rgba(255, 255, 255, 0.1) inset;
-}
-
-.checkbox-wrapper-1 [type="checkbox"].substituted.dark:checked + label:before {
-  background-color: #a97035;
-  color: rgba(255, 255, 255, 0.075);
-}
-
-.checkbox-wrapper-1
-  [type="checkbox"].substituted.dark:checked:enabled:active
-  + label:before,
-.checkbox-wrapper-1
-  [type="checkbox"].substituted.dark:checked:enabled
-  + label:active:before {
-  background-color: #c68035;
-  color: rgba(0, 0, 0, 0.275);
 }
