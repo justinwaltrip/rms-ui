@@ -5,10 +5,10 @@ import styles from "./SideBar.module.css";
 import changeCollection from "../../assets/change-collection.png";
 import darkMode from "../../assets/dark-mode.png";
 import grid from "../../assets/grid.png";
-// import search from "../../assets/search.png";
 import lightMode from "../../assets/light-mode.png";
 import { usePersistedTheme } from "../../contexts/ThemeContext";
 import { AppContext } from "../../main";
+// import search from "../../assets/search.png";
 
 const SideBar: FC = () => {
   // #region hooks
