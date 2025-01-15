@@ -8,6 +8,7 @@ import React, {
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
+import { ThemeProvider } from "./contexts/ThemeContext";
 import Editor from "./pages/editor/Editor";
 import Grid from "./pages/grid/Grid";
 import Home from "./pages/home/Home";
@@ -73,7 +74,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <AppContextProvider>
-      <RouterProvider router={router} />
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </AppContextProvider>
   </React.StrictMode>,
 );

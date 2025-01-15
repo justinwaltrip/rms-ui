@@ -26,6 +26,10 @@
   opacity: 0.6;
 }
 
+[data-theme="light"] .source-icon {
+  filter: var(--icon-filter);
+}
+
 .source-icon:hover {
   cursor: pointer;
 }
@@ -90,6 +94,10 @@
   filter: drop-shadow(0px 0px 2px black);
 }
 
+[data-theme="light"] .close-icon {
+  filter: var(--icon-filter);
+}
+
 .close-icon:hover {
   cursor: pointer;
 }
@@ -151,7 +159,7 @@
 
 input {
   text-align: left;
-  color: white;
+  color: var(--text-primary);
 }
 
 input:focus {
@@ -178,6 +186,10 @@ input:focus {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+[data-theme="light"] .upload-icon {
+  filter: var(--icon-filter);
 }
 
 .upload-icon:hover {

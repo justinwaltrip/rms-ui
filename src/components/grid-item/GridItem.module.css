@@ -2,14 +2,14 @@
   position: relative;
   height: 200px;
   width: 150px;
-  background: #353535;
+  background-color: var(--background-primary);
   border-radius: 5px;
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
 }
 
 .grid-item:hover {
   cursor: pointer;
-  background: #454545;
+  background-color: var(--hover-color);
 }
 
 .grid-item-image {
@@ -52,7 +52,7 @@
 .grid-item-tag {
   font-size: 9px;
   font-weight: bold;
-  background-color: #282828;
+  background-color: var(--background-secondary);
   border-radius: 5px;
   width: fit-content;
   padding-left: 5px;
@@ -69,6 +69,10 @@
   width: 15px;
 }
 
+[data-theme="light"] .more-icon {
+  filter: var(--icon-filter);
+}
+
 .more-icon:hover {
   cursor: pointer;
 }
@@ -78,8 +82,7 @@
   height: 150px;
   width: 150px;
   border-radius: 5px 5px 0px 0px;
-  background-color: #282828;
-  /* text in center */
+  background-color: var(--background-secondary);
   display: flex;
   justify-content: center;
   align-items: center;
