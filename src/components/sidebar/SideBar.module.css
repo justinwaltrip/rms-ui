@@ -4,14 +4,10 @@
   left: 0;
   bottom: 0;
   width: 50px;
-  border-right: 1px solid #464646;
+  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-[data-theme="light"] .sidebar {
-  border-right: 1px solid var(--border-color);
 }
 
 .sidebar-item {
@@ -30,7 +26,7 @@
 }
 
 [data-theme="light"] .sidebar-icon {
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
 
 .sidebar-icon:hover {
@@ -48,7 +44,7 @@
 }
 
 [data-theme="light"] .change-collection-icon {
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
 
 .change-collection-icon:hover {
@@ -63,7 +59,7 @@
 }
 
 [data-theme="light"] .theme-icon {
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
 
 .theme-icon:hover {

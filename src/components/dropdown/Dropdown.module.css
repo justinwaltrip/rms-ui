@@ -1,5 +1,5 @@
 .dropdown {
-  background: #464646;
+  background-color: var(--background-secondary);
   width: 170px;
   padding: 5px;
   border-radius: 5px;
@@ -22,10 +22,6 @@
   border-radius: 5px;
 }
 
-[data-theme="light"] .option:hover {
-  background-color: var(--hover-color);
-}
-
 .option-icon {
   width: 25px;
   height: 25px;
@@ -33,7 +29,7 @@
 }
 
 [data-theme="light"] .option-icon {
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
 
 .option-text {

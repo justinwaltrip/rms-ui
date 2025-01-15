@@ -27,7 +27,7 @@
 }
 
 [data-theme="light"] .source-icon {
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
 
 .source-icon:hover {
@@ -95,7 +95,7 @@
 }
 
 [data-theme="light"] .close-icon {
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
 
 .close-icon:hover {
@@ -159,11 +159,7 @@
 
 input {
   text-align: left;
-  color: white;
-}
-
-[data-theme="light"] input {
-  color: black;
+  color: var(--text-primary);
 }
 
 input:focus {
@@ -193,7 +189,7 @@ input:focus {
 }
 
 [data-theme="light"] .upload-icon {
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
 
 .upload-icon:hover {

@@ -12,10 +12,6 @@
   overflow-y: hidden;
 }
 
-[data-theme="light"] .title-bar {
-  background-color: var(--background-secondary);
-}
-
 .create-icon {
   position: relative;
   left: 80px;
@@ -25,7 +21,7 @@
 }
 
 [data-theme="light"] .create-icon {
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
 
 .create-icon:hover {
@@ -49,23 +45,11 @@
   background-color: var(--background-primary);
 }
 
-[data-theme="light"] .active-tab {
-  background-color: var(--background-primary);
-}
-
 .inactive-tab {
   background-color: var(--background-secondary);
 }
 
-[data-theme="light"] .inactive-tab {
-  background-color: var(--background-secondary);
-}
-
 .inactive-tab:hover {
-  background-color: var(--background-primary);
-}
-
-[data-theme="light"] .inactive-tab:hover {
   background-color: var(--background-primary);
 }
 
@@ -88,7 +72,7 @@
 }
 
 [data-theme="light"] .close-icon {
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
 
 .close-icon:hover {

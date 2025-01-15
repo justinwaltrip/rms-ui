@@ -2,22 +2,14 @@
   position: relative;
   height: 200px;
   width: 150px;
-  background: #353535;
+  background-color: var(--background-primary);
   border-radius: 5px;
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
 }
 
-[data-theme="light"] .grid-item {
-  background: var(--hover-color);
-}
-
 .grid-item:hover {
   cursor: pointer;
-  background: var(--text-secondary);
-}
-
-[data-theme="light"] .grid-item:hover {
-  background: rgb(218, 218, 218);
+  background-color: var(--hover-color);
 }
 
 .grid-item-image {
@@ -60,16 +52,12 @@
 .grid-item-tag {
   font-size: 9px;
   font-weight: bold;
-  background-color: #282828;
+  background-color: var(--background-secondary);
   border-radius: 5px;
   width: fit-content;
   padding-left: 5px;
   padding-right: 5px;
   line-height: 15px;
-}
-
-[data-theme="light"] .grid-item-tag {
-  background-color: var(--dialog-background);
 }
 
 .more-icon {
@@ -82,7 +70,7 @@
 }
 
 [data-theme="light"] .more-icon {
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
 
 .more-icon:hover {
@@ -94,15 +82,10 @@
   height: 150px;
   width: 150px;
   border-radius: 5px 5px 0px 0px;
-  background-color: #282828;
-  /* text in center */
+  background-color: var(--background-secondary);
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-[data-theme="light"] .grid-item-image-placeholder {
-  background-color: var(--dialog-background);
 }
 
 .more-dropdown-container {

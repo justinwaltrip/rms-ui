@@ -57,7 +57,7 @@
 }
 
 [data-theme="light"] .filter-icon {
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
 
 .filter-text {
@@ -85,7 +85,7 @@
   opacity: 0.6;
   border-left: 3px solid transparent;
   border-right: 3px solid transparent;
-  border-top: 5px solid #fff;
+  border-top: 5px solid var(--text-primary);
 }
 
 .filter {
@@ -93,7 +93,7 @@
   flex-direction: row;
   align-items: center;
   gap: 5px;
-  background-color: #353535;
+  background-color: var(--background-secondary);
   border-radius: 5px;
   padding-left: 10px;
   padding-right: 10px;
@@ -117,7 +117,7 @@
 }
 
 [data-theme="light"] .remove-icon {
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
 
 .remove-icon:hover {
@@ -135,7 +135,7 @@
 }
 
 [data-theme="light"] .sort-icon {
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
 
 .sort-icon-desc {
@@ -157,5 +157,5 @@
   opacity: 0.6;
   border-left: 3px solid transparent;
   border-right: 3px solid transparent;
-  border-top: 5px solid #fff;
+  border-top: 5px solid var(--text-primary);
 }

@@ -32,7 +32,7 @@
 }
 
 [data-theme="light"] .view-icon {
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
 
 .view-icon:hover {
