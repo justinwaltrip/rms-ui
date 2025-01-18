@@ -414,7 +414,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                       placeholder="measure"
                       onChange={function (e: ChangeEvent<HTMLInputElement>) {
                         const newIngredients = [...ingredients];
-                        newIngredients[index].primary_measure = e.target.value;
+                        newIngredients[index].imperial_measure = e.target.value;
                         setIngredients(newIngredients);
                       }}
                       onKeyDown={function (
@@ -460,7 +460,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                       }}
                       onChange={function (e: ChangeEvent<HTMLTextAreaElement>) {
                         const newIngredients = [...ingredients];
-                        newIngredients[index].name = e.target.value;
+                        newIngredients[index].ingredient = e.target.value;
                         setIngredients(newIngredients);
                       }}
                       onKeyDown={function (
