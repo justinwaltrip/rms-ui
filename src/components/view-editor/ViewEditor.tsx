@@ -383,7 +383,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
             <h2>ingredients</h2>
             {ingredients &&
               ingredients.map(
-                ({ ingredient, is_checked, imperial_measure }, index) => (
+                ({ name, is_checked, primary_measure }, index) => (
                   <div key={index} className={styles["ingredient"]}>
                     {/* checkbox */}
                     <div className="checkbox-wrapper-1">
@@ -410,7 +410,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                       }
                       className={styles["ingredient-measure"]}
                       type="text"
-                      value={imperial_measure || ""}
+                      value={primary_measure || ""}
                       placeholder="measure"
                       onChange={function (e: ChangeEvent<HTMLInputElement>) {
                         const newIngredients = [...ingredients];
@@ -451,7 +451,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                     <textarea
                       className={styles["ingredient-name"]}
                       rows={1}
-                      value={ingredient || ""}
+                      value={name || ""}
                       placeholder="ingredient"
                       onInput={(e) => {
                         e.currentTarget.style.height = "";

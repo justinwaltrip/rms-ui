@@ -2,21 +2,21 @@ import { readRecipeContents, writeRecipeContents } from "./fs";
 import { FileService } from "../services/FileService";
 
 class Ingredient {
-  public imperial_measure: string | undefined;
-  public metric_measure: string | undefined;
-  public ingredient: string;
+  public primary_measure: string;
+  public name: string;
   public is_checked: boolean;
+  public alt_measure: string | undefined;
 
   constructor(
-    imperial_measure?: string,
-    metric_measure?: string,
-    ingredient: string = "",
+    primary_measure: string = "",
+    name: string = "",
     is_checked: boolean = false,
+    alt_measure?: string,
   ) {
-    this.imperial_measure = imperial_measure;
-    this.metric_measure = metric_measure;
-    this.ingredient = ingredient;
+    this.primary_measure = primary_measure;
+    this.name = name;
     this.is_checked = is_checked;
+    this.alt_measure = alt_measure;
   }
 }
 
