@@ -1,5 +1,5 @@
 .dropdown {
-  background: #464646;
+  background-color: var(--background-secondary);
   width: 170px;
   padding: 5px;
   border-radius: 5px;
@@ -18,7 +18,7 @@
 
 .option:hover {
   cursor: pointer;
-  background-color: #1e1e1e;
+  background-color: var(--background-secondary);
   border-radius: 5px;
 }
 
@@ -26,6 +26,10 @@
   width: 25px;
   height: 25px;
   opacity: 0.6;
+}
+
+[data-theme="light"] .option-icon {
+  filter: var(--icon-filter);
 }
 
 .option-text {

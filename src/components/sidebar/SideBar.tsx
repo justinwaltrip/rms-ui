@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 
 import styles from "./SideBar.module.css";
 import changeCollection from "../../assets/change-collection.png";
+import darkMode from "../../assets/dark-mode.png";
 import grid from "../../assets/grid.png";
+import lightMode from "../../assets/light-mode.png";
+import { usePersistedTheme } from "../../contexts/ThemeContext";
 import { AppContext } from "../../main";
 // import search from "../../assets/search.png";
 
@@ -12,6 +15,7 @@ const SideBar: FC = () => {
   const navigate = useNavigate();
   const appContext = useContext(AppContext);
   const { setCollectionPath, setOpenFiles } = appContext;
+  const { theme, toggleTheme } = usePersistedTheme();
   // #endregion
 
   return (
@@ -35,6 +39,17 @@ const SideBar: FC = () => {
         />
       </div> */}
       <div className={styles["spacer"]} />
+      <div className={styles["sidebar-item"]}>
+        <img
+          className={styles["theme-icon"]}
+          src={theme === "light" ? darkMode : lightMode}
+          alt="Theme icon"
+          onClick={toggleTheme}
+          title={
+            theme === "light" ? "Switch to dark mode" : "Switch to light mode"
+          }
+        />
+      </div>
       <div className={styles["sidebar-item"]}>
         <img
           className={`${styles["change-collection-icon"]}`}

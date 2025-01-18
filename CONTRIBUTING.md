@@ -60,6 +60,7 @@ To build the Tauri app:
 build
 ```
 
-## Color Palette
+## Icons
 
-- **Icons**: `#EBEBF5`
+- **Library**: [SF Regular](https://icons8.com)
+- **Color**: `#ebebf5`

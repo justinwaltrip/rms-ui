@@ -12,7 +12,7 @@
 }
 
 .add-button-text {
-  color: #ebebf5;
+  color: var(--text-secondary);
   line-height: 10px;
 }
 
@@ -21,10 +21,14 @@
 }
 
 .add-button:focus {
-  outline: 1px solid #ebebf5;
+  outline: 1px solid var(--text-secondary);
 }
 
 .add-icon {
   height: 25px;
   width: 25px;
+}
+
+[data-theme="light"] .add-icon {
+  filter: var(--icon-filter);
 }

@@ -32,6 +32,10 @@
   width: 25px;
 }
 
+[data-theme="light"] .icon {
+  filter: var(--icon-filter);
+}
+
 .label {
   position: relative;
   left: 10px;
@@ -41,7 +45,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: #353535;
+  background-color: var(--background-secondary);
   height: 25px;
   border-radius: 25px;
   gap: 10px;
@@ -53,6 +57,10 @@
   opacity: 0.6;
   height: 15px;
   width: 15px;
+}
+
+[data-theme="light"] .remove-icon {
+  filter: var(--icon-filter);
 }
 
 .remove-icon:hover {
