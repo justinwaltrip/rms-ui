@@ -69,6 +69,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
   const [newNoteIndex, setNewNoteIndex] = useState<number>(-1);
 
   const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
+  const [useMetric, setUseMetric] = useState<boolean>(false);
   // #endregion
 
   // #region effects
@@ -207,11 +208,19 @@ const ViewEditor: FC<ViewEditorProps> = ({
   }, [directions]);
 
   /**
-   * On ingredients change, set height of ingredients
+   * On ingredients change, set height of ingredients.
+   *
+   * Uses requestAnimationFrame to ensure that the height is set after the textarea has been resized.
    */
   useEffect(() => {
-    resizeIngredients();
-  }, [ingredients]);
+    const handleResizeIngredients = () => {
+      requestAnimationFrame(() => {
+        resizeIngredients();
+      });
+    };
+
+    handleResizeIngredients();
+  }, [ingredients, useMetric]);
 
   /**
    * On mount, add listener for resize
@@ -380,10 +389,28 @@ const ViewEditor: FC<ViewEditorProps> = ({
             <Properties recipe={recipe} />
           </div>
           <div className={styles["column"]}>
-            <h2>ingredients</h2>
+            <div className={styles["ingredients-header"]}>
+              <h2>ingredients</h2>
+              <div className={styles["unit-toggle"]}>
+                <label className={styles["switch"]}>
+                  <input
+                    type="checkbox"
+                    checked={useMetric}
+                    onChange={(e) => setUseMetric(e.target.checked)}
+                  />
+                  <span className={styles["slider"]}></span>
+                </label>
+                <span className={styles["unit"]}>
+                  {useMetric ? "metric" : "imperial"}
+                </span>
+              </div>
+            </div>
             {ingredients &&
               ingredients.map(
-                ({ ingredient, is_checked, imperial_measure }, index) => (
+                (
+                  { ingredient, is_checked, imperial_measure, metric_measure },
+                  index,
+                ) => (
                   <div key={index} className={styles["ingredient"]}>
                     {/* checkbox */}
                     <div className="checkbox-wrapper-1">
@@ -410,11 +437,20 @@ const ViewEditor: FC<ViewEditorProps> = ({
                       }
                       className={styles["ingredient-measure"]}
                       type="text"
-                      value={imperial_measure || ""}
+                      value={
+                        useMetric
+                          ? metric_measure || ""
+                          : imperial_measure || ""
+                      }
                       placeholder="measure"
                       onChange={function (e: ChangeEvent<HTMLInputElement>) {
                         const newIngredients = [...ingredients];
-                        newIngredients[index].imperial_measure = e.target.value;
+                        if (useMetric) {
+                          newIngredients[index].metric_measure = e.target.value;
+                        } else {
+                          newIngredients[index].imperial_measure =
+                            e.target.value;
+                        }
                         setIngredients(newIngredients);
                       }}
                       onKeyDown={function (
