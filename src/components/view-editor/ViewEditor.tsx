@@ -223,6 +223,13 @@ const ViewEditor: FC<ViewEditorProps> = ({
   }, [ingredients, useMetric]);
 
   /**
+   * On notes change, set height of notes
+   */
+  useEffect(() => {
+    resizeNotes();
+  }, [notes]);
+
+  /**
    * On mount, add listener for resize
    */
   useEffect(() => {
@@ -311,6 +318,18 @@ const ViewEditor: FC<ViewEditorProps> = ({
       const ingredient = ingredients[i] as HTMLTextAreaElement;
       ingredient.style.height = "";
       ingredient.style.height = ingredient.scrollHeight + "px";
+    }
+  }
+
+  /**
+   * Resize notes
+   */
+  function resizeNotes() {
+    const notes = document.getElementsByClassName(styles["note-input"]);
+    for (let i = 0; i < notes.length; i++) {
+      const note = notes[i] as HTMLTextAreaElement;
+      note.style.height = "";
+      note.style.height = note.scrollHeight + "px";
     }
   }
 
@@ -663,7 +682,10 @@ const ViewEditor: FC<ViewEditorProps> = ({
             {notes &&
               notes.map((note, index) => (
                 <div key={index} className={styles["note"]}>
-                  <p>{`-`}</p>
+                  {/* dash */}
+                  <div>{`-`}</div>
+
+                  {/* note text */}
                   <textarea
                     rows={1}
                     onInput={(e) => {
