@@ -335,6 +335,8 @@ const ViewEditor: FC<ViewEditorProps> = ({
 
   // #endregion
 
+  const isEditingDisabled = !filename || !recipeLoaded;
+
   return (
     <div className={styles["view-page"]}>
       <img
@@ -358,6 +360,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                 setTitle(e.target.value);
               }}
               placeholder="title"
+              disabled={isEditingDisabled}
             />
             <div className={styles["image-container"]}>
               {image ? (
@@ -372,9 +375,9 @@ const ViewEditor: FC<ViewEditorProps> = ({
                   alt="Upload icon"
                   className={styles["upload-icon"]}
                   onClick={() => {
-                    selectImage()
-                      .then(() => {})
-                      .catch((err) => console.error(err));
+                    if (!isEditingDisabled) {
+                      selectImage().catch((err) => console.error(err));
+                    }
                   }}
                 />
               )}
@@ -404,8 +407,9 @@ const ViewEditor: FC<ViewEditorProps> = ({
                 setDescription(e.target.value);
               }}
               placeholder="description"
+              disabled={isEditingDisabled}
             />
-            <Properties recipe={recipe} />
+            <Properties recipe={recipe} isEditingDisabled={isEditingDisabled} />
           </div>
           <div className={styles["column"]}>
             <div className={styles["ingredients-header"]}>
@@ -416,6 +420,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                     type="checkbox"
                     checked={useMetric}
                     onChange={(e) => setUseMetric(e.target.checked)}
+                    disabled={isEditingDisabled}
                   />
                   <span className={styles["slider"]}></span>
                 </label>
@@ -444,6 +449,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                           newIngredients[index].is_checked = e.target.checked;
                           setIngredients(newIngredients);
                         }}
+                        disabled={isEditingDisabled}
                       />
                       <label htmlFor={`ingredient-checkbox-${index}`} />
                     </div>
@@ -500,6 +506,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                           }
                         }
                       }}
+                      disabled={isEditingDisabled}
                     />
 
                     {/* ingredient name */}
@@ -550,6 +557,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                         }
                       }}
                       autoCorrect="off"
+                      disabled={isEditingDisabled}
                     />
                   </div>
                 ),
@@ -557,17 +565,19 @@ const ViewEditor: FC<ViewEditorProps> = ({
             <AddButton
               text="add ingredient"
               onClick={() => {
-                if (!ingredients) {
-                  setIngredients([new Ingredient("")]);
-                  setNewIngredientIndex(0);
-                } else {
-                  // add new ingredient at end
-                  const newIngredients = [...ingredients];
-                  newIngredients.push(new Ingredient(""));
-                  setIngredients(newIngredients);
+                if (!isEditingDisabled) {
+                  if (!ingredients) {
+                    setIngredients([new Ingredient()]);
+                    setNewIngredientIndex(0);
+                  } else {
+                    // add new ingredient at end
+                    const newIngredients = [...ingredients];
+                    newIngredients.push(new Ingredient());
+                    setIngredients(newIngredients);
 
-                  // focus on new ingredient amount
-                  setNewIngredientIndex(newIngredients.length - 1);
+                    // focus on new ingredient amount
+                    setNewIngredientIndex(newIngredients.length - 1);
+                  }
                 }
               }}
             />
@@ -656,6 +666,7 @@ const ViewEditor: FC<ViewEditorProps> = ({
                           );
                         }
                       }}
+                      disabled={isEditingDisabled}
                     />
                   </div>
                 ))}
@@ -664,17 +675,19 @@ const ViewEditor: FC<ViewEditorProps> = ({
             <AddButton
               text="add direction"
               onClick={() => {
-                if (!directions) {
-                  setDirections([""]);
-                  setNewDirectionIndex(0);
-                } else {
-                  // add new direction at end
-                  const newDirections = [...directions];
-                  newDirections.push("");
-                  setDirections(newDirections);
+                if (!isEditingDisabled) {
+                  if (!directions) {
+                    setDirections([""]);
+                    setNewDirectionIndex(0);
+                  } else {
+                    // add new direction at end
+                    const newDirections = [...directions];
+                    newDirections.push("");
+                    setDirections(newDirections);
 
-                  // focus on new direction
-                  setNewDirectionIndex(newDirections.length - 1);
+                    // focus on new direction
+                    setNewDirectionIndex(newDirections.length - 1);
+                  }
                 }
               }}
             />
@@ -724,23 +737,26 @@ const ViewEditor: FC<ViewEditorProps> = ({
                       }
                     }}
                     className={styles["note-input"]}
+                    disabled={isEditingDisabled}
                   />
                 </div>
               ))}
             <AddButton
               text="add note"
               onClick={() => {
-                if (!notes) {
-                  setNotes([""]);
-                  setNewNoteIndex(0);
-                } else {
-                  // add new note at end
-                  const newNotes = [...notes];
-                  newNotes.push("");
-                  setNotes(newNotes);
+                if (!isEditingDisabled) {
+                  if (!notes) {
+                    setNotes([""]);
+                    setNewNoteIndex(0);
+                  } else {
+                    // add new note at end
+                    const newNotes = [...notes];
+                    newNotes.push("");
+                    setNotes(newNotes);
 
-                  // focus on new note
-                  setNewNoteIndex(newNotes.length - 1);
+                    // focus on new note
+                    setNewNoteIndex(newNotes.length - 1);
+                  }
                 }
               }}
             />
