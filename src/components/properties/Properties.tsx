@@ -18,9 +18,10 @@ const fileService = new FileService();
 
 interface PropertiesProps {
   recipe: Recipe | null;
+  isEditingDisabled: boolean;
 }
 
-const Properties: FC<PropertiesProps> = ({ recipe }) => {
+const Properties: FC<PropertiesProps> = ({ recipe, isEditingDisabled }) => {
   // #region states
   const [recipeLoaded, setRecipeLoaded] = useState<boolean>(false);
 
@@ -370,8 +371,10 @@ const Properties: FC<PropertiesProps> = ({ recipe }) => {
       </div>
       <AddButton
         onClick={(e) => {
-          e.stopPropagation();
-          setShowAddPropertyDropdown(!showAddPropertyDropdown);
+          if (!isEditingDisabled) {
+            e.stopPropagation();
+            setShowAddPropertyDropdown(!showAddPropertyDropdown);
+          }
         }}
         text={"add property"}
       />
