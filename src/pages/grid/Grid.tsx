@@ -224,7 +224,7 @@ const Grid: FC = () => {
           </div>
           <div className={styles["grid"]}>
             {displayRecipes.map((recipe, index) => (
-              <div key={index}>
+              <div key={index} className={styles["grid-item"]}>
                 <GridItem recipe={recipe} />
               </div>
             ))}
