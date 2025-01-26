@@ -42,8 +42,8 @@
                     };
                     prettier = {
                       enable = true;
-                      files = "\\.(js|ts|tsx|json|md)$";
                       entry = "pnpm exec prettier --write";
+                      files = "^(?!.*src-tauri/gen/schemas).*(\\.js|\\.ts|\\.tsx|\\.json|\\.md)$";
                     };
                   };
                 }
