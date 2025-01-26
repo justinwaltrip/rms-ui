@@ -20,6 +20,7 @@
   align-items: center;
   height: 36px;
   overflow-x: scroll;
+  overflow-y: hidden;
 }
 
 .grid-item::-webkit-scrollbar {
@@ -93,4 +94,8 @@
   width: 100%;
   white-space: nowrap;
   padding-top: 15px;
+}
+
+.source::-webkit-scrollbar {
+  display: none;
 }
