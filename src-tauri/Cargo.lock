@@ -3006,7 +3006,7 @@ dependencies = [
 
 [[package]]
 name = "rms"
-version = "0.1.0-alpha"
+version = "0.2.0-alpha"
 dependencies = [
  "cocoa 0.25.0",
  "fork",
@@ -3752,8 +3752,8 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-icloud"
-version = "0.1.0"
-source = "git+https://github.com/justinwaltrip/tauri-plugin-icloud.git#539caece1010d6fccd6f7e445291576bfebdd6d9"
+version = "0.2.0-alpha"
+source = "git+https://github.com/justinwaltrip/tauri-plugin-icloud.git#264088936577d3e6d6d4a34296b8c4fca80a75ea"
 dependencies = [
  "serde",
  "tauri",

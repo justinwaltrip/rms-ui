@@ -1,6 +1,6 @@
 [package]
 name = "rms"
-version = "0.1.0-alpha"
+version = "0.2.0-alpha"
 description = "Local-first recipe management system inspired by Obsidian"
 authors = ["Justin Waltrip"]
 license = ""
