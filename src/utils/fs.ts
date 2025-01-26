@@ -93,6 +93,25 @@ async function readRecipeContents(
 }
 
 /**
+ * Bulk read recipe contents from files using bulkReadTextFile
+ */
+async function bulkReadRecipeContents(
+  filenames: Array<string>,
+  collectionPath: string,
+  fileService: FileService,
+) {
+  try {
+    const paths = filenames.map(
+      (filename) => `${collectionPath}/${filename}.json`,
+    );
+    return await fileService.bulkReadTextFile(paths);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+/**
  * Read image from file
  * @param filename
  * @param collectionPath
@@ -286,4 +305,5 @@ export {
   renameRecipe,
   deleteRecipe,
   getCollectionPathDisplayName,
+  bulkReadRecipeContents,
 };

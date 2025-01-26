@@ -12,6 +12,10 @@ interface ReadTextFileResponse {
   content: string;
 }
 
+interface BulkReadTextFileResponse {
+  entries: Array<{ name: string; content: string }>;
+}
+
 interface ExistsResponse {
   exists: boolean;
 }
@@ -100,6 +104,31 @@ export class iCloudService {
         return response.content;
       } catch (error) {
         console.log("Got error from read_text_file");
+        console.error(error);
+        throw error;
+      }
+    });
+  }
+
+  async bulkReadTextFile(paths: Array<string>): Promise<Array<string>> {
+    return this.enqueue(async () => {
+      const payload = {
+        paths: paths,
+      };
+      console.log(
+        "Invoking plugin:icloud|bulk_read_text_file with args",
+        payload,
+      );
+      try {
+        const response = await invoke<BulkReadTextFileResponse>(
+          "plugin:icloud|bulk_read_text_file",
+          payload,
+        );
+        console.log("Got response from bulk_read_text_file");
+        console.log(response);
+        return response.entries.map((entry) => entry.content);
+      } catch (error) {
+        console.log("Got error from bulk_read_text_file");
         console.error(error);
         throw error;
       }

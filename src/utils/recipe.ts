@@ -1,4 +1,8 @@
-import { readRecipeContents, writeRecipeContents } from "./fs";
+import {
+  bulkReadRecipeContents,
+  readRecipeContents,
+  writeRecipeContents,
+} from "./fs";
 import { FileService } from "../services/FileService";
 
 class Ingredient {
@@ -69,6 +73,37 @@ class Recipe {
       } else {
         throw new Error("Invalid recipe file");
       }
+    } catch (err) {
+      // Make sure to properly log or handle the error
+      console.error(err);
+      throw err;
+    }
+  }
+
+  static async bulkLoadRecipe(
+    filenames: string[],
+    collectionPath: string,
+    fileService: FileService,
+  ): Promise<Recipe[]> {
+    try {
+      const recipes: Recipe[] = [];
+      const contents = await bulkReadRecipeContents(
+        filenames,
+        collectionPath,
+        fileService,
+      );
+
+      for (let i = 0; i < contents.length; i++) {
+        const json: { [key: string]: unknown } = JSON.parse(contents[i]);
+
+        if (json !== null && typeof json === "object") {
+          recipes.push(new Recipe(json, filenames[i], collectionPath));
+        } else {
+          throw new Error("Invalid recipe file");
+        }
+      }
+
+      return recipes;
     } catch (err) {
       // Make sure to properly log or handle the error
       console.error(err);
