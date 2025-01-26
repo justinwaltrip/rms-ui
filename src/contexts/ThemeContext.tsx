@@ -20,13 +20,18 @@ type ThemeProviderProps = {
 
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const [theme, setTheme] = useState<Theme>(() => {
-    const savedTheme = localStorage.getItem("theme") as Theme | null;
-    return savedTheme || "dark"; // Default to "light" if no theme is saved
+    if (typeof window !== "undefined" && window.localStorage) {
+      const savedTheme = localStorage.getItem("theme") as Theme | null;
+      return savedTheme || "dark"; // Default to "dark" if no theme is saved
+    }
+    return "dark"; // Default to "dark" if localStorage is not available
   });
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
+    if (typeof window !== "undefined" && window.localStorage) {
+      document.documentElement.setAttribute("data-theme", theme);
+      localStorage.setItem("theme", theme);
+    }
   }, [theme]);
 
   const toggleTheme = () => {
@@ -52,16 +57,23 @@ export const usePersistedTheme = () => {
   const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    if (savedTheme) {
-      document.documentElement.setAttribute("data-theme", savedTheme);
-    } else {
-      document.documentElement.setAttribute("data-theme", theme);
+    if (typeof window !== "undefined" && window.localStorage) {
+      const savedTheme = localStorage.getItem("theme") as
+        | "light"
+        | "dark"
+        | null;
+      if (savedTheme) {
+        document.documentElement.setAttribute("data-theme", savedTheme);
+      } else {
+        document.documentElement.setAttribute("data-theme", theme);
+      }
     }
   }, [theme]);
 
   useEffect(() => {
-    localStorage.setItem("theme", theme);
+    if (typeof window !== "undefined" && window.localStorage) {
+      localStorage.setItem("theme", theme);
+    }
   }, [theme]);
 
   return { theme, toggleTheme };

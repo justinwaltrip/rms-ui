@@ -4834,6 +4834,11 @@
           "const": "icloud:default"
         },
         {
+          "description": "Enables the bulk_read_text_file command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:allow-bulk-read-text-file"
+        },
+        {
           "description": "Enables the create_folder command without any pre-configured scope.",
           "type": "string",
           "const": "icloud:allow-create-folder"
@@ -4877,6 +4882,11 @@
           "description": "Enables the write_text_file command without any pre-configured scope.",
           "type": "string",
           "const": "icloud:allow-write-text-file"
+        },
+        {
+          "description": "Denies the bulk_read_text_file command without any pre-configured scope.",
+          "type": "string",
+          "const": "icloud:deny-bulk-read-text-file"
         },
         {
           "description": "Denies the create_folder command without any pre-configured scope.",

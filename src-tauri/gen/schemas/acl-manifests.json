@@ -3408,6 +3408,11 @@
       "permissions": ["allow-ping"]
     },
     "permissions": {
+      "allow-bulk-read-text-file": {
+        "identifier": "allow-bulk-read-text-file",
+        "description": "Enables the bulk_read_text_file command without any pre-configured scope.",
+        "commands": { "allow": ["bulk_read_text_file"], "deny": [] }
+      },
       "allow-create-folder": {
         "identifier": "allow-create-folder",
         "description": "Enables the create_folder command without any pre-configured scope.",
@@ -3452,6 +3457,11 @@
         "identifier": "allow-write-text-file",
         "description": "Enables the write_text_file command without any pre-configured scope.",
         "commands": { "allow": ["write_text_file"], "deny": [] }
+      },
+      "deny-bulk-read-text-file": {
+        "identifier": "deny-bulk-read-text-file",
+        "description": "Denies the bulk_read_text_file command without any pre-configured scope.",
+        "commands": { "allow": [], "deny": ["bulk_read_text_file"] }
       },
       "deny-create-folder": {
         "identifier": "deny-create-folder",

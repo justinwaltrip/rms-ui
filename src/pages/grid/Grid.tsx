@@ -78,16 +78,17 @@ const Grid: FC = () => {
   const loadRecipesFromDirectory = async (collectionPath: string) => {
     try {
       const files = await fileService.readDir(collectionPath);
-      const promises: Array<Promise<Recipe>> = [];
+      const filenames = [];
       for (const file of files) {
         if (file.endsWith(".json")) {
-          const filename = file.substring(0, file.length - ".json".length);
-          promises.push(
-            Recipe.loadRecipe(filename, collectionPath, fileService),
-          );
+          filenames.push(file.substring(0, file.length - ".json".length));
         }
       }
-      return await Promise.all(promises);
+      return await Recipe.bulkLoadRecipe(
+        filenames,
+        collectionPath,
+        fileService,
+      );
     } catch (err) {
       console.error(err);
       return [];

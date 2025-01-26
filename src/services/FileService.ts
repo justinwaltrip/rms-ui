@@ -38,6 +38,14 @@ export class FileService {
     }
   }
 
+  async bulkReadTextFile(paths: Array<string>): Promise<Array<string>> {
+    if (this.currentPlatform === "ios") {
+      return this.cloudService.bulkReadTextFile(paths);
+    } else {
+      return Promise.all(paths.map((path) => this.readTextFile(path)));
+    }
+  }
+
   async getImageSrc(path: string): Promise<string> {
     if (this.currentPlatform === "ios") {
       const base64 = await this.cloudService.readImageFile(path);
