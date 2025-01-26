@@ -96,13 +96,21 @@ const Grid: FC = () => {
   };
 
   useEffect(() => {
+    let mounted = true;
+
     if (collectionPath) {
       loadRecipesFromDirectory(collectionPath)
         .then((recipes) => {
-          setRecipes(recipes);
+          if (mounted) {
+            setRecipes(recipes);
+          }
         })
         .catch((err) => console.error(err));
     }
+
+    return () => {
+      mounted = false;
+    };
   }, [collectionPath]);
 
   /**
