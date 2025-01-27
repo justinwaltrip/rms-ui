@@ -20,7 +20,7 @@ interface ImageUploaderProps {
 
 const fileService = new FileService();
 
-const ImageUploader: FC<ImageUploaderProps> = ({
+export const ImageUploader: FC<ImageUploaderProps> = ({
   image,
   setImage,
   isEditingDisabled,
@@ -28,6 +28,9 @@ const ImageUploader: FC<ImageUploaderProps> = ({
 }) => {
   const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
 
+  /**
+   * Get image source
+   */
   useEffect(() => {
     if (image) {
       fileService
@@ -121,5 +124,3 @@ const ImageUploader: FC<ImageUploaderProps> = ({
     </div>
   );
 };
-
-export default ImageUploader;

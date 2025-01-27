@@ -11,7 +11,6 @@ interface DirectionsListProps {
 
 export const DirectionsList: FC<DirectionsListProps> = ({ ...props }) => {
   const { directions, setDirections, isEditingDisabled } = props;
-
   const newDirectionRef = useRef<HTMLTextAreaElement>(null);
   const [newDirectionIndex, setNewDirectionIndex] = useState<number>(-1);
 

@@ -13,7 +13,6 @@ interface IngredientsListProps {
 
 export const IngredientsList: FC<IngredientsListProps> = ({ ...props }) => {
   const { ingredients, setIngredients, isEditingDisabled } = props;
-
   const newIngredientRef = useRef<HTMLInputElement>(null);
   const [newIngredientIndex, setNewIngredientIndex] = useState<number>(-1);
   const [useMetric, setUseMetric] = useState<boolean>(false);

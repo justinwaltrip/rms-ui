@@ -11,7 +11,6 @@ interface NotesListProps {
 
 export const NotesList: FC<NotesListProps> = ({ ...props }) => {
   const { notes, setNotes, isEditingDisabled } = props;
-
   const newNoteRef = useRef<HTMLTextAreaElement>(null);
   const [newNoteIndex, setNewNoteIndex] = useState<number>(-1);
 
