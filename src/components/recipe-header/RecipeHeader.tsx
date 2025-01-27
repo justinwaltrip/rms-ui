@@ -1,7 +1,7 @@
 import { FC } from "react";
 
 import styles from "./RecipeHeader.module.scss";
-import ImageUploader from "../image-uploader/ImageUploader";
+import { ImageUploader } from "../image-uploader/ImageUploader";
 
 interface RecipeHeaderProps {
   title: string | undefined;
