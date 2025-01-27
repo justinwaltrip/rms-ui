@@ -43,6 +43,14 @@ export const NotesList: FC<NotesListProps> = ({ ...props }) => {
     }
   }
 
+  /**
+   * On mount, add listener for resize
+   */
+  useEffect(() => {
+    window.addEventListener("resize", resizeNotes);
+    return () => window.removeEventListener("resize", resizeNotes);
+  }, []);
+
   return (
     <React.Fragment>
       <h2>notes</h2>
