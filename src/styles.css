@@ -213,3 +213,12 @@ select:focus-visible {
   background-color: #c68035;
   color: rgba(0, 0, 0, 0.275);
 }
+
+input {
+  text-align: left;
+  color: var(--text-primary);
+}
+
+input:focus {
+  outline: none;
+}

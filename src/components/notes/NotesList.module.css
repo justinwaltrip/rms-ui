@@ -1,0 +1,10 @@
+.note {
+  margin-top: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.note-input {
+  width: 100%;
+}
