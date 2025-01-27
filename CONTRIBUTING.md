@@ -35,15 +35,6 @@ Once Rust has finished building, the webview will open, displaying your web app.
 
 - **Props Types**: If the component has any props, create a type for the props. Name the type using PascalCase, followed by `Props` (e.g., `AddFilterDialogProps`).
 
-- **Code Grouping**: Use `// #region` and `// #endregion` to group related sections of code. This helps in collapsing and expanding sections in VS Code. The order should be:
-
-  1. variables - simple `const` declarations
-  2. contexts - `useContext` declarations
-  3. states - `useState` declarations
-  4. effects - `useEffect` declarations
-  5. functions - `function` declarations
-  6. components - `const` declarations of components
-
 - **Inline Functions**: Use inline functions whenever possible to reduce complexity and improve readability.
 
 - **JSDoc Comments**: Create JSDoc comments for all functions, including:
