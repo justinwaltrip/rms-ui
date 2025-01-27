@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 
 import styles from "./NotesList.module.css";
 import AddButton from "../add-button/AddButton";
@@ -44,7 +44,7 @@ export const NotesList: FC<NotesListProps> = ({ ...props }) => {
   }
 
   return (
-    <div>
+    <React.Fragment>
       <h2>notes</h2>
       {notes &&
         notes.map((note, index) => (
@@ -114,6 +114,6 @@ export const NotesList: FC<NotesListProps> = ({ ...props }) => {
           }
         }}
       />
-    </div>
+    </React.Fragment>
   );
 };

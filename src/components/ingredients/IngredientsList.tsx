@@ -57,7 +57,7 @@ export const IngredientsList: FC<IngredientsListProps> = ({ ...props }) => {
   }, [ingredients, useMetric]);
 
   return (
-    <div>
+    <React.Fragment>
       <div className={styles["ingredients-header"]}>
         <h2>ingredients</h2>
         <div className={styles["unit-toggle"]}>
@@ -214,6 +214,6 @@ export const IngredientsList: FC<IngredientsListProps> = ({ ...props }) => {
           }
         }}
       />
-    </div>
+    </React.Fragment>
   );
 };

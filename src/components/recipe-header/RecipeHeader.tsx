@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React, { FC } from "react";
 
 import styles from "./RecipeHeader.module.scss";
 import { ImageUploader } from "../image-uploader/ImageUploader";
@@ -16,7 +16,7 @@ interface RecipeHeaderProps {
 
 export const RecipeHeader: FC<RecipeHeaderProps> = ({ ...props }) => {
   return (
-    <div>
+    <React.Fragment>
       <textarea
         className={styles["title-input"]}
         value={props.title || ""}
@@ -37,6 +37,6 @@ export const RecipeHeader: FC<RecipeHeaderProps> = ({ ...props }) => {
         placeholder="description"
         disabled={props.isEditingDisabled}
       />
-    </div>
+    </React.Fragment>
   );
 };

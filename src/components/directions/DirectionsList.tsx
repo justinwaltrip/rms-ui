@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 
 import styles from "./DirectionsList.module.css";
 import AddButton from "../add-button/AddButton";
@@ -58,7 +58,7 @@ export const DirectionsList: FC<DirectionsListProps> = ({ ...props }) => {
   }, [directions]);
 
   return (
-    <div>
+    <React.Fragment>
       <h2>directions</h2>
       {directions && (
         <div className={styles["directions"]}>
@@ -162,6 +162,6 @@ export const DirectionsList: FC<DirectionsListProps> = ({ ...props }) => {
           }
         }}
       />
-    </div>
+    </React.Fragment>
   );
 };
