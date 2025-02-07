@@ -56,26 +56,38 @@ const AppContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   );
 };
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <Home />,
+    },
+    {
+      path: "/grid",
+      element: <Grid />,
+    },
+    {
+      path: "/editor",
+      element: <Editor />,
+    },
+  ],
   {
-    path: "/",
-    element: <Home />,
+    future: {
+      v7_relativeSplatPath: true,
+    },
   },
-  {
-    path: "/grid",
-    element: <Grid />,
-  },
-  {
-    path: "/editor",
-    element: <Editor />,
-  },
-]);
+);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <AppContextProvider>
       <ThemeProvider>
-        <RouterProvider router={router} />
+        <RouterProvider
+          router={router}
+          future={{
+            v7_startTransition: true,
+          }}
+        />
       </ThemeProvider>
     </AppContextProvider>
   </React.StrictMode>,
