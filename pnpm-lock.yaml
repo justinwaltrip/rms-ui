@@ -12,8 +12,8 @@ importers:
         specifier: ^1.2.4
         version: 1.2.4(eslint@9.17.0)
       '@tauri-apps/api':
-        specifier: ^2.1.1
-        version: 2.1.1
+        specifier: ^2.2.0
+        version: 2.2.0
       '@tauri-apps/plugin-dialog':
         specifier: ~2.0.2
         version: 2.0.2
@@ -510,8 +510,8 @@ packages:
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
-  '@tauri-apps/api@2.1.1':
-    resolution: {integrity: sha512-fzUfFFKo4lknXGJq8qrCidkUcKcH2UHhfaaCNt4GzgzGaW2iS26uFOg4tS3H4P8D6ZEeUxtiD5z0nwFF0UN30A==}
+  '@tauri-apps/api@2.2.0':
+    resolution: {integrity: sha512-R8epOeZl1eJEl603aUMIGb4RXlhPjpgxbGVEaqY+0G5JG9vzV/clNlzTeqc+NLYXVqXcn8mb4c5b9pJIUDEyAg==}
 
   '@tauri-apps/cli-darwin-arm64@2.0.0-rc.18':
     resolution: {integrity: sha512-L2/VQ4q1pZyhqOifarVDJf/+JabU6DSUMj6979wXrUOOxmyfLCZaw5qGGsbirYOfxWMo+qcXEFRF411YIv9qWw==}
@@ -2260,7 +2260,7 @@ snapshots:
 
   '@rtsao/scc@1.1.0': {}
 
-  '@tauri-apps/api@2.1.1': {}
+  '@tauri-apps/api@2.2.0': {}
 
   '@tauri-apps/cli-darwin-arm64@2.0.0-rc.18':
     optional: true
@@ -2307,19 +2307,19 @@ snapshots:
 
   '@tauri-apps/plugin-dialog@2.0.2':
     dependencies:
-      '@tauri-apps/api': 2.1.1
+      '@tauri-apps/api': 2.2.0
 
   '@tauri-apps/plugin-fs@2.0.4':
     dependencies:
-      '@tauri-apps/api': 2.1.1
+      '@tauri-apps/api': 2.2.0
 
   '@tauri-apps/plugin-os@2.0.0':
     dependencies:
-      '@tauri-apps/api': 2.1.1
+      '@tauri-apps/api': 2.2.0
 
   '@tauri-apps/plugin-shell@2.0.1':
     dependencies:
-      '@tauri-apps/api': 2.1.1
+      '@tauri-apps/api': 2.2.0
 
   '@types/estree@1.0.6': {}
 
