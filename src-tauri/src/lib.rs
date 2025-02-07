@@ -14,10 +14,6 @@ use std::{fs::metadata, path::PathBuf};
 #[macro_use]
 extern crate cocoa;
 
-#[cfg(target_os = "macos")]
-#[macro_use]
-extern crate objc;
-
 // Only import the plugin for macOS
 #[cfg(target_os = "macos")]
 mod tauri_traffic_light_positioner_plugin;
