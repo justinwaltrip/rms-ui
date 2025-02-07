@@ -26,7 +26,7 @@ tauri-plugin-icloud = { git = "https://github.com/justinwaltrip/tauri-plugin-icl
 [target.'cfg(target_os = "macos")'.dependencies]
 cocoa = "0.26.0"
 objc = "0.2.7"
-rand = "0.8.5"
+rand = "0.9.0"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
