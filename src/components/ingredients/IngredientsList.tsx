@@ -9,10 +9,18 @@ interface IngredientsListProps {
   ingredients: Ingredient[] | undefined;
   setIngredients: (ingredients: Ingredient[]) => void;
   isEditingDisabled: boolean;
+  width: number;
+  isWideScreen: boolean;
 }
 
 export const IngredientsList: FC<IngredientsListProps> = ({ ...props }) => {
-  const { ingredients, setIngredients, isEditingDisabled } = props;
+  const {
+    ingredients,
+    setIngredients,
+    isEditingDisabled,
+    width,
+    isWideScreen,
+  } = props;
   const newIngredientRef = useRef<HTMLInputElement>(null);
   const [newIngredientIndex, setNewIngredientIndex] = useState<number>(-1);
   const [useMetric, setUseMetric] = useState<boolean>(false);
@@ -54,7 +62,7 @@ export const IngredientsList: FC<IngredientsListProps> = ({ ...props }) => {
     };
 
     handleResizeIngredients();
-  }, [ingredients, useMetric]);
+  }, [ingredients, useMetric, width, isWideScreen]);
 
   return (
     <React.Fragment>

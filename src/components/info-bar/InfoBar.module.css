@@ -2,8 +2,9 @@
   position: relative;
   left: 0;
   top: 0;
-  margin: 5px;
-  width: 80%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 90%;
   display: flex;
   justify-content: center;
 }

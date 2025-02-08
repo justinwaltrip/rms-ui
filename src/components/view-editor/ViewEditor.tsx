@@ -46,6 +46,10 @@ const ViewEditor: FC<ViewEditorProps> = ({
   // set title from filename
   const [defaultTitle, setDefaultTitle] = useState<string>("");
 
+  const [leftColumnWidth, setLeftColumnWidth] = useState(50); // percentage
+  const [isResizing, setIsResizing] = useState(false);
+  const [isWideScreen, setIsWideScreen] = useState(window.innerWidth >= 1200);
+
   /**
    * On tab load
    */
@@ -142,6 +146,53 @@ const ViewEditor: FC<ViewEditorProps> = ({
     }
   }, [defaultTitle, recipeLoaded]);
 
+  // Handle mouse down on resizer
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsResizing(true);
+    e.preventDefault();
+  };
+
+  // Handle mouse move while resizing
+  useEffect(() => {
+    const handleMouseMove = (e: globalThis.MouseEvent) => {
+      if (!isResizing) return;
+
+      const viewEditor = document.querySelector(`.${styles["view-editor"]}`);
+      if (!viewEditor) return;
+
+      const viewEditorRect = viewEditor.getBoundingClientRect();
+      const newWidth =
+        ((e.clientX - viewEditorRect.left) / viewEditorRect.width) * 100;
+
+      if (newWidth >= 30 && newWidth <= 70) {
+        setLeftColumnWidth(newWidth);
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    if (isResizing) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizing]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsWideScreen(window.innerWidth >= 900);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const isEditingDisabled = !filename || !recipeLoaded;
 
   return (
@@ -159,35 +210,62 @@ const ViewEditor: FC<ViewEditorProps> = ({
           setDefaultTitle={setDefaultTitle}
         />
         <div className={styles["view-editor"]}>
-          <div className={styles["column"]}>
-            <RecipeHeader
-              title={title}
-              setTitle={setTitle}
-              description={description}
-              setDescription={setDescription}
-              image={image}
-              setImage={setImage}
-              isEditingDisabled={isEditingDisabled}
-              collectionPath={collectionPath}
+          <div className={styles["columns-container"]}>
+            <div
+              className={`${styles["column"]} ${styles["first-column"]}`}
+              style={{
+                flex: isWideScreen ? `0 0 ${leftColumnWidth}%` : "1",
+              }}
+            >
+              <RecipeHeader
+                title={title}
+                setTitle={setTitle}
+                description={description}
+                setDescription={setDescription}
+                image={image}
+                setImage={setImage}
+                isEditingDisabled={isEditingDisabled}
+                collectionPath={collectionPath}
+              />
+              <Properties
+                recipe={recipe}
+                isEditingDisabled={isEditingDisabled}
+              />
+            </div>
+
+            <div
+              className={`${styles["resizer"]} ${isResizing ? styles["resizing"] : ""}`}
+              onMouseDown={handleMouseDown}
             />
-            <Properties recipe={recipe} isEditingDisabled={isEditingDisabled} />
-          </div>
-          <div className={styles["column"]}>
-            <IngredientsList
-              ingredients={ingredients}
-              setIngredients={setIngredients}
-              isEditingDisabled={isEditingDisabled}
-            />
-            <DirectionsList
-              directions={directions}
-              setDirections={setDirections}
-              isEditingDisabled={isEditingDisabled}
-            />
-            <NotesList
-              notes={notes}
-              setNotes={setNotes}
-              isEditingDisabled={isEditingDisabled}
-            />
+
+            <div
+              className={`${styles["column"]} ${styles["second-column"]}`}
+              style={{
+                flex: isWideScreen ? `0 0 ${100 - leftColumnWidth}%` : "1",
+              }}
+            >
+              <IngredientsList
+                ingredients={ingredients}
+                setIngredients={setIngredients}
+                isEditingDisabled={isEditingDisabled}
+                width={leftColumnWidth}
+                isWideScreen={isWideScreen}
+              />
+              <DirectionsList
+                directions={directions}
+                setDirections={setDirections}
+                isEditingDisabled={isEditingDisabled}
+                width={leftColumnWidth}
+                isWideScreen={isWideScreen}
+              />
+              <NotesList
+                notes={notes}
+                setNotes={setNotes}
+                isEditingDisabled={isEditingDisabled}
+                width={leftColumnWidth}
+                isWideScreen={isWideScreen}
+              />
+            </div>
           </div>
         </div>
       </div>

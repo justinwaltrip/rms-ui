@@ -226,7 +226,7 @@ const Properties: FC<PropertiesProps> = ({ recipe, isEditingDisabled }) => {
   );
 
   return (
-    <div className={styles["properties"]}>
+    <div>
       <div className={styles["grid-container"]}>
         {tags !== undefined && (
           <>
