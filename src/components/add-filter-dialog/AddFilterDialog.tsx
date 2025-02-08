@@ -68,15 +68,18 @@ const AddFilterDialog: FC<AddFilterDialogProps> = ({
           </div>
         ))}
       </div>
-      <input
-        className={styles["filter-value"]}
-        value={filterValue}
-        onChange={(event) => setFilterValue(event.target.value)}
-        placeholder={FILTERS[filterField]["placeholder"] || "value"}
-      />
+      {filterOperator &&
+        !["is empty", "is not empty"].includes(filterOperator) && (
+          <input
+            className={styles["filter-value"]}
+            value={filterValue}
+            onChange={(event) => setFilterValue(event.target.value)}
+            placeholder={FILTERS[filterField]["placeholder"] || "value"}
+          />
+        )}
       <button
         className={styles["apply-filter-button"]}
-        disabled={!filterOperator || !filterValue}
+        disabled={!filterOperator}
         onClick={(e) => {
           e.stopPropagation();
           applyFilter();

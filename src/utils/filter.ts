@@ -14,10 +14,21 @@ const FILTERS: {
     operators: ["includes", "does not include"],
     placeholder: "tag",
   },
+  source: {
+    operators: [
+      "is",
+      "is not",
+      "contains",
+      "does not contain",
+      "is empty",
+      "is not empty",
+    ],
+    placeholder: "source",
+  },
 };
 
 interface Filter {
-  field: "title" | "tags";
+  field: "title" | "tags" | "source";
   operator: string;
   value: string;
 }
@@ -49,6 +60,10 @@ function filterRecipes(
           return (
             Array.isArray(fieldValue) && !fieldValue.includes(filter.value)
           );
+        case "is empty":
+          return fieldValue === "" || fieldValue === null;
+        case "is not empty":
+          return fieldValue !== "" && fieldValue !== null;
       }
       return false; // default return value if no operator matched
     });
