@@ -65,11 +65,6 @@ export const NotesList: FC<NotesListProps> = ({ ...props }) => {
             {/* note text */}
             <textarea
               rows={1}
-              onInput={(e) => {
-                e.currentTarget.style.height = "";
-                e.currentTarget.style.height =
-                  e.currentTarget.scrollHeight + "px";
-              }}
               ref={newNoteIndex === index ? newNoteRef : null}
               value={note || ""}
               onChange={(e) => {

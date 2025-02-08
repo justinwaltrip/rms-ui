@@ -73,11 +73,6 @@ export const DirectionsList: FC<DirectionsListProps> = ({ ...props }) => {
               {/* direction text */}
               <textarea
                 rows={1}
-                onInput={(e) => {
-                  e.currentTarget.style.height = "";
-                  e.currentTarget.style.height =
-                    e.currentTarget.scrollHeight + "px";
-                }}
                 className={styles["direction-input"]}
                 ref={newDirectionIndex === index ? newDirectionRef : null}
                 value={direction || ""}

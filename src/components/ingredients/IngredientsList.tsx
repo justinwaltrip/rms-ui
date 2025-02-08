@@ -159,11 +159,6 @@ export const IngredientsList: FC<IngredientsListProps> = ({ ...props }) => {
                 rows={1}
                 value={ingredient || ""}
                 placeholder="ingredient"
-                onInput={(e) => {
-                  e.currentTarget.style.height = "";
-                  e.currentTarget.style.height =
-                    e.currentTarget.scrollHeight + "px";
-                }}
                 onChange={function (e: ChangeEvent<HTMLTextAreaElement>) {
                   const newIngredients = [...ingredients];
                   newIngredients[index].ingredient = e.target.value;

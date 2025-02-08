@@ -226,6 +226,8 @@ const ViewEditor: FC<ViewEditorProps> = ({
                 setImage={setImage}
                 isEditingDisabled={isEditingDisabled}
                 collectionPath={collectionPath}
+                width={leftColumnWidth}
+                isWideScreen={isWideScreen}
               />
               <Properties
                 recipe={recipe}
