@@ -7,10 +7,12 @@ interface NotesListProps {
   notes: string[] | undefined;
   setNotes: (notes: string[]) => void;
   isEditingDisabled: boolean;
+  width: number;
+  isWideScreen: boolean;
 }
 
 export const NotesList: FC<NotesListProps> = ({ ...props }) => {
-  const { notes, setNotes, isEditingDisabled } = props;
+  const { notes, setNotes, isEditingDisabled, width, isWideScreen } = props;
   const newNoteRef = useRef<HTMLTextAreaElement>(null);
   const [newNoteIndex, setNewNoteIndex] = useState<number>(-1);
 
@@ -29,7 +31,7 @@ export const NotesList: FC<NotesListProps> = ({ ...props }) => {
    */
   useEffect(() => {
     resizeNotes();
-  }, [notes]);
+  }, [notes, width, isWideScreen]);
 
   /**
    * Resize notes
@@ -63,11 +65,6 @@ export const NotesList: FC<NotesListProps> = ({ ...props }) => {
             {/* note text */}
             <textarea
               rows={1}
-              onInput={(e) => {
-                e.currentTarget.style.height = "";
-                e.currentTarget.style.height =
-                  e.currentTarget.scrollHeight + "px";
-              }}
               ref={newNoteIndex === index ? newNoteRef : null}
               value={note || ""}
               onChange={(e) => {

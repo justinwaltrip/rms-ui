@@ -7,10 +7,13 @@ interface DirectionsListProps {
   directions: string[] | undefined;
   setDirections: (directions: string[]) => void;
   isEditingDisabled: boolean;
+  width: number;
+  isWideScreen: boolean;
 }
 
 export const DirectionsList: FC<DirectionsListProps> = ({ ...props }) => {
-  const { directions, setDirections, isEditingDisabled } = props;
+  const { directions, setDirections, isEditingDisabled, width, isWideScreen } =
+    props;
   const newDirectionRef = useRef<HTMLTextAreaElement>(null);
   const [newDirectionIndex, setNewDirectionIndex] = useState<number>(-1);
 
@@ -55,7 +58,7 @@ export const DirectionsList: FC<DirectionsListProps> = ({ ...props }) => {
    */
   useEffect(() => {
     resizeDirections();
-  }, [directions]);
+  }, [directions, width, isWideScreen]);
 
   return (
     <React.Fragment>
@@ -70,11 +73,6 @@ export const DirectionsList: FC<DirectionsListProps> = ({ ...props }) => {
               {/* direction text */}
               <textarea
                 rows={1}
-                onInput={(e) => {
-                  e.currentTarget.style.height = "";
-                  e.currentTarget.style.height =
-                    e.currentTarget.scrollHeight + "px";
-                }}
                 className={styles["direction-input"]}
                 ref={newDirectionIndex === index ? newDirectionRef : null}
                 value={direction || ""}

@@ -9,10 +9,18 @@ interface IngredientsListProps {
   ingredients: Ingredient[] | undefined;
   setIngredients: (ingredients: Ingredient[]) => void;
   isEditingDisabled: boolean;
+  width: number;
+  isWideScreen: boolean;
 }
 
 export const IngredientsList: FC<IngredientsListProps> = ({ ...props }) => {
-  const { ingredients, setIngredients, isEditingDisabled } = props;
+  const {
+    ingredients,
+    setIngredients,
+    isEditingDisabled,
+    width,
+    isWideScreen,
+  } = props;
   const newIngredientRef = useRef<HTMLInputElement>(null);
   const [newIngredientIndex, setNewIngredientIndex] = useState<number>(-1);
   const [useMetric, setUseMetric] = useState<boolean>(false);
@@ -54,7 +62,7 @@ export const IngredientsList: FC<IngredientsListProps> = ({ ...props }) => {
     };
 
     handleResizeIngredients();
-  }, [ingredients, useMetric]);
+  }, [ingredients, useMetric, width, isWideScreen]);
 
   return (
     <React.Fragment>
@@ -151,11 +159,6 @@ export const IngredientsList: FC<IngredientsListProps> = ({ ...props }) => {
                 rows={1}
                 value={ingredient || ""}
                 placeholder="ingredient"
-                onInput={(e) => {
-                  e.currentTarget.style.height = "";
-                  e.currentTarget.style.height =
-                    e.currentTarget.scrollHeight + "px";
-                }}
                 onChange={function (e: ChangeEvent<HTMLTextAreaElement>) {
                   const newIngredients = [...ingredients];
                   newIngredients[index].ingredient = e.target.value;

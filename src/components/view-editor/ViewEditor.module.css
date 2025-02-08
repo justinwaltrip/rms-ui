@@ -14,7 +14,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 50px;
+  padding-bottom: 25px;
 }
 
 .source-icon {
@@ -35,26 +35,87 @@
 }
 
 .view-editor {
-  width: 60%;
+  width: 90%;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
 }
 
-.view-editor > * {
+.columns-container {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-}
-
-@media (min-width: 1200px) {
-  .view-editor {
-    width: 80%;
-  }
-  .view-editor > * {
-    width: 50%;
-  }
 }
 
 .column {
   display: flex;
   flex-direction: column;
+  min-width: 200px;
+  width: 100%;
 }
 
+.first-column {
+  padding-right: 0;
+  padding-bottom: 25px;
+}
+
+.second-column {
+  padding-left: 0;
+}
+
+.resizer {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .columns-container {
+    flex-direction: row;
+    position: relative;
+    box-sizing: border-box;
+  }
+  
+  .column {
+    width: auto;
+    box-sizing: border-box; /* Include padding in width calculation */
+  }
+  
+  .first-column {
+    padding-right: 25px;
+    padding-bottom: 0;
+  }
+  
+  .second-column {
+    padding-left: 25px;
+  }
+
+  .resizer {
+    display: block;
+    width: 8px; /* Increased width for better usability */
+    margin: 0 -4px; /* Negative margin to center the grab area */
+    cursor: col-resize;
+    z-index: 1;
+    position: relative;
+  }
+
+  /* Add a visual line in the center of the resizer */
+  .resizer::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgb(235, 235, 245, 0.6);
+    transform: translateX(-50%);
+    transition: background 0.2s ease;
+  }
+
+  .resizer:hover::after {
+    background: #c0c0c0;
+    width: 2px;
+  }
+
+  .resizer.resizing::after {
+    background: #808080;
+    width: 2px;
+  }
+}
