@@ -1,0 +1,41 @@
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.documentSection {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    border-right: 1px solid #ccc;
+}
+
+.fileInput {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.pdfViewer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Add these styles if you want to customize the PDF viewer */
+.pdfViewer :global(.react-pdf__Document) {
+    width: 100%;
+}
+
+.pdfViewer :global(.react-pdf__Page) {
+    margin-bottom: 20px;
+}
