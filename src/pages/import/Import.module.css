@@ -43,3 +43,11 @@
 .text-section {
     flex: 1;
 }
+
+.recipe-data {
+    white-space: pre-wrap;
+    font-family: monospace;
+    font-size: 14px;
+    overflow-y: scroll;
+    height: 100%;
+}

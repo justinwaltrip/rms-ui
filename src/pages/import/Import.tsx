@@ -12,16 +12,55 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url,
 ).toString();
 
+interface RecipeData {
+  [key: string]: any;
+}
+
+const BASE_URL = "http://localhost:8000";
+
 const Import: FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [numPages, setNumPages] = useState<number | null>(null);
+  const [recipeData, setRecipeData] = useState<RecipeData | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
-    if (file && file.type === "application/pdf") {
+    if (
+      file &&
+      (file.type === "application/pdf" || file.type.startsWith("image/"))
+    ) {
       setSelectedFile(file);
+      await convertToJson(file);
     } else {
-      alert("Please select a PDF file");
+      alert("Please select a PDF or image file");
+    }
+  };
+
+  const convertToJson = async (file: File) => {
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch(`${BASE_URL}/convert/`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Conversion failed");
+      }
+
+      const data = await response.json();
+      setRecipeData(data);
+    } catch (error) {
+      console.error("Error converting file:", error);
+      alert("Failed to convert file. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -30,18 +69,19 @@ const Import: FC = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles["container"]}>
       <TitleBar activeFileIndex={-1} />
-      <div className={styles.content}>
-        <div className={styles.documentSection}>
+      <SideBar />
+      <div className={styles["content"]}>
+        <div className={styles["document-section"]}>
           <input
             type="file"
-            accept=".pdf"
+            accept=".pdf,.jpg,.jpeg,.png"
             onChange={handleFileChange}
-            className={styles.fileInput}
+            className={styles["file-input"]}
           />
-          {selectedFile && (
-            <div className={styles.pdfViewer}>
+          {selectedFile && selectedFile.type === "application/pdf" && (
+            <div className={styles["pdf-viewer"]}>
               <Document
                 file={selectedFile}
                 onLoadSuccess={onDocumentLoadSuccess}
@@ -56,8 +96,24 @@ const Import: FC = () => {
               </Document>
             </div>
           )}
+          {selectedFile && selectedFile.type.startsWith("image/") && (
+            <div className={styles["image-viewer"]}>
+              <img
+                src={URL.createObjectURL(selectedFile)}
+                alt="Recipe"
+                style={{ maxWidth: "400px" }}
+              />
+            </div>
+          )}
         </div>
-        <SideBar />
+        <div className={styles["text-section"]}>
+          {isLoading && <div>Converting...</div>}
+          {recipeData && (
+            <pre className={styles["recipe-data"]}>
+              {JSON.stringify(recipeData, null, 2)}
+            </pre>
+          )}
+        </div>
       </div>
     </div>
   );
