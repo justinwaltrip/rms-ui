@@ -5,37 +5,41 @@
 }
 
 .content {
+    position: fixed;
+    top: 40px;
+    left: 50px;
+    right: 0;
+    bottom: 0;
     display: flex;
+    flex-direction: row;
     flex: 1;
     overflow: hidden;
 }
 
-.documentSection {
+.document-section {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
-    border-right: 1px solid #ccc;
-}
-
-.fileInput {
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 2px dashed #ccc;
-    border-radius: 4px;
-    width: 100%;
-}
-
-.pdfViewer {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* Add these styles if you want to customize the PDF viewer */
-.pdfViewer :global(.react-pdf__Document) {
-    width: 100%;
+.file-input {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
 }
 
-.pdfViewer :global(.react-pdf__Page) {
+.pdf-viewer {
+    display: flex;
+}
+
+.pdf-viewer :global(.react-pdf__Page) {
     margin-bottom: 20px;
+}
+
+.text-section {
+    flex: 1;
 }
