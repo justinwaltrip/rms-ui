@@ -37,31 +37,10 @@
   flex: 1;
 }
 
-.change-collection-icon {
-  height: 25px;
-  width: 25px;
-  opacity: 0.6;
+.below-sidebar-icon {
+  margin-top: -25px;
 }
 
-[data-theme="light"] .change-collection-icon {
-  filter: var(--icon-filter);
-}
-
-.change-collection-icon:hover {
-  cursor: pointer;
-}
-
-.theme-icon {
-  height: 25px;
-  width: 25px;
-  opacity: 0.6;
+.above-sidebar-icon {
   margin-bottom: -25px;
-}
-
-[data-theme="light"] .theme-icon {
-  filter: var(--icon-filter);
-}
-
-.theme-icon:hover {
-  cursor: pointer;
 }

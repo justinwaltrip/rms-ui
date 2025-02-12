@@ -13,6 +13,7 @@ import Editor from "./pages/editor/Editor";
 import Grid from "./pages/grid/Grid";
 import Home from "./pages/home/Home";
 import "./styles.css";
+import Import from "./pages/import/Import";
 
 export const AppContext = createContext<{
   collectionPath: string;
@@ -69,6 +70,10 @@ const router = createBrowserRouter(
     {
       path: "/editor",
       element: <Editor />,
+    },
+    {
+      path: "/import",
+      element: <Import />,
     },
   ],
   {
